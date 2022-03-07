@@ -1,5 +1,9 @@
+import Layout from "../../components/Layout";
+import Layout2 from "../../components/Layout2";
+
 export default function index({ data }) {
-  function create() {
+  // handler
+  const create = () => {
     const data = { username: "example" };
     fetch("/create", {
       method: "POST", // or 'PUT'
@@ -15,13 +19,9 @@ export default function index({ data }) {
       .catch((error) => {
         console.error("Error:", error);
       });
-  }
+  };
 
-  return (
-    <button className="bg-red-200 w-24" onClick={create}>
-      create
-    </button>
-  );
+  return <Layout2 content={"none"} />;
 }
 
 export async function getServerSideProps(context) {
