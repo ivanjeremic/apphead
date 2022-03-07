@@ -4,9 +4,6 @@
   "description": "",
   "main": "index.js",
   "type": "module",
-  "workspaces": [
-    "packages/admin"
-  ],
   "engines": {
     "node": ">=16"
   },
@@ -17,9 +14,16 @@
     "nb": "next build",
     "ns": "next start"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "database",
+    "nosql",
+    "backend",
+    "api",
+    "graphql",
+    "cms"
+  ],
+  "author": "Ivan Jeremic",
+  "license": "MIT",
   "dependencies": {
     "@headlessui/react": "^1.5.0",
     "@heroicons/react": "^1.0.6",

@@ -37,6 +37,7 @@ import {
 } from "@heroicons/react/solid";
 import Image from "next/image";
 import Table from "./Table";
+import DatabaseSelect from "./DatabaseSelect";
 
 const user = {
   name: "Tom Cook",
@@ -46,15 +47,16 @@ const user = {
 const navigation = [
   { name: "Dashboard", href: "#", icon: HomeIcon, current: true },
   { name: "Clusters", href: "#", icon: CalendarIcon, current: false },
-  { name: "Databases", href: "#", icon: CalendarIcon, current: false },
   { name: "Users", href: "#", icon: UserGroupIcon, current: false },
   { name: "Media", href: "#", icon: SearchCircleIcon, current: false },
   { name: "Triggers", href: "#", icon: SpeakerphoneIcon, current: false },
   { name: "Functions", href: "#", icon: MapIcon, current: false },
+  { name: "Web Hosting", href: "#", icon: MapIcon, current: false },
 ];
 const secondaryNavigation = [
   { name: "Plugins", href: "#", icon: ViewGridAddIcon },
   { name: "Settings", href: "#", icon: CogIcon },
+  { name: "Documention", href: "#", icon: CogIcon },
 ];
 const tabs = [
   { name: "Profile", href: "#", current: true },
@@ -475,6 +477,9 @@ export default function Layout2({ aside, content }) {
                   alt="Workflow"
                 />
               </div>
+              <div className="p-2">
+                <DatabaseSelect />
+              </div>
               <nav className="mt-5 flex-1" aria-label="Sidebar">
                 <div className="px-2 space-y-1">
                   {navigation.map((item) => (
@@ -538,11 +543,14 @@ export default function Layout2({ aside, content }) {
                       {user.name}
                     </p>
                     <p className="text-xs font-medium text-gray-500 group-hover:text-gray-700">
-                      View profile
+                      View profiled
                     </p>
                   </div>
                 </div>
               </a>
+            </div>
+            <div className="h-8 bg-black text-white flex items-center justify-end p-2">
+              <div>version: 0.2</div>
             </div>
           </div>
         </div>
