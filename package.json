@@ -12,6 +12,8 @@
   },
   "scripts": {
     "start": "node domedb.js",
+    "dev": "node domedb.js && npx tailwindcss -c tailwind.config.cjs -i ./styles/globals.css -o ./styles/main.css --watch",
+    "tw": "npx tailwindcss -c tailwind.config.cjs -i ./styles/globals.css -o ./styles/main.css --watch",
     "nb": "next build",
     "ns": "next start"
   },
@@ -49,7 +51,6 @@
     "redis": "^4.0.4"
   },
   "devDependencies": {
-    "@types/node": "^17.0.21",
     "autoprefixer": "^10.4.2",
     "postcss": "^8.4.7",
     "tailwindcss": "^3.0.23"

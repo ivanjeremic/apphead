@@ -5,7 +5,6 @@ import { fileURLToPath } from "url";
 
 export const isDev = process.env.NODE_ENV !== "production";
 
-// @ts-ignore
 export const __filename = fileURLToPath(import.meta.url);
 
 export const __dirname = dirname(__filename);

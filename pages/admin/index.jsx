@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 export default function index({ data }) {
   function create() {
     const data = { username: "example" };
@@ -20,7 +18,7 @@ export default function index({ data }) {
   }
 
   return (
-    <button className="bg-red-200 foo" onClick={create}>
+    <button className="bg-red-200 w-24" onClick={create}>
       create
     </button>
   );
