@@ -1,3 +1,4 @@
+//@ts-ignore
 import FastifyMailer from "fastify-mailer";
 
 export default async function (db, opts, next) {

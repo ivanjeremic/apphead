@@ -1,6 +1,3 @@
-import Layout from "../../components/Layout";
-import Layout2 from "../../components/Layout2";
-
 export default function index({ data }) {
   // handler
   const create = () => {
@@ -21,7 +18,7 @@ export default function index({ data }) {
       });
   };
 
-  return <Layout2 content={"none"} />;
+  return <h1>Dashboard</h1>;
 }
 
 export async function getServerSideProps(context) {

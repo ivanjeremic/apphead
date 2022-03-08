@@ -1,0 +1,5 @@
+# Structure
+
+Projects
+-Teams
+--Databases
