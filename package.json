@@ -27,6 +27,7 @@
   "dependencies": {
     "@headlessui/react": "^1.5.0",
     "@heroicons/react": "^1.0.6",
+    "@monaco-editor/react": "^4.3.1",
     "@tailwindcss/forms": "^0.5.0",
     "bson-objectid": "^2.0.2",
     "check-disk-space": "^3.2.0",

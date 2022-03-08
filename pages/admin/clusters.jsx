@@ -1,4 +1,4 @@
-import AddClusterBox from "../../components/AddClusterBox";
+import AddClusterBox from "../../admin-panel/components/AddClusterBox";
 
 export default function clusters() {
   return (

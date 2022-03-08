@@ -35,6 +35,11 @@
       "static/chunks/main.js",
       "static/chunks/pages/admin/clusters.js"
     ],
+    "/admin/functions": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/admin/functions.js"
+    ],
     "/admin/users": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
