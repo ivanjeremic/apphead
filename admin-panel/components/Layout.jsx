@@ -47,6 +47,8 @@ export default function Layout({ children }) {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  const [isExpanded, setIsExpanded] = useState(true);
+
   const navigation = useMainNavigation(pathname, query.db);
 
   const secondaryNavigation = useSecondaryNavigation(pathname, query.db);
@@ -193,7 +195,12 @@ export default function Layout({ children }) {
 
         {/* Static sidebar for desktop */}
         <div className="hidden lg:flex lg:flex-shrink-0">
-          <div className="flex flex-col w-64">
+          <div
+            className={classNames(
+              isExpanded ? "w-64" : "w-36",
+              "flex flex-col"
+            )}
+          >
             {/* Sidebar component, swap this element with another sidebar if you like */}
             <div className="flex flex-col h-0 flex-1 border-r border-gray-200">
               <div className="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
@@ -284,7 +291,9 @@ export default function Layout({ children }) {
                 </a>
               </div>
             </div>
-            <div className="h-8 bg-black text-white flex items-center justify-end p-2"></div>
+          </div>
+          <div className="bg-gray-200 w-4 opacity-70 flex items-center justify-center hover:bg-gray-300 transition-all ease-in-out duration-75 cursor-pointer">
+            {"<"}
           </div>
         </div>
         <div className="flex flex-col min-w-0 flex-1 overflow-hidden">
@@ -309,6 +318,7 @@ export default function Layout({ children }) {
               </div>
             </div>
           </div>
+
           <div className="flex-1 relative z-0 flex overflow-hidden">
             <main
               ref={ref}
@@ -332,13 +342,15 @@ export default function Layout({ children }) {
               </nav>
               {children}
             </main>
+
             <aside className="hidden xl:order-first xl:flex xl:flex-col flex-shrink-0 w-96 border-r border-gray-200">
               <Aside pathname={pathname} />
             </aside>
           </div>
-          <div className="h-8 bg-black text-white flex items-center justify-end p-2">
+
+          {/* <div className="h-8 bg-black text-white flex items-center justify-end p-2">
             <div>version: 0.2</div>
-          </div>
+          </div> */}
         </div>
       </div>
     </>
