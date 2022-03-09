@@ -7,49 +7,49 @@ import {
   UserGroupIcon,
 } from "@heroicons/react/outline";
 
-export const useMainNavigation = (pathname) => {
+export const useMainNavigation = (pathname, db) => {
   const navigation = [
     {
       name: "Dashboard",
-      href: "/admin",
+      href: "/domedb",
       icon: HomeIcon,
-      current: pathname === "/admin",
+      current: pathname === "domedb",
     },
     {
       name: "Clusters",
-      href: "/admin/clusters",
+      href: `/domedb/${db}/clusters`,
       icon: CalendarIcon,
-      current: pathname === "/admin/clusters",
+      current: pathname.includes("clusters"),
     },
     {
       name: "Users",
-      href: "/admin/users",
+      href: `/domedb/${db}/users`,
       icon: UserGroupIcon,
-      current: pathname === "/admin/users",
+      current: pathname.includes("users"),
     },
     {
       name: "Media",
-      href: "/admin/media",
+      href: `/domedb/${db}/media`,
       icon: SearchCircleIcon,
-      current: pathname === "/admin/media",
+      current: pathname.includes("media"),
     },
     {
       name: "Triggers",
-      href: "/admin/triggers",
+      href: `/domedb/${db}/triggers`,
       icon: SpeakerphoneIcon,
-      current: pathname === "/admin/triggers",
+      current: pathname.includes("triggers"),
     },
     {
       name: "Functions",
-      href: "/admin/functions",
+      href: `/domedb/${db}/functions`,
       icon: MapIcon,
-      current: pathname === "/admin/functions",
+      current: pathname.includes("functions"),
     },
     {
       name: "Web Hosting",
-      href: "/admin/web-hosting",
+      href: `/domedb/${db}/web-hosting`,
       icon: MapIcon,
-      current: pathname === "/admin/web-hosting",
+      current: pathname.includes("web-hosting"),
     },
   ];
 

@@ -25,15 +25,15 @@ const Aside = ({ pathname }) => {
     return <h2>Home</h2>;
   }
 
-  if (pathname === "/admin/clusters") {
+  if (pathname.includes("clusters")) {
     return <Directory />;
   }
 
-  if (pathname === "/admin/media") {
+  if (pathname.includes("media")) {
     return <GalleryAside />;
   }
 
-  if (pathname === "/admin/functions") {
+  if (pathname.includes("functions")) {
     return <FunctionsAside />;
   }
 
@@ -41,15 +41,15 @@ const Aside = ({ pathname }) => {
 };
 
 export default function Layout({ children }) {
-  const { pathname } = useRouter();
+  const { pathname, query } = useRouter();
 
   const { width, height, ref } = useAppContext();
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const navigation = useMainNavigation(pathname);
+  const navigation = useMainNavigation(pathname, query.db);
 
-  const secondaryNavigation = useSecondaryNavigation(pathname);
+  const secondaryNavigation = useSecondaryNavigation(pathname, query.db);
 
   return (
     <>
@@ -249,17 +249,15 @@ export default function Layout({ children }) {
                   />
                   <div className="flex-1 px-2 space-y-1">
                     {secondaryNavigation.map((item) => (
-                      <a
-                        key={item.name}
-                        href={item.href}
-                        className="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md"
-                      >
-                        <item.icon
-                          className="text-gray-400 group-hover:text-gray-500 mr-3 flex-shrink-0 h-6 w-6"
-                          aria-hidden="true"
-                        />
-                        {item.name}
-                      </a>
+                      <Link key={item.name} href={item.href}>
+                        <a className="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                          <item.icon
+                            className="text-gray-400 group-hover:text-gray-500 mr-3 flex-shrink-0 h-6 w-6"
+                            aria-hidden="true"
+                          />
+                          {item.name}
+                        </a>
+                      </Link>
                     ))}
                   </div>
                 </nav>

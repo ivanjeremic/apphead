@@ -1,4 +1,4 @@
-import Core from "../core/plugins/domedb-core.js";
+import Core from "../core/plugins/core.js";
 
 export default async function (db, opts, next) {
   db.register(Core);

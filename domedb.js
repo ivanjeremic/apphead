@@ -1,4 +1,3 @@
-//@ts-nocheck
 import Fastify from "fastify";
 import autoLoad from "fastify-autoload";
 import { dirname, join } from "path";
