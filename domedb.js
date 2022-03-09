@@ -16,12 +16,6 @@ const db = Fastify({
 });
 
 await db.register(autoLoad, {
-  dir: join(__dirname, "routes"),
-  maxDepth: 1,
-  forceESM: true,
-});
-
-await db.register(autoLoad, {
   dir: join(__dirname, "plugins"),
   maxDepth: 1,
   forceESM: true,

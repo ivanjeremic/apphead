@@ -229,14 +229,14 @@ export default function Directory() {
                 type="search"
                 name="search"
                 id="search"
-                className="focus:ring-pink-500 focus:border-pink-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
+                className="focus-ring-input block w-full pl-10 sm:text-sm border-gray-300 rounded-md"
                 placeholder="Search"
               />
             </div>
           </div>
           <button
             type="submit"
-            className="inline-flex justify-center px-3.5 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500"
+            className="inline-flex justify-center px-3.5 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
           >
             <FilterIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
             <span className="sr-only">Search</span>

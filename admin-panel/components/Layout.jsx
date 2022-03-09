@@ -6,10 +6,13 @@ import DatabaseSelect from "./DatabaseSelect";
 import { useRouter } from "next/router";
 import Directory from "./Directory";
 import { XIcon, MenuIcon } from "@heroicons/react/outline";
-import { classNames } from "../helpers/classNames";
+import { classNames } from "../utils/classNames";
 import Link from "next/link";
 import { useMainNavigation } from "../hooks/useMainNavigation";
 import { useSecondaryNavigation } from "../hooks/useSecondaryNavigation";
+import GalleryAside from "./GalleryAside";
+import FunctionsAside from "./FunctionsAside";
+import { useAppContext } from "../Context";
 
 const user = {
   name: "Tom Cook",
@@ -26,11 +29,21 @@ const Aside = ({ pathname }) => {
     return <Directory />;
   }
 
+  if (pathname === "/admin/media") {
+    return <GalleryAside />;
+  }
+
+  if (pathname === "/admin/functions") {
+    return <FunctionsAside />;
+  }
+
   return null;
 };
 
 export default function Layout({ children }) {
   const { pathname } = useRouter();
+
+  const { width, height, ref } = useAppContext();
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -197,9 +210,7 @@ export default function Layout({ children }) {
                   className="border-t border-gray-200 my-5"
                   aria-hidden="true"
                 />
-                <div className="p-2">
-                  <DatabaseSelect />
-                </div>
+
                 <div className="p-2">
                   <DatabaseSelect />
                 </div>
@@ -301,7 +312,10 @@ export default function Layout({ children }) {
             </div>
           </div>
           <div className="flex-1 relative z-0 flex overflow-hidden">
-            <main className="flex-1 relative z-0 overflow-y-auto focus:outline-none xl:order-last">
+            <main
+              ref={ref}
+              className="flex-1 relative z-0 focus:outline-none xl:order-last"
+            >
               {/* Breadcrumb */}
               <nav
                 className="flex items-start px-4 py-3 sm:px-6 lg:px-8 xl:hidden"
