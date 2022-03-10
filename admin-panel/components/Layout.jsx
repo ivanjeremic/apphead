@@ -197,12 +197,17 @@ export default function Layout({ children }) {
         <div className="hidden lg:flex lg:flex-shrink-0">
           <div
             className={classNames(
-              isExpanded ? "w-64" : "w-36",
-              "flex flex-col"
+              isExpanded ? "w-64" : "w-0",
+              "flex flex-col transition-all duration-500"
             )}
           >
             {/* Sidebar component, swap this element with another sidebar if you like */}
-            <div className="flex flex-col h-0 flex-1 border-r border-gray-200">
+            <div
+              className={classNames(
+                !isExpanded ? "hidden" : "",
+                "flex flex-col h-0 flex-1 border-r border-gray-200"
+              )}
+            >
               <div className="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
                 <div className="flex items-center flex-shrink-0 px-4">
                   <Image
@@ -292,9 +297,12 @@ export default function Layout({ children }) {
               </div>
             </div>
           </div>
-          <div className="bg-gray-200 w-4 opacity-70 flex items-center justify-center hover:bg-gray-300 transition-all ease-in-out duration-75 cursor-pointer">
+          <button
+            onClick={() => setIsExpanded(isExpanded ? false : true)}
+            className="bg-gray-200 w-4 opacity-70 flex items-center justify-center hover:bg-red-300 transition-all ease-in-out duration-75 cursor-pointer"
+          >
             {"<"}
-          </div>
+          </button>
         </div>
         <div className="flex flex-col min-w-0 flex-1 overflow-hidden">
           <div className="lg:hidden">
