@@ -5,7 +5,7 @@ import Image from "next/image";
 import DatabaseSelect from "./DatabaseSelect";
 import { useRouter } from "next/router";
 import Directory from "./Directory";
-import { XIcon, MenuIcon } from "@heroicons/react/outline";
+import { XIcon, MenuIcon, HomeIcon } from "@heroicons/react/outline";
 import { classNames } from "../utils/classNames";
 import Link from "next/link";
 import { useMainNavigation } from "../hooks/useMainNavigation";
@@ -125,7 +125,7 @@ export default function Layout({ children }) {
                           className={classNames(
                             item.current
                               ? "bg-gray-100 text-gray-900"
-                              : "text-gray-600 hover:bg-red-50 hover:text-gray-900",
+                              : "text-gray-600 hover:bg-green-500 hover:text-gray-900",
                             "group flex items-center px-2 py-2 text-base font-medium rounded-md"
                           )}
                           aria-current={item.current ? "page" : undefined}
@@ -197,26 +197,34 @@ export default function Layout({ children }) {
         <div className="hidden lg:flex lg:flex-shrink-0">
           <div
             className={classNames(
-              isExpanded ? "w-64" : "w-0",
+              isExpanded ? "w-64" : " w-14",
               "flex flex-col transition-all duration-500"
             )}
           >
             {/* Sidebar component, swap this element with another sidebar if you like */}
             <div
               className={classNames(
-                !isExpanded ? "hidden" : "",
+                "",
                 "flex flex-col h-0 flex-1 border-r border-gray-200"
               )}
             >
-              <div className="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
-                <div className="flex items-center flex-shrink-0 px-4">
-                  <Image
-                    className="h-8 w-auto"
-                    width={300}
-                    height={67}
-                    src="/logo.png"
-                    alt="Workflow"
-                  />
+              <div className="flex-1 flex flex-col pt-5 pb-4 overflow-hidden">
+                <div className="flex items-center flex-shrink-0 px-4 h-7">
+                  {isExpanded ? (
+                    <Image
+                      width={300}
+                      height={67}
+                      src="/logo.png"
+                      alt="Workflow"
+                    />
+                  ) : (
+                    <Image
+                      width={40}
+                      height={40}
+                      src="/logo_sm.png"
+                      alt="Workflow"
+                    />
+                  )}
                 </div>
                 <hr
                   className="border-t border-gray-200 my-5"
@@ -224,7 +232,25 @@ export default function Layout({ children }) {
                 />
 
                 <div className="p-2">
-                  <DatabaseSelect />
+                  {isExpanded ? (
+                    <DatabaseSelect />
+                  ) : (
+                    <div className="flex-1 px-2 space-y-1">
+                      <Link href="#">
+                        <a className="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                          <HomeIcon
+                            className="text-gray-400 group-hover:text-gray-500 mr-3 flex-shrink-0 h-6 w-6"
+                            aria-hidden="true"
+                          />
+                          <span
+                            className={classNames(!isExpanded ? "hidden" : "")}
+                          >
+                            DB
+                          </span>
+                        </a>
+                      </Link>
+                    </div>
+                  )}
                 </div>
                 <hr className="border-t border-gray-200" aria-hidden="true" />
 
@@ -235,7 +261,7 @@ export default function Layout({ children }) {
                         <a
                           className={classNames(
                             item.current
-                              ? "bg-gray-200 text-gray-900"
+                              ? "bg-[#EAEAEA] text-gray-900"
                               : "text-gray-600 hover:bg-[#EAEAEA] hover:text-gray-900",
                             "group flex items-center px-2 py-2 text-sm font-medium rounded-md"
                           )}
@@ -250,7 +276,13 @@ export default function Layout({ children }) {
                             )}
                             aria-hidden="true"
                           />
-                          {item.name}
+                          <span
+                            className={classNames(
+                              !isExpanded ? "hidden" : "whitespace-nowrap"
+                            )}
+                          >
+                            {item.name}
+                          </span>
                         </a>
                       </Link>
                     ))}
@@ -259,22 +291,34 @@ export default function Layout({ children }) {
                     className="border-t border-gray-200 my-5"
                     aria-hidden="true"
                   />
+
                   <div className="flex-1 px-2 space-y-1">
                     {secondaryNavigation.map((item) => (
                       <Link key={item.name} href={item.href}>
-                        <a className="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                        <a
+                          className={classNames(
+                            item.current
+                              ? "bg-[#EAEAEA] text-gray-900"
+                              : "text-gray-600 hover:bg-[#EAEAEA] hover:text-gray-900",
+                            "group flex items-center px-2 py-2 text-sm font-medium rounded-md"
+                          )}
+                        >
                           <item.icon
                             className="text-gray-400 group-hover:text-gray-500 mr-3 flex-shrink-0 h-6 w-6"
                             aria-hidden="true"
                           />
-                          {item.name}
+                          <span
+                            className={classNames(!isExpanded ? "hidden" : "")}
+                          >
+                            {item.name}
+                          </span>
                         </a>
                       </Link>
                     ))}
                   </div>
                 </nav>
               </div>
-              <div className="flex-shrink-0 flex border-t border-gray-200 p-4">
+              <div className="flex-shrink-0 flex border-t border-gray-200 p-4 overflow-hidden">
                 <a href="#" className="flex-shrink-0 w-full group block">
                   <div className="flex items-center">
                     <div>
@@ -284,7 +328,12 @@ export default function Layout({ children }) {
                         alt=""
                       />
                     </div>
-                    <div className="ml-3">
+                    <div
+                      className={classNames(
+                        !isExpanded ? "hidden" : "",
+                        "ml-3"
+                      )}
+                    >
                       <p className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
                         {user.name}
                       </p>
@@ -299,7 +348,7 @@ export default function Layout({ children }) {
           </div>
           <button
             onClick={() => setIsExpanded(isExpanded ? false : true)}
-            className="bg-gray-200 w-4 opacity-70 flex items-center justify-center hover:bg-red-300 transition-all ease-in-out duration-75 cursor-pointer"
+            className="bg-gray-200 w-4 opacity-70 flex items-center justify-center hover:bg-gray-300 transition-all ease-in-out duration-75 cursor-pointer"
           >
             {"<"}
           </button>
