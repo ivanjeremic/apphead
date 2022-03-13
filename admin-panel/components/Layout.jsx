@@ -198,7 +198,7 @@ export default function Layout({ children }) {
           <div
             className={classNames(
               isExpanded ? "w-64" : " w-14",
-              "flex flex-col transition-all duration-500"
+              "flex flex-col transition-all ease-in-out duration-300"
             )}
           >
             {/* Sidebar component, swap this element with another sidebar if you like */}
@@ -209,52 +209,53 @@ export default function Layout({ children }) {
               )}
             >
               <div className="flex-1 flex flex-col pt-5 pb-4 overflow-hidden">
-                <div className="flex items-center flex-shrink-0 px-4 h-7">
+                <div className="h-[67px]">
                   {isExpanded ? (
                     <Image
                       width={300}
                       height={67}
+                      layout="responsive"
                       src="/logo.png"
-                      alt="Workflow"
+                      alt="DomeDB Logo"
                     />
                   ) : (
-                    <Image
-                      width={40}
-                      height={40}
-                      src="/logo_sm.png"
-                      alt="Workflow"
-                    />
-                  )}
-                </div>
-                <hr
-                  className="border-t border-gray-200 my-5"
-                  aria-hidden="true"
-                />
-
-                <div className="p-2">
-                  {isExpanded ? (
-                    <DatabaseSelect />
-                  ) : (
-                    <div className="flex-1 px-2 space-y-1">
-                      <Link href="#">
-                        <a className="text-gray-600 hover:bg-gray-50 hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
-                          <HomeIcon
-                            className="text-gray-400 group-hover:text-gray-500 mr-3 flex-shrink-0 h-6 w-6"
-                            aria-hidden="true"
-                          />
-                          <span
-                            className={classNames(!isExpanded ? "hidden" : "")}
-                          >
-                            DB
-                          </span>
-                        </a>
-                      </Link>
+                    <div className="flex justify-center">
+                      <Image
+                        width={40}
+                        height={40}
+                        src="/logo_sm.png"
+                        alt="DomeDB Logo"
+                      />
                     </div>
                   )}
                 </div>
-                <hr className="border-t border-gray-200" aria-hidden="true" />
 
-                <nav className="mt-5 flex-1" aria-label="Sidebar">
+                <nav className="flex-1" aria-label="Sidebar">
+                  <div className="px-2 space-y-1 h-24">
+                    {isExpanded ? (
+                      <div className="text-gray-600 px-2 py-2 text-sm font-medium rounded-md">
+                        <DatabaseSelect label="Projects" />
+                      </div>
+                    ) : (
+                      <div>
+                        <Link href="#">
+                          <a className="text-gray-600 hover:bg-[#EAEAEA] hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                            <HomeIcon
+                              className="text-gray-400 group-hover:text-gray-500 mr-3 flex-shrink-0 h-6 w-6"
+                              aria-hidden="true"
+                            />
+                            <span
+                              className={classNames(
+                                !isExpanded ? "hidden" : ""
+                              )}
+                            >
+                              DB
+                            </span>
+                          </a>
+                        </Link>
+                      </div>
+                    )}
+                  </div>
                   <div className="px-2 space-y-1">
                     {navigation.map((item) => (
                       <Link href={item.href} key={item.name}>
@@ -320,27 +321,16 @@ export default function Layout({ children }) {
               </div>
               <div className="flex-shrink-0 flex border-t border-gray-200 p-4 overflow-hidden">
                 <a href="#" className="flex-shrink-0 w-full group block">
-                  <div className="flex items-center">
-                    <div>
-                      <img
-                        className="inline-block h-9 w-9 rounded-full"
-                        src={user.imageUrl}
-                        alt=""
+                  <div>
+                    <a className="text-gray-600 hover:bg-[#EAEAEA] hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                      <HomeIcon
+                        className="text-gray-400 group-hover:text-gray-500 mr-3 flex-shrink-0 h-6 w-6"
+                        aria-hidden="true"
                       />
-                    </div>
-                    <div
-                      className={classNames(
-                        !isExpanded ? "hidden" : "",
-                        "ml-3"
-                      )}
-                    >
-                      <p className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
-                        {user.name}
-                      </p>
-                      <p className="text-xs font-medium text-gray-500 group-hover:text-gray-700">
-                        View profiled
-                      </p>
-                    </div>
+                      <span className={classNames(!isExpanded ? "hidden" : "")}>
+                        DB
+                      </span>
+                    </a>
                   </div>
                 </a>
               </div>

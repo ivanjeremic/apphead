@@ -34,16 +34,6 @@
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/domedb/[db]/functions.js"
-    ],
-    "/domedb/[db]/media": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/domedb/[db]/media.js"
-    ],
-    "/domedb/[db]/triggers": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/domedb/[db]/triggers.js"
     ]
   },
   "ampFirstPages": []

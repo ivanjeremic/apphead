@@ -69,24 +69,19 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function DatabaseSelect() {
+export default function DatabaseSelect({ label }) {
   const [selected, setSelected] = useState(people[3]);
 
   return (
     <Listbox value={selected} onChange={setSelected}>
       {({ open }) => (
-        <>
+        <Fragment>
           <Listbox.Label className="block text-sm font-medium text-gray-700">
-            Databases
+            {label}
           </Listbox.Label>
-          <div className="mt-1 relative">
-            <Listbox.Button className="relative w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-2 text-left cursor-default focus-ring-input sm:text-sm">
+          <div className="mt-1 relative mb-2">
+            <Listbox.Button className="relative w-full bg-white border border-gray-300 rounded-md shadow-sm pl-3 pr-10 py-1 text-left cursor-default focus-ring-input sm:text-sm">
               <span className="flex items-center">
-                <img
-                  src={selected.avatar}
-                  alt=""
-                  className="flex-shrink-0 h-6 w-6 rounded-full"
-                />
                 <span className="ml-3 block truncate">{selected.name}</span>
               </span>
               <span className="ml-3 absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
@@ -117,7 +112,7 @@ export default function DatabaseSelect() {
                     value={person}
                   >
                     {({ selected, active }) => (
-                      <>
+                      <Fragment>
                         <div className="flex items-center">
                           <img
                             src={person.avatar}
@@ -144,14 +139,15 @@ export default function DatabaseSelect() {
                             <CheckIcon className="h-5 w-5" aria-hidden="true" />
                           </span>
                         ) : null}
-                      </>
+                      </Fragment>
                     )}
                   </Listbox.Option>
                 ))}
+                <p>s</p>
               </Listbox.Options>
             </Transition>
           </div>
-        </>
+        </Fragment>
       )}
     </Listbox>
   );
