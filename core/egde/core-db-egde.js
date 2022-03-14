@@ -11,30 +11,30 @@ export default async function (db, opts, next) {
 
   // some other endpoint
   db.get("/admindb", async (request, reply) => {
-    let myDB = open({
+    let currentDB = open({
       path: `databases/admindb`,
       // any options go here, we can turn on compression like this:
       compression: true,
     });
 
-    await myDB.put("admindb", {
+    await currentDB.put("admindb", {
       clusters: [{ name: "c1", uri: "https://foo/api", databases: [] }],
     });
 
-    const res = myDB.get("admindb");
+    const res = currentDB.get("admindb");
 
     reply.send({ data: res });
   });
 
   // test database
   db.get("/www", async (request, reply) => {
-    let myDB = open({
+    let currentDB = open({
       path: `databases/my-db`,
       // any options go here, we can turn on compression like this:
       compression: true,
     });
 
-    await myDB.put("greeting", { someText: "Hello, World!" });
+    await currentDB.put("greeting", { someText: "Hello, World!" });
 
     reply.send({ data: "" });
   });
