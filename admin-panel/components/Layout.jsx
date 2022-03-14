@@ -1,6 +1,6 @@
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { ChevronLeftIcon } from "@heroicons/react/solid";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
 import Image from "next/image";
 import DatabaseSelect from "./DatabaseSelect";
 import { useRouter } from "next/router";
@@ -13,6 +13,7 @@ import { useSecondaryNavigation } from "../hooks/useSecondaryNavigation";
 import GalleryAside from "./GalleryAside";
 import FunctionsAside from "./FunctionsAside";
 import { useAppContext } from "../Context";
+import { useWindowSize } from "../hooks/useWindowSize";
 
 const user = {
   name: "Tom Cook",
@@ -44,6 +45,7 @@ export default function Layout({ children }) {
   const { pathname, query } = useRouter();
 
   const { width, height, ref } = useAppContext();
+  const size = useWindowSize();
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -54,8 +56,11 @@ export default function Layout({ children }) {
   const secondaryNavigation = useSecondaryNavigation(pathname, query.db);
 
   return (
-    <>
-      <div className="relative h-screen flex overflow-hidden bg-white">
+    <div>
+      <div
+        className="relative flex overflow-hidden bg-white"
+        style={{ height: size.height - 32 }}
+      >
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog
             as="div"
@@ -192,7 +197,6 @@ export default function Layout({ children }) {
             </div>
           </Dialog>
         </Transition.Root>
-
         {/* Static sidebar for desktop */}
         <div className="hidden lg:flex lg:flex-shrink-0">
           <div
@@ -372,34 +376,20 @@ export default function Layout({ children }) {
               className="flex-1 relative z-0 focus:outline-none xl:order-last"
             >
               {/* Breadcrumb */}
-              <nav
-                className="flex items-start px-4 py-3 sm:px-6 lg:px-8 xl:hidden"
-                aria-label="Breadcrumb"
-              >
-                <a
-                  href="#"
-                  className="inline-flex items-center space-x-3 text-sm font-medium text-gray-900"
-                >
-                  <ChevronLeftIcon
-                    className="-ml-2 h-5 w-5 text-gray-400"
-                    aria-hidden="true"
-                  />
-                  <span>Directory</span>
-                </a>
-              </nav>
               {children}
             </main>
-
             <aside className="hidden xl:order-first xl:flex xl:flex-col flex-shrink-0 w-96 border-r border-gray-200">
               <Aside pathname={pathname} />
             </aside>
           </div>
-
-          {/* <div className="h-8 bg-black text-white flex items-center justify-end p-2">
-            <div>version: 0.2</div>
-          </div> */}
         </div>
       </div>
-    </>
+      <div
+        className="bg-black text-white flex items-center justify-end p-2"
+        style={{ height: "32px" }}
+      >
+        <div>version: 0.2</div>
+      </div>
+    </div>
   );
 }

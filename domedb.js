@@ -19,10 +19,6 @@ async function domedb(app, opts) {
     forceESM: true,
   });
 
-  app.get("/xxx", (request, reply) => {
-    reply.send({ xxx: "xxx" });
-  });
-
   app.get("/restart", async (req, reply) => {
     await app.restart();
 

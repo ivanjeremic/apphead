@@ -24,16 +24,6 @@
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
-    ],
-    "/domedb/[db]/clusters": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/domedb/[db]/clusters.js"
-    ],
-    "/domedb/[db]/functions": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/domedb/[db]/functions.js"
     ]
   },
   "ampFirstPages": []
