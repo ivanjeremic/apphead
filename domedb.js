@@ -13,12 +13,17 @@ async function domedb(app, opts) {
   // opts are the options passed to start()
   console.log("plugin loaded", opts);
 
+  // load core
+  await app.register(import("./core/core.js"));
+
+  // load plugins
   await app.register(autoLoad, {
     dir: join(__dirname, "plugins"),
     maxDepth: 1,
     forceESM: true,
   });
 
+  // refresh on new route/plugin added
   app.get("/restart", async (req, reply) => {
     await app.restart();
 

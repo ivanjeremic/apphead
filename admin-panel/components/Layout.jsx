@@ -1,6 +1,12 @@
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
+import {
+  ChevronLeftIcon,
+  FilterIcon,
+  MailIcon,
+  PhoneIcon,
+  SearchIcon,
+} from "@heroicons/react/solid";
 import Image from "next/image";
 import DatabaseSelect from "./DatabaseSelect";
 import { useRouter } from "next/router";
@@ -15,33 +21,44 @@ import FunctionsAside from "./FunctionsAside";
 import { useAppContext } from "../Context";
 import { useWindowSize } from "../hooks/useWindowSize";
 
+const team = [
+  {
+    name: "Leslie Alexander",
+    handle: "lesliealexander",
+    role: "Co-Founder / CEO",
+    imageUrl:
+      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+  },
+  {
+    name: "Michael Foster",
+    handle: "michaelfoster",
+    role: "Co-Founder / CTO",
+    imageUrl:
+      "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+  },
+  {
+    name: "Dries Vincent",
+    handle: "driesvincent",
+    role: "Manager, Business Relations",
+    imageUrl:
+      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+  },
+  {
+    name: "Lindsay Walton",
+    handle: "lindsaywalton",
+    role: "Front-end Developer",
+    imageUrl:
+      "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+  },
+];
+
 const user = {
   name: "Tom Cook",
   imageUrl:
     "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
 };
 
-const Aside = ({ pathname }) => {
-  if (pathname === "/admin") {
-    return <h2>Home</h2>;
-  }
-
-  if (pathname.includes("clusters")) {
-    return <Directory />;
-  }
-
-  if (pathname.includes("media")) {
-    return <GalleryAside />;
-  }
-
-  if (pathname.includes("functions")) {
-    return <FunctionsAside />;
-  }
-
-  return null;
-};
-
-export default function Layout({ children }) {
+export default function Layout({ children, title, actions, aside }) {
   const { pathname, query } = useRouter();
 
   const { width, height, ref } = useAppContext();
@@ -332,7 +349,7 @@ export default function Layout({ children }) {
                         aria-hidden="true"
                       />
                       <span className={classNames(!isExpanded ? "hidden" : "")}>
-                        DB
+                        DBs
                       </span>
                     </a>
                   </div>
@@ -340,14 +357,14 @@ export default function Layout({ children }) {
               </div>
             </div>
           </div>
-          <button
-            onClick={() => setIsExpanded(isExpanded ? false : true)}
-            className="bg-gray-200 w-4 opacity-70 flex items-center justify-center hover:bg-gray-300 transition-all ease-in-out duration-75 cursor-pointer"
-          >
-            {"<"}
-          </button>
         </div>
-        <div className="flex flex-col min-w-0 flex-1 overflow-hidden">
+        <div
+          onClick={() => setIsExpanded(isExpanded ? false : true)}
+          className="bg-gray-200 w-4 opacity-70 flex items-center justify-center hover:bg-gray-300 transition-all ease-in-out duration-75 cursor-pointer"
+        >
+          {"<"}
+        </div>
+        <div className="flex flex-col min-w-0 flex-1 overflow-hidden border-l border-gray-200">
           <div className="lg:hidden">
             <div className="flex items-center justify-between bg-gray-50 border-b border-gray-200 px-4 py-1.5">
               <div>
@@ -376,11 +393,67 @@ export default function Layout({ children }) {
               className="flex-1 relative z-0 focus:outline-none xl:order-last"
             >
               {/* Breadcrumb */}
-              {children}
+              <nav
+                className="flex items-start px-4 py-3 sm:px-6 lg:px-8 xl:hidden"
+                aria-label="Breadcrumb"
+              >
+                <a
+                  href="#"
+                  className="inline-flex items-center space-x-3 text-sm font-medium text-gray-900"
+                >
+                  <ChevronLeftIcon
+                    className="-ml-2 h-5 w-5 text-gray-400"
+                    aria-hidden="true"
+                  />
+                  <span>Directory</span>
+                </a>
+              </nav>
+
+              <article>
+                {/* Profile header */}
+                <div>
+                  <div className="mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="sm:flex sm:items-end sm:space-x-5">
+                      <div className="sm:flex-1 sm:min-w-0 sm:flex sm:items-center sm:justify-end sm:space-x-6 sm:pb-1">
+                        <div className="sm:hidden 2xl:block mt-6 min-w-0 flex-1">
+                          <h1 className="text-2xl font-bold text-gray-900 truncate">
+                            {title}
+                          </h1>
+                        </div>
+                        <div className="mt-6 flex flex-col justify-stretch space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
+                          {actions}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="hidden sm:block 2xl:hidden mt-6 min-w-0 flex-1">
+                      <h1 className="text-2xl font-bold text-gray-900 truncate">
+                        {title}
+                      </h1>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Tabs */}
+                <div className="mt-6 sm:mt-2 2xl:mt-5">
+                  <div className="border-b border-gray-200">
+                    <div className="mx-auto px-4 sm:px-6 lg:px-8">
+                      <nav className="-mb-px flex space-x-8" aria-label="Tabs">
+                        <div>Eins</div>
+                        <div>Eins</div>
+                      </nav>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Description list */}
+                <div className="mt-6 mx-auto">{children}</div>
+              </article>
             </main>
-            <aside className="hidden xl:order-first xl:flex xl:flex-col flex-shrink-0 w-96 border-r border-gray-200">
-              <Aside pathname={pathname} />
-            </aside>
+            {aside && (
+              <aside className="hidden xl:order-first xl:flex xl:flex-col flex-shrink-0 w-96 border-r border-gray-200">
+                {aside}
+              </aside>
+            )}
           </div>
         </div>
       </div>
