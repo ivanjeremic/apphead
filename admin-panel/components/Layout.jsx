@@ -1,5 +1,5 @@
 import { Fragment, useState } from "react";
-import { Dialog, Transition } from "@headlessui/react";
+import { Dialog, Menu, Transition } from "@headlessui/react";
 import {
   ChevronLeftIcon,
   FilterIcon,
@@ -11,7 +11,12 @@ import Image from "next/image";
 import DatabaseSelect from "./DatabaseSelect";
 import { useRouter } from "next/router";
 import Directory from "./Directory";
-import { XIcon, MenuIcon, HomeIcon } from "@heroicons/react/outline";
+import {
+  XIcon,
+  MenuIcon,
+  HomeIcon,
+  PlusIcon as PlusIconOutline,
+} from "@heroicons/react/outline";
 import { classNames } from "../utils/classNames";
 import Link from "next/link";
 import { useMainNavigation } from "../hooks/useMainNavigation";
@@ -20,6 +25,11 @@ import GalleryAside from "./GalleryAside";
 import FunctionsAside from "./FunctionsAside";
 import { useAppContext } from "../Context";
 import { useWindowSize } from "../hooks/useWindowSize";
+
+const userNavigation = [
+  { name: "Your profile", href: "#" },
+  { name: "Sign out", href: "#" },
+];
 
 const team = [
   {
@@ -409,32 +419,124 @@ export default function Layout({ children, title, actions, aside }) {
                 </a>
               </nav>
 
-              <article>
-                {/* Profile header */}
-                <div>
-                  <div className="mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="sm:flex sm:items-end sm:space-x-5">
-                      <div className="sm:flex-1 sm:min-w-0 sm:flex sm:items-center sm:justify-end sm:space-x-6 sm:pb-1">
-                        <div className="sm:hidden 2xl:block mt-6 min-w-0 flex-1">
-                          <h1 className="text-2xl font-bold text-gray-900 truncate">
-                            {title}
-                          </h1>
-                        </div>
-                        <div className="mt-6 flex flex-col justify-stretch space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
-                          {actions}
-                        </div>
+              {/* Profile header */}
+              <div className="border-b border-gray-200 shadow-sm">
+                <div className="mx-auto px-4 sm:px-6 lg:px-8">
+                  <div className="sm:flex sm:items-end sm:space-x-5">
+                    <div className="sm:flex-1 sm:min-w-0 sm:flex sm:items-center sm:justify-end sm:space-x-6 sm:pb-1">
+                      <div className="sm:hidden 2xl:block mt-6 min-w-0 flex-1">
+                        <h1 className="text-2xl font-bold text-gray-900 truncate">
+                          {title}
+                        </h1>
+                      </div>
+                      <div className="mt-6 flex flex-col justify-stretch space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
+                        {actions}
                       </div>
                     </div>
-                    <div className="hidden sm:block 2xl:hidden mt-6 min-w-0 flex-1">
-                      <h1 className="text-2xl font-bold text-gray-900 truncate">
-                        {title}
-                      </h1>
-                    </div>
+                  </div>
+                  <div className="hidden sm:block 2xl:hidden mt-6 min-w-0 flex-1">
+                    <h1 className="text-2xl font-bold text-gray-900 truncate">
+                      {title}
+                    </h1>
                   </div>
                 </div>
+                <div className="flex-1 h-16 flex justify-between px-4 sm:px-6 lg:px-8">
+                  <div className="flex-1 flex">
+                    <form
+                      className="w-full flex md:ml-0"
+                      action="#"
+                      method="GET"
+                    >
+                      <label htmlFor="search-field" className="sr-only">
+                        Search all files
+                      </label>
+                      <div className="relative w-full text-gray-400 focus-within:text-gray-600">
+                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center">
+                          <SearchIcon
+                            className="flex-shrink-0 h-5 w-5"
+                            aria-hidden="true"
+                          />
+                        </div>
+                        <input
+                          name="search-field"
+                          id="search-field"
+                          className="h-full w-full border-transparent py-2 pl-8 pr-3 text-base text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-0 focus:border-transparent focus:placeholder-gray-400 sm:hidden"
+                          placeholder="Search"
+                          type="search"
+                        />
+                        <input
+                          name="search-field"
+                          id="search-field"
+                          className="hidden h-full w-full border-transparent py-2 pl-8 pr-3 text-base text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-0 focus:border-transparent focus:placeholder-gray-400 sm:block"
+                          placeholder="Search all files"
+                          type="search"
+                        />
+                      </div>
+                    </form>
+                  </div>
+                  <div className="ml-2 flex items-center space-x-4 sm:ml-6 sm:space-x-6">
+                    {/* Profile dropdown */}
+                    <Menu as="div" className="relative flex-shrink-0">
+                      {({ open }) => (
+                        <Fragment>
+                          <div>
+                            <Menu.Button className="bg-white rounded-full flex text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                              <span className="sr-only">Open user menu</span>
+                              <img
+                                className="h-8 w-8 rounded-full"
+                                src="https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=256&h=256&q=80"
+                                alt=""
+                              />
+                            </Menu.Button>
+                          </div>
+                          <Transition
+                            show={open}
+                            as={Fragment}
+                            enter="transition ease-out duration-100"
+                            enterFrom="transform opacity-0 scale-95"
+                            enterTo="transform opacity-100 scale-100"
+                            leave="transition ease-in duration-75"
+                            leaveFrom="transform opacity-100 scale-100"
+                            leaveTo="transform opacity-0 scale-95"
+                          >
+                            <Menu.Items
+                              static
+                              className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+                            >
+                              {userNavigation.map((item) => (
+                                <Menu.Item key={item.name}>
+                                  {({ active }) => (
+                                    <a
+                                      href={item.href}
+                                      className={classNames(
+                                        active ? "bg-gray-100" : "",
+                                        "block px-4 py-2 text-sm text-gray-700"
+                                      )}
+                                    >
+                                      {item.name}
+                                    </a>
+                                  )}
+                                </Menu.Item>
+                              ))}
+                            </Menu.Items>
+                          </Transition>
+                        </Fragment>
+                      )}
+                    </Menu>
 
+                    <button
+                      type="button"
+                      className="flex bg-indigo-600 p-1 rounded-full items-center justify-center text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    >
+                      <PlusIconOutline className="h-6 w-6" aria-hidden="true" />
+                      <span className="sr-only">Add file</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <article>
                 {/* Tabs */}
-                <div className="mt-6 sm:mt-2 2xl:mt-5">
+                {/* <div className="mt-6 sm:mt-2 2xl:mt-5">
                   <div className="border-b border-gray-200">
                     <div className="mx-auto px-4 sm:px-6 lg:px-8">
                       <nav className="-mb-px flex space-x-8" aria-label="Tabs">
@@ -443,10 +545,10 @@ export default function Layout({ children, title, actions, aside }) {
                       </nav>
                     </div>
                   </div>
-                </div>
+                </div> */}
 
                 {/* Description list */}
-                <div className="mt-6 mx-auto">{children}</div>
+                <div className="mx-auto">{children}</div>
               </article>
             </main>
             {aside && (

@@ -15,6 +15,18 @@ const useProps = (pathname) => {
     };
   }
 
+  if (pathname.includes("media")) {
+    return {
+      title: "Media",
+    };
+  }
+
+  if (pathname.includes("users")) {
+    return {
+      title: "Users",
+    };
+  }
+
   return {};
 };
 
