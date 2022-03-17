@@ -15,6 +15,16 @@
     "static/development/_middlewareManifest.js"
   ],
   "pages": {
+    "/[db]/clusters": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/[db]/clusters.js"
+    ],
+    "/[db]/users": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/[db]/users.js"
+    ],
     "/_app": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
@@ -24,41 +34,6 @@
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
-    ],
-    "/domedb": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/domedb.js"
-    ],
-    "/domedb/[db]/clusters": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/domedb/[db]/clusters.js"
-    ],
-    "/domedb/[db]/functions": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/domedb/[db]/functions.js"
-    ],
-    "/domedb/[db]/media": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/domedb/[db]/media.js"
-    ],
-    "/domedb/[db]/triggers": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/domedb/[db]/triggers.js"
-    ],
-    "/domedb/[db]/users": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/domedb/[db]/users.js"
-    ],
-    "/domedb/[db]/web-hosting": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/domedb/[db]/web-hosting.js"
     ]
   },
   "ampFirstPages": []

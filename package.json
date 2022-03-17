@@ -4,6 +4,9 @@
   "description": "",
   "main": "domedb.js",
   "type": "module",
+  "bin": {
+    "domedb": "./bin/domedb"
+  },
   "engines": {
     "node": ">=16"
   },
@@ -24,6 +27,8 @@
   ],
   "author": "Ivan Jeremic",
   "license": "MIT",
+  "homepage": "https://domedb.com",
+  "bugs": "https://github.com/domedb/domedb/issues",
   "dependencies": {
     "@fastify/restartable": "^0.3.0",
     "@headlessui/react": "^1.5.0",
