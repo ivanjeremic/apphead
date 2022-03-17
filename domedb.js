@@ -1,9 +1,13 @@
 import autoLoad from "fastify-autoload";
 import { start } from "@fastify/restartable";
+import FastifyVite from "fastify-vite";
+import renderer from "fastify-vite-react";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 
 export const isDev = process.env.NODE_ENV !== "production";
+
+const root = import.meta.url;
 
 export const __filename = fileURLToPath(import.meta.url);
 
@@ -23,6 +27,11 @@ async function domedb(app, opts) {
     forceESM: true,
   });
 
+  await app.register(FastifyVite, {
+    root,
+    renderer,
+  });
+
   // refresh on new route/plugin added
   app.get("/restart", async (req, reply) => {
     await app.restart();
@@ -31,7 +40,7 @@ async function domedb(app, opts) {
   });
 }
 
-const { stop, restart, listen, inject } = await start({
+const { stop, restart, listen, inject, vite } = await start({
   protocol: "http", // or 'https'
   // key: ...,
   // cert: ...,
@@ -42,6 +51,8 @@ const { stop, restart, listen, inject } = await start({
   port: 3000,
   app: domedb,
 });
+
+await vite.commands();
 
 const { address, port } = await listen();
 

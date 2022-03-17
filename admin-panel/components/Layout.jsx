@@ -86,7 +86,7 @@ export default function Layout({ children, title, actions, aside }) {
     <div>
       <div
         className="relative flex overflow-hidden bg-white"
-        style={{ height: size.height - 32 }}
+        style={{ height: size.height - 32 || 0 }}
       >
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog

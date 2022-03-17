@@ -4,9 +4,6 @@
   "description": "",
   "main": "domedb.js",
   "type": "module",
-  "bin": {
-    "domedb": "./bin/domedb"
-  },
   "engines": {
     "node": ">=16"
   },
@@ -36,6 +33,7 @@
     "@monaco-editor/react": "^4.3.1",
     "@tailwindcss/aspect-ratio": "^0.4.0",
     "@tailwindcss/forms": "^0.5.0",
+    "bcrypt": "^5.0.1",
     "bson-objectid": "^2.0.2",
     "check-disk-space": "^3.2.0",
     "fastify": "^3.27.2",
@@ -67,6 +65,7 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-resize-detector": "^7.0.0",
+    "react-router-dom": "^6.2.2",
     "redis": "^4.0.4"
   },
   "devDependencies": {
