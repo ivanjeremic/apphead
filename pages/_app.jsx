@@ -6,7 +6,7 @@ import ClustersActions from "../admin-panel/components/clusters/ClustersActions"
 import Directory from "../admin-panel/components/Directory";
 import "../styles/main.css";
 
-const useProps = (pathname) => {
+const useLayoutProps = (pathname) => {
   if (pathname.includes("clusters")) {
     return {
       title: "Clusters",
@@ -33,7 +33,7 @@ const useProps = (pathname) => {
 function LayoutContainer({ children }) {
   const { pathname } = useRouter();
 
-  const props = useProps(pathname);
+  const props = useLayoutProps(pathname);
 
   if (pathname === "/" || pathname === "/domedb") {
     return <Fragment>{children}</Fragment>;

@@ -1,6 +1,5 @@
 {
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
-  "/_document": "pages/_document.js",
-  "/domedb/[db]/clusters": "pages/domedb/[db]/clusters.js"
+  "/_document": "pages/_document.js"
 }
