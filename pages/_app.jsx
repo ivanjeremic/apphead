@@ -1,16 +1,16 @@
 import { Fragment } from "react";
 import { useRouter } from "next/router";
-import Layout from "../admin-panel/components//Layout";
+import Layout from "../admin-panel/components/Layout";
 import Context from "../admin-panel/Context";
-import ClustersActions from "../admin-panel/components/clusters/ClustersActions";
-import Directory from "../admin-panel/components//Directory";
+import ClusterActions from "../admin-panel/components/clusters/ClustersActions";
+import Directory from "../admin-panel/components/Directory";
 import "../styles/main.css";
 
 const useLayoutProps = (pathname) => {
   if (pathname.includes("clusters")) {
     return {
       title: "Clusters",
-      actions: <ClustersActions />,
+      actions: <ClusterActions />,
       aside: <Directory />,
     };
   }

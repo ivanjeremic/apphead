@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "node domedb.js",
-    "dev": "node domedb.js && npx tailwindcss -c tailwind.config.cjs -i ./styles/globals.css -o ./styles/main.css --watch",
+    "dev": "node domedb.js",
     "tw": "npx tailwindcss -c tailwind.config.cjs -i ./styles/globals.css -o ./styles/main.css --watch",
     "nb": "next build",
     "ns": "next start"
@@ -36,7 +36,7 @@
     "bcrypt": "^5.0.1",
     "bson-objectid": "^2.0.2",
     "check-disk-space": "^3.2.0",
-    "fastify": "^3.27.2",
+    "fastify": "^3.27.4",
     "fastify-autoload": "^3.11.0",
     "fastify-basic-auth": "^2.2.0",
     "fastify-bearer-auth": "^6.2.0",

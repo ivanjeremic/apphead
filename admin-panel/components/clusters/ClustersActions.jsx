@@ -67,7 +67,7 @@ const publishingOptions = [
   },
 ];
 
-export default function Actions() {
+export default function ClusterActions() {
   const [selected, setSelected] = useState(publishingOptions[0]);
 
   return (
