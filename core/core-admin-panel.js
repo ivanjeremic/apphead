@@ -1,7 +1,5 @@
-import FastifyNext from "fastify-nextjs";
-
 export default async function (db, opts, next) {
-  db.register(FastifyNext).after(() => {
+  await db.register(import("fastify-nextjs")); /* .after(() => {
     db.next("/domedb/:db");
     db.next("/domedb/:db/clusters");
     db.next("/domedb/:db/users");
@@ -11,5 +9,5 @@ export default async function (db, opts, next) {
     db.next("/domedb/:db/web-hosting");
     db.next("/domedb/:db/plugins");
     db.next("/domedb/:db/settings");
-  });
+  }); */
 }

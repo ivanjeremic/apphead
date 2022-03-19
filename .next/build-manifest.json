@@ -25,15 +25,10 @@
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
-    "/domedb/[db]/clusters": [
+    "/domedb/[db]/users": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/domedb/[db]/clusters.js"
-    ],
-    "/domedb/[db]/web-hosting": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/domedb/[db]/web-hosting.js"
+      "static/chunks/pages/domedb/[db]/users.js"
     ]
   },
   "ampFirstPages": []

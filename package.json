@@ -1,15 +1,18 @@
 {
   "name": "domedb",
-  "version": "1.0.0",
+  "version": "1.0.9",
   "description": "",
-  "main": "domedb.js",
+  "main": "./bin/domedb.js",
   "type": "module",
+  "bin": {
+    "domedb": "./bin/domedb.js"
+  },
   "engines": {
-    "node": ">=16"
+    "node": ">=14.8"
   },
   "scripts": {
-    "start": "node domedb.js",
-    "dev": "node domedb.js",
+    "start": "node ./bin/domedb.js",
+    "dev": "node ./bin/domedb.js",
     "tw": "npx tailwindcss -c tailwind.config.cjs -i ./styles/globals.css -o ./styles/main.css --watch",
     "nb": "next build",
     "ns": "next start"

@@ -1,7 +1,5 @@
-import FastifyMailer from "fastify-mailer";
-
 export default async function (db, opts, next) {
-  db.register(FastifyMailer, {
+  await db.register(import("fastify-mailer"), {
     defaults: {
       // set the default sender email address to jane.doe@example.tld
       from: "Jane Doe <jane.doe@example.tld>",
