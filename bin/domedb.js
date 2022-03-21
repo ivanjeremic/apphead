@@ -10,8 +10,6 @@ export const __filename = fileURLToPath(import.meta.url);
 
 export const __dirname = dirname(__filename);
 
-console.log("RUNNIIINNN", join(__dirname, "../plugins"));
-
 async function domedb(app, opts) {
   // load core
   await app.register(import("../core/core.js"));
