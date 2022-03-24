@@ -11,7 +11,7 @@
     "node": ">=14.8"
   },
   "workspaces": [
-    "packages/browser-sdk",
+    "packages/web-sdk",
     "packages/node-sdk",
     "packages/core",
     "packages/panel"
