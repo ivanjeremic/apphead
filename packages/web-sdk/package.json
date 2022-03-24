@@ -1,12 +1,12 @@
 {
-  "name": "@domedb/browser-sdk",
+  "name": "@domedb/web-sdk",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "keywords": [
     "domedb",
     "sdk",
-    "browser"
+    "web"
   ],
   "author": "",
   "license": "MIT",
