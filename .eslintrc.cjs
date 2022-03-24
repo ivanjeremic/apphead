@@ -4,12 +4,15 @@ module.exports = {
     es2021: true,
   },
   extends: [
-    'airbnb-base',
+    "airbnb-base",
   ],
   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
+    ecmaVersion: "latest",
+    sourceType: "module",
   },
   rules: {
+    quotes: ["error", "double"],
+    "node/file-extension-in-import": ["error", "always"],
+    "func-names": ["error", "never"],
   },
 };

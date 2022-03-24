@@ -1,0 +1,16 @@
+{
+  "name": "@domedb/core",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "keywords": [
+    "@domedb/core"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "fastify-mailer": "^2.3.1",
+    "lmdb": "^2.2.6"
+  }
+}

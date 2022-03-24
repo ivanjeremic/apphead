@@ -10,26 +10,40 @@ export const __filename = fileURLToPath(import.meta.url);
 
 export const __dirname = dirname(__filename);
 
-async function domedb(app, opts) {
-  // load core
-  await app.register(import("../core/core.js"));
+/**
+ * @description app entry.
+ */
+// eslint-disable-next-line no-unused-vars
+async function app(db, opts) {
+  /**
+   * @description load core.
+   */
+  await db.register(import("@domedb/core"));
 
-  // load plugins
-  await app.register(autoLoad, {
+  /**
+   * @description load plugins.
+   */
+  await db.register(autoLoad, {
     dir: join(__dirname, "../plugins"),
     maxDepth: 1,
     forceESM: true,
   });
 
-  // refresh on new route/plugin added
-  app.get("/restart", async (req, reply) => {
-    await app.restart();
+  /**
+   * @description refresh on new route/plugin added.
+   */
+  // eslint-disable-next-line no-unused-vars
+  db.get("/restart", async (req, reply) => {
+    await db.restart();
 
     return { status: "ok" };
   });
 }
 
-const { stop, restart, listen, inject } = await start({
+const {
+  // eslint-disable-next-line no-unused-vars
+  stop, restart, listen, inject,
+} = await start({
   protocol: "http", // or 'https'
   // key: ...,
   // cert: ...,
@@ -38,7 +52,7 @@ const { stop, restart, listen, inject } = await start({
   logger: true,
   host: "127.0.0.1",
   port: 3000,
-  app: domedb,
+  app,
 });
 
 const { address, port } = await listen();
