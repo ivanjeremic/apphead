@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@domedb/panel": "1.0.0",
     "fastify-mailer": "^2.3.1",
     "lmdb": "^2.2.6"
   }

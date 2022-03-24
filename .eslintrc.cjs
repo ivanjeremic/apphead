@@ -15,4 +15,5 @@ module.exports = {
     "node/file-extension-in-import": ["error", "always"],
     "func-names": ["error", "never"],
   },
+  ignorePatterns: ["packages/deno-sdk/*"],
 };

@@ -11,7 +11,10 @@
     "node": ">=14.8"
   },
   "workspaces": [
-    "packages/*"
+    "packages/browser-sdk",
+    "packages/node-sdk",
+    "packages/core",
+    "packages/panel"
   ],
   "scripts": {
     "start": "NODE_ENV=production node ./bin/domedb.js",
@@ -33,7 +36,7 @@
   "homepage": "https://domedb.com",
   "bugs": "https://github.com/domedb/domedb/issues",
   "dependencies": {
-    "@domedb/core": "^0.3.0",
+    "@domedb/core": "1.0.0",
     "@domedb/panel": "1.0.0",
     "@fastify/restartable": "^0.3.0",
     "@headlessui/react": "^1.5.0",
