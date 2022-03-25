@@ -1,8 +1,12 @@
-export default async function (db, opts, next) {
+const { join } = require("path");
+
+const isDev = process.env.NODE_ENV !== "production";
+
+async function main(db, opts, next) {
   await db
     .register(import("fastify-nextjs"), {
-      dev: process.env.NODE_ENV !== "production",
-      dir: "./node_modules/domedb-panel",
+      dev: isDev,
+      dir: isDev ? join(__dirname) : "./node_modules/@domedb/panel",
       conf: {
         poweredByHeader: false,
       },
@@ -19,3 +23,5 @@ export default async function (db, opts, next) {
       db.next("/domedb/:db/settings");
     });
 }
+
+module.exports = main;

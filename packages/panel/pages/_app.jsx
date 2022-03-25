@@ -9,7 +9,7 @@ import "../styles/main.css";
 const useLayoutProps = (pathname) => {
   if (pathname.includes("clusters")) {
     return {
-      title: "ClustersXXX",
+      title: "Clusters",
       actions: <ClusterActions />,
       aside: <Directory />,
     };

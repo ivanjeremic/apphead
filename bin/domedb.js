@@ -3,6 +3,16 @@ import autoLoad from "fastify-autoload";
 import { start } from "@fastify/restartable";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
+import pino from "pino";
+
+const logger = pino({
+  transport: {
+    target: "pino-pretty",
+    options: {
+      colorize: true,
+    },
+  },
+});
 
 export const isDev = process.env.NODE_ENV !== "production";
 
@@ -11,39 +21,31 @@ export const __filename = fileURLToPath(import.meta.url);
 export const __dirname = dirname(__filename);
 
 /**
- * @description app entry.
+ * @param {any} db
+ * @param {object} _opts
+ * @returns {Promise<any>}
+ * @description
  */
-// eslint-disable-next-line no-unused-vars
-async function app(db, opts) {
-  /**
-   * @description load core.
-   */
+async function app(db, _opts) {
+  // load core
   await db.register(import("@domedb/core"));
 
-  /**
-   * @description load plugins.
-   */
+  // load plugins.
   await db.register(autoLoad, {
     dir: join(__dirname, "../plugins"),
     maxDepth: 1,
     forceESM: true,
   });
 
-  /**
-   * @description refresh on new route/plugin added.
-   */
-  // eslint-disable-next-line no-unused-vars
-  db.get("/restart", async (req, reply) => {
+  // refresh on new route/plugin added.
+  db.get("/restart", async (_req, _reply) => {
     await db.restart();
 
     return { status: "ok" };
   });
 }
 
-const {
-  // eslint-disable-next-line no-unused-vars
-  stop, restart, listen, inject,
-} = await start({
+const { listen } = await start({
   protocol: "http", // or 'https'
   // key: ...,
   // cert: ...,
@@ -57,4 +59,4 @@ const {
 
 const { address, port } = await listen();
 
-console.log("DomeDB running", address, port);
+logger.info(`DomeDB running: ${address}:${port}`);
