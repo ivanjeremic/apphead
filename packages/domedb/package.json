@@ -1,8 +1,12 @@
 {
-  "name": "domedb-monorepo",
+  "name": "domedb",
   "version": "1.0.15",
-  "description": "domedb-monorepo",
+  "description": "",
+  "main": "./bin/domedb.js",
   "type": "module",
+  "bin": {
+    "domedb": "./bin/domedb.js"
+  },
   "engines": {
     "node": ">=16.14.2",
     "npm": ">=8.5.0"
@@ -16,8 +20,8 @@
     "packages/panel"
   ],
   "scripts": {
-    "develop:panel": "cross-env NODE_ENV=development node ./packages/domedb/bin/domedb.js",
-    "start:production": "cross-env NODE_ENV=production node ./packages/domedb/bin/domedb.js"
+    "develop:panel": "cross-env NODE_ENV=development node ./bin/domedb.js",
+    "start:production": "cross-env NODE_ENV=production node ./bin/domedb.js"
   },
   "keywords": [
     "database",
@@ -31,6 +35,17 @@
   "license": "MIT",
   "homepage": "https://domedb.com",
   "bugs": "https://github.com/domedb/domedb/issues",
+  "dependencies": {
+    "@domedb/core": "1.0.0",
+    "@domedb/panel": "1.0.0",
+    "@fastify/restartable": "^0.3.0",
+    "chalk": "^5.0.1",
+    "fastify": "^3.27.4",
+    "fastify-autoload": "^3.11.0",
+    "pino": "^7.9.2",
+    "pino-pretty": "^7.6.0",
+    "pm2": "^5.2.0"
+  },
   "devDependencies": {
     "concurrently": "^7.0.0",
     "eslint": "^8.11.0",
