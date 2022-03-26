@@ -1,6 +1,6 @@
 {
   "name": "domedb-monorepo",
-  "version": "1.0.15",
+  "version": "0.0.0",
   "description": "domedb-monorepo",
   "type": "module",
   "engines": {
