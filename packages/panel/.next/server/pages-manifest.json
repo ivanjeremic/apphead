@@ -1,0 +1,16 @@
+{
+  "/_error": "pages/_error.js",
+  "/_document": "pages/_document.js",
+  "/_app": "pages/_app.js",
+  "/domedb/[db]/clusters": "pages/domedb/[db]/clusters.html",
+  "/domedb/[db]/functions": "pages/domedb/[db]/functions.html",
+  "/domedb/[db]": "pages/domedb/[db].html",
+  "/domedb/[db]/media": "pages/domedb/[db]/media.html",
+  "/domedb/[db]/plugins": "pages/domedb/[db]/plugins.html",
+  "/domedb/[db]/settings": "pages/domedb/[db]/settings.html",
+  "/domedb/[db]/triggers": "pages/domedb/[db]/triggers.html",
+  "/domedb/[db]/users": "pages/domedb/[db]/users.html",
+  "/domedb/[db]/web-hosting": "pages/domedb/[db]/web-hosting.html",
+  "/": "pages/index.html",
+  "/404": "pages/404.html"
+}

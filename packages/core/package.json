@@ -1,6 +1,6 @@
 {
   "name": "@domedb/core",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Core plugin for DomeDB Server",
   "main": "index.js",
   "type": "module",
@@ -11,7 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "@domedb/node-sdk": "1.0.0",
-    "@domedb/panel": "1.0.0",
+    "@domedb/panel": "1.0.2",
     "fastify-mailer": "^2.3.1",
     "lmdb": "2.2.6",
     "bcrypt": "^5.0.1",

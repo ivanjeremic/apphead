@@ -1,7 +1,6 @@
 # folders
 .domedb
 packages
-plugins
 
 #files
 .eslint.cjs
