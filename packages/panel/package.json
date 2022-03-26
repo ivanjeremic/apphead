@@ -4,11 +4,9 @@
   "description": "",
   "main": "index.js",
   "keywords": [],
-  "author": "DomeDB",
+  "author": "Ivan Jeremic",
   "license": "MIT",
   "scripts": {
-    "start": "node ./bin/domedb.js",
-    "dev": "node ./bin/domedb.js",
     "tw": "npx tailwindcss -c tailwind.config.cjs -i ./styles/globals.css -o ./styles/main.css --watch",
     "nb": "next build",
     "nd": "next dev",

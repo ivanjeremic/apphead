@@ -4,7 +4,9 @@ import { start } from "@fastify/restartable";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 import pino from "pino";
+import chalk from "chalk";
 
+// eslint-disable-next-line no-unused-vars
 const logger = pino({
   transport: {
     target: "pino-pretty",
@@ -14,10 +16,13 @@ const logger = pino({
   },
 });
 
+/** @type {boolean} */
 export const isDev = process.env.NODE_ENV !== "production";
 
+/** @type {string} */
 export const __filename = fileURLToPath(import.meta.url);
 
+/** @type {string} */
 export const __dirname = dirname(__filename);
 
 /**
@@ -59,4 +64,5 @@ const { listen } = await start({
 
 const { address, port } = await listen();
 
-logger.info(`DomeDB running: ${address}:${port}`);
+// eslint-disable-next-line no-console
+console.log(chalk.green(`DomeDB running: ${address}:${port}`));

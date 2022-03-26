@@ -2,12 +2,13 @@ const { join } = require("path");
 
 const isDev = process.env.NODE_ENV !== "production";
 
-async function main(db, opts, next) {
+async function main(db, _opts, _next) {
   await db
     .register(import("fastify-nextjs"), {
       dev: isDev,
       dir: isDev ? join(__dirname) : "./node_modules/@domedb/panel",
       conf: {
+        distDir: '.domedb',
         poweredByHeader: false,
       },
     })

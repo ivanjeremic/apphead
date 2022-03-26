@@ -1,3 +1,4 @@
+/* eslint-disable node/file-extension-in-import */
 module.exports = {
   env: {
     browser: true,
@@ -12,14 +13,7 @@ module.exports = {
   },
   rules: {
     quotes: ["error", "double"],
-    "node/file-extension-in-import": [
-      "error",
-      "never",
-      {
-        tryExtensions: [".js", ".json", ".node"],
-        ".xxx": "never",
-      },
-    ],
+    "node/file-extension-in-import": false,
     "func-names": ["error", "never"],
     "no-underscore-dangle": ["error", { allow: ["__filename", "__dirname"] }],
     "no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
