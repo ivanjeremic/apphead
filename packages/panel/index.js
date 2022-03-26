@@ -8,7 +8,6 @@ async function main(db, _opts, _next) {
       dev: isDev,
       dir: isDev ? join(__dirname) : "./node_modules/@domedb/panel",
       conf: {
-        distDir: '.domedb',
         poweredByHeader: false,
       },
     })
