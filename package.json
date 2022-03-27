@@ -17,7 +17,8 @@
   ],
   "scripts": {
     "develop:panel": "cross-env NODE_ENV=development node ./packages/domedb/bin/domedb.js",
-    "start:production": "cross-env NODE_ENV=production node ./packages/domedb/bin/domedb.js"
+    "start:production": "cross-env NODE_ENV=production node ./packages/domedb/bin/domedb.js",
+    "publish:domedb": "npm --prefix ./packages/domedb run publish:npm"
   },
   "keywords": [
     "database",

@@ -1,6 +1,6 @@
 {
   "name": "domedb",
-  "version": "1.0.21",
+  "version": "1.0.24",
   "description": "",
   "main": "./bin/domedb.js",
   "type": "module",
@@ -10,6 +10,9 @@
   "engines": {
     "node": ">=16.14.2",
     "npm": ">=8.5.0"
+  },
+  "scripts": {
+    "publish:npm": "npm publish"
   },
   "keywords": [
     "database",
