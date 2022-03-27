@@ -24,3 +24,6 @@ The DomeDB Panel is a Next.js Application which uses SSR only, since the DomeDB 
 
 # Contribute to Core
 Soon...
+
+# Contribute to Official Plugin - /packages/plugins
+Official Plugins are Fastify-plugins which extend the functionality of DomeDB.
