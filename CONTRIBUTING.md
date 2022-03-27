@@ -20,7 +20,7 @@ This is a deno project and is not tracked by the Workspace feature of npm as you
 The Node & Deno SDKs need to have the exact same codebase except for the module imports and they are published diffrently.
 
 # Contribute to Panel - /packages/panel
-The DomeDB Panel is a Next.js Application which uses SSR only, since the DomeDB Server is a Backend built on Fastify the way Next.js is integrated is trough a Fastify plugin which uses the Next.js Custom Server,  https://nextjs.org/docs/advanced-features/custom-server. The Panel istself is a Fastify plugin aswell which is published to NPM @domedb/panel and used in @domedb/core.
+The DomeDB Panel is a Next.js Application which uses SSR only, since the DomeDB Server is a Backend built on Fastify the way Next.js is integrated is trough a Fastify plugin which uses the Next.js Custom Server, https://nextjs.org/docs/advanced-features/custom-server. The Panel istself is a Fastify plugin aswell which is published to NPM @domedb/panel and used in @domedb/core.
 
 # Contribute to Core
 Soon...
