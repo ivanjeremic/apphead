@@ -1,4 +1,3 @@
-/* eslint-disable node/file-extension-in-import */
 module.exports = {
   env: {
     browser: true,
@@ -11,7 +10,6 @@ module.exports = {
     ecmaVersion: "latest",
     sourceType: "module",
   },
-  plugins: ["workspaces"],
   rules: {
     quotes: ["error", "double"],
     "node/file-extension-in-import": false,
