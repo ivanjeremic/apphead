@@ -5,12 +5,13 @@ module.exports = {
     es2021: true,
   },
   extends: [
-    "airbnb-base",
+    "eslint:recommended"
   ],
   parserOptions: {
     ecmaVersion: "latest",
     sourceType: "module",
   },
+  plugins: ["workspaces"],
   rules: {
     quotes: ["error", "double"],
     "node/file-extension-in-import": false,
