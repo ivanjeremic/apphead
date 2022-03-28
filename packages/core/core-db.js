@@ -7,6 +7,8 @@ class CrudUtil {
   constructor(opts) {
     this.db = opts.db
 
+    this.hasOfflineCache = opts.hasOfflineCache
+
     this.currentDB = (collection) => open({
       path: `.domedb/databases/${this.db}/${collection}`,
       // any options go here, we can turn on compression like this:
@@ -15,18 +17,18 @@ class CrudUtil {
   }
 
   /**
+   * create collection
    * @param {string} collection
-   * @description create collection
    */
    async createCollection(collection) {
     await this.currentDB(collection).put(collection, {collectionMeta: {}});
   }
 
   /**
+   * get document from collection
    * @param {string} collection 
    * @param {string} key 
    * @returns {Promise<any>}
-   * @description get document from collection
    */
    async get(collection, key) {
     const doc = await this.currentDB(collection).get(key)
@@ -35,19 +37,19 @@ class CrudUtil {
   }
 
   /**
+   * write to document
    * @param {string} collection
    * @param {string} key
    * @param {*} value 
-   * @description write to document
    */
   async write(collection, key, value) {
     await this.currentDB(collection).put(key, value);
   }
 
   /**
+   * remove document
    * @param {string} collection 
    * @param {string} document 
-   * @description remove document
    */
   async remove(collection, document) {
     await this.currentDB(collection).remove(document, 'value1');
