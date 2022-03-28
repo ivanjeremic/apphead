@@ -1,5 +1,9 @@
-# PUBLISHING TO NPM
+# General Sugguestions
+If you are on VSCode we recommend a theme which uses colors that let the comments(JSDoc) appear more in the background,
+since the project uses JSDoc for typing it is easier for your eyes to seperate the JSDoc sections from the code.
+A theme that does that well is 'Dracula Webstorm Edition'.
 
+# PUBLISHING TO NPM
 DomeDB is a modern ESM Application which is easy to understand and contribute to and has no build steps except you are contrubuting to the Dashboard under the package "panel",
 When changes are made and merged into the repository all we need to do is update versions of each modified package and publish to npm and do `npm i` and then `npm publish` the new version of "domedb"
 
