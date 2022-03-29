@@ -2,6 +2,7 @@ import { open } from "lmdb";
 
 class CrudUtil {
   /**
+   * Storage Engine
    * @param {*} opts 
    */
   constructor(opts) {

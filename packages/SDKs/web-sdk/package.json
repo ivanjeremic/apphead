@@ -2,7 +2,8 @@
   "name": "@domedb/web-sdk",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./src/index.js",
+  "type": "module",
   "keywords": [
     "domedb",
     "sdk",
