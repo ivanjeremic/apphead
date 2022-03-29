@@ -1,6 +1,6 @@
 # General Sugguestions
-If you are on VSCode we recommend a theme which uses colors that let the comments(JSDoc) appear more in the background,
-since the project uses JSDoc for typing it is easier for your eyes to seperate the JSDoc sections from the code.
+If you are on VSCode we recommend a theme which uses colors that let the JSDoc Comments appear more in the background,
+since the project uses JSDoc for typing it is easier for your eyes to seperate the JSDoc sections from the Code.
 A theme that does that well is 'Dracula Webstorm Edition'.
 
 # PUBLISHING TO NPM
