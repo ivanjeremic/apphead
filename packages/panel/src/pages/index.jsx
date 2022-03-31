@@ -1,9 +1,9 @@
-import { LockClosedIcon } from "@heroicons/react/solid";
-import Image from "next/image";
-import { useRouter } from "next/router";
+import { LockClosedIcon } from '@heroicons/react/solid'
+import Image from 'next/image'
+import { useRouter } from 'next/router'
 
-export default function Example() {
-  const { push } = useRouter();
+export default function Example () {
+  const { push } = useRouter()
 
   return (
     <div className="h-screen bg-gray-50">
@@ -77,8 +77,8 @@ export default function Example() {
             <div>
               <button
                 onClick={(e) => {
-                  e.preventDefault();
-                  push("/domedb/foo/clusters");
+                  e.preventDefault()
+                  push('/domedb/foo/clusters')
                 }}
                 type="submit"
                 className="group relative w-full flex justify-center py-2 px-4 text-sm font-medium rounded-md text-white bg-black hover:text-black hover:bg-transparent focus:outline-none focus:ring-2 focus:ring-offset-2 border-2 border-black focus:ring-black"
@@ -96,5 +96,5 @@ export default function Example() {
         </div>
       </div>
     </div>
-  );
+  )
 }

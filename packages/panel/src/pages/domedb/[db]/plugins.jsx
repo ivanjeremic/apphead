@@ -1,3 +1,3 @@
-export default function plugins() {
-  return <div>plugins</div>;
+export default function plugins () {
+  return <div>plugins</div>
 }

@@ -1,18 +1,18 @@
-import React, { useRef } from "react";
-import Editor from "@monaco-editor/react";
-import { useAppContext } from "../../../admin-panel/Context";
+import React, { useRef } from 'react'
+import Editor from '@monaco-editor/react'
+import { useAppContext } from '../../../admin-panel/Context'
 
-export default function functions() {
-  const { width, height, ref } = useAppContext();
+export default function functions () {
+  const { width, height, ref } = useAppContext()
 
-  const editorRef = useRef(null);
+  const editorRef = useRef(null)
 
-  function handleEditorDidMount(editor, monaco) {
-    editorRef.current = editor;
+  function handleEditorDidMount (editor, monaco) {
+    editorRef.current = editor
   }
 
-  function showValue() {
-    alert(editorRef.current.getValue());
+  function showValue () {
+    alert(editorRef.current.getValue())
   }
 
   return (
@@ -22,5 +22,5 @@ export default function functions() {
       defaultValue="// some comment"
       onMount={handleEditorDidMount}
     />
-  );
+  )
 }

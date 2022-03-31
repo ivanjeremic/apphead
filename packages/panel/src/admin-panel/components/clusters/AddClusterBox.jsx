@@ -1,6 +1,6 @@
-import CreateClusterForm from "./CreateClusterForm";
+import CreateClusterForm from './CreateClusterForm'
 
-export default function AddClusterBox() {
+export default function AddClusterBox () {
   return (
     <>
       {/* <CreateClusterForm /> */}
@@ -28,5 +28,5 @@ export default function AddClusterBox() {
         </span>
       </button>
     </>
-  );
+  )
 }

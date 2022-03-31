@@ -1,3 +1,3 @@
-export default function webHosting() {
-  return <div>webHosting</div>;
+export default function webHosting () {
+    return <div>webHosting</div>
 }

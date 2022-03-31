@@ -11,6 +11,9 @@
   ],
   "author": "Ivan Jeremic",
   "license": "MIT",
+  "scripts": {
+    "publish:npm": "npm publish"
+  },
   "dependencies": {
     "idb": "^7.0.1"
   }

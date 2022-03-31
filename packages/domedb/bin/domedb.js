@@ -1,15 +1,15 @@
 #!/usr/bin/env node
-import autoLoad from "fastify-autoload";
-import { start } from "@fastify/restartable";
-import { join, dirname } from "path";
-import { fileURLToPath } from "url";
-import pino from "pino";
-import chalk from "chalk";
+import autoLoad from 'fastify-autoload';
+import { start } from '@fastify/restartable';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+import pino from 'pino';
+import chalk from 'chalk';
 
 // eslint-disable-next-line no-unused-vars
 const logger = pino({
   transport: {
-    target: "pino-pretty",
+    target: 'pino-pretty',
     options: {
       colorize: true,
     },
@@ -17,7 +17,7 @@ const logger = pino({
 });
 
 /** @type {boolean} */
-export const isDev = process.env.NODE_ENV !== "production";
+export const isDev = process.env.NODE_ENV !== 'production';
 
 /** @type {string} */
 export const __filename = fileURLToPath(import.meta.url);
@@ -33,31 +33,31 @@ export const __dirname = dirname(__filename);
  */
 async function app(db, _opts) {
   // load core
-  await db.register(import("@domedb/core"));
+  await db.register(import('@domedb/core'));
 
   // load plugins.
   await db.register(autoLoad, {
-    dir: join(__dirname, "../plugins"),
+    dir: join(__dirname, '../plugins'),
     maxDepth: 1,
     forceESM: true,
   });
 
   // refresh on new route/plugin added.
-  db.get("/restart", async (_req, _reply) => {
+  db.get('/restart', async (_req, _reply) => {
     await db.restart();
 
-    return { status: "ok" };
+    return { status: 'ok' };
   });
 }
 
 const { listen } = await start({
-  protocol: "http", // or 'https'
+  protocol: 'http', // or 'https'
   // key: ...,
   // cert: ...,
   // add all other options that you would pass to fastify
   pluginTimeout: isDev ? 20000 : undefined,
   logger: true,
-  host: "127.0.0.1",
+  host: '127.0.0.1',
   port: 3000,
   app,
 });

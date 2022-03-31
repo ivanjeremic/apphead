@@ -1,5 +1,5 @@
-import MediaGallery from "../../../admin-panel/components/MediaGallery";
+import MediaGallery from '../../../admin-panel/components/MediaGallery'
 
-export default function media() {
-  return <MediaGallery />;
+export default function media () {
+  return <MediaGallery />
 }

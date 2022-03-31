@@ -1,24 +1,24 @@
-import { CogIcon, ViewGridAddIcon } from "@heroicons/react/outline";
+import { CogIcon, ViewGridAddIcon } from '@heroicons/react/outline';
 
 export const useSecondaryNavigation = (pathname, db) => {
   const secondaryNavigation = [
     {
-      name: "Plugins",
+      name: 'Plugins',
       href: `/domedb/${db}/plugins`,
       icon: ViewGridAddIcon,
-      current: pathname.includes("plugins"),
+      current: pathname.includes('plugins'),
     },
     {
-      name: "Settings",
+      name: 'Settings',
       href: `/domedb/${db}/settings`,
       icon: CogIcon,
-      current: pathname.includes("settings"),
+      current: pathname.includes('settings'),
     },
     {
-      name: "Documention",
-      href: `#`,
+      name: 'Documention',
+      href: '#',
       icon: CogIcon,
-      current: pathname.includes("#"),
+      current: pathname.includes('#'),
     },
   ];
 

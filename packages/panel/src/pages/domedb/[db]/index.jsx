@@ -1,22 +1,22 @@
-export default function index() {
+export default function index () {
   // handler
   const create = () => {
-    const data = { username: "example" };
-    fetch("/create", {
-      method: "POST", // or 'PUT'
+    const data = { username: 'example' }
+    fetch('/create', {
+      method: 'POST', // or 'PUT'
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(data)
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("Success:", data);
+        console.log('Success:', data)
       })
       .catch((error) => {
-        console.error("Error:", error);
-      });
-  };
+        console.error('Error:', error)
+      })
+  }
 
-  return <h1>Dashboard</h1>;
+  return <h1>Dashboard</h1>
 }

@@ -12,7 +12,8 @@
   "author": "Ivan Jeremic",
   "license": "MIT",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "publish:npm": "npm publish"
   },
   "dependencies": {
     "@turf/turf": "^6.5.0",

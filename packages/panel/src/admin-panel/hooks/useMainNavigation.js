@@ -5,51 +5,51 @@ import {
   SearchCircleIcon,
   SpeakerphoneIcon,
   UserGroupIcon,
-} from "@heroicons/react/outline";
+} from '@heroicons/react/outline';
 
 export const useMainNavigation = (pathname, db) => {
   const navigation = [
     {
-      name: "Dashboard",
-      href: "/domedb",
+      name: 'Dashboard',
+      href: '/domedb',
       icon: HomeIcon,
-      current: pathname === "domedb",
+      current: pathname === 'domedb',
     },
     {
-      name: "Clusters",
+      name: 'Clusters',
       href: `/domedb/${db}/clusters`,
       icon: CalendarIcon,
-      current: pathname.includes("clusters"),
+      current: pathname.includes('clusters'),
     },
     {
-      name: "Users",
+      name: 'Users',
       href: `/domedb/${db}/users`,
       icon: UserGroupIcon,
-      current: pathname.includes("users"),
+      current: pathname.includes('users'),
     },
     {
-      name: "Media",
+      name: 'Media',
       href: `/domedb/${db}/media`,
       icon: SearchCircleIcon,
-      current: pathname.includes("media"),
+      current: pathname.includes('media'),
     },
     {
-      name: "Triggers",
+      name: 'Triggers',
       href: `/domedb/${db}/triggers`,
       icon: SpeakerphoneIcon,
-      current: pathname.includes("triggers"),
+      current: pathname.includes('triggers'),
     },
     {
-      name: "Functions",
+      name: 'Functions',
       href: `/domedb/${db}/functions`,
       icon: MapIcon,
-      current: pathname.includes("functions"),
+      current: pathname.includes('functions'),
     },
     {
-      name: "Web Hosting",
+      name: 'Web Hosting',
       href: `/domedb/${db}/web-hosting`,
       icon: MapIcon,
-      current: pathname.includes("web-hosting"),
+      current: pathname.includes('web-hosting'),
     },
   ];
 

@@ -1,5 +1,5 @@
-import ClustersContent from "../../../admin-panel/components/clusters/ClustersContent";
+import ClustersContent from '../../../admin-panel/components/clusters/ClustersContent'
 
-export default function clusters() {
-  return <ClustersContent />;
+export default function clusters () {
+  return <ClustersContent />
 }

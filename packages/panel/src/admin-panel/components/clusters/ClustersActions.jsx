@@ -12,63 +12,63 @@ import {
   LocationMarkerIcon,
   MailIcon,
   PencilIcon,
-  SearchIcon,
-} from "@heroicons/react/solid";
-import { Disclosure, Listbox, Menu, Transition } from "@headlessui/react";
-import { Fragment, useState } from "react";
-import { classNames } from "../../utils/classNames";
+  SearchIcon
+} from '@heroicons/react/solid'
+import { Disclosure, Listbox, Menu, Transition } from '@headlessui/react'
+import { Fragment, useState } from 'react'
+import { classNames } from '../../utils/classNames'
 
 const user = {
-  name: "Whitney Francis",
-  email: "whitneyfrancis@example.com",
+  name: 'Whitney Francis',
+  email: 'whitneyfrancis@example.com',
   imageUrl:
-    "https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-};
+    'https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+}
 const navigation = [
-  { name: "Dashboard", href: "#", current: true },
-  { name: "Jobs", href: "#", current: false },
-  { name: "Applicants", href: "#", current: false },
-  { name: "Company", href: "#", current: false },
-];
+  { name: 'Dashboard', href: '#', current: true },
+  { name: 'Jobs', href: '#', current: false },
+  { name: 'Applicants', href: '#', current: false },
+  { name: 'Company', href: '#', current: false }
+]
 const userNavigation = [
-  { name: "Your Profile", href: "#" },
-  { name: "Settings", href: "#" },
-  { name: "Sign out", href: "#" },
-];
+  { name: 'Your Profile', href: '#' },
+  { name: 'Settings', href: '#' },
+  { name: 'Sign out', href: '#' }
+]
 const tabs = [
-  { name: "Applied", href: "#", count: "2", current: false },
-  { name: "Phone Screening", href: "#", count: "4", current: false },
-  { name: "Interview", href: "#", count: "6", current: true },
-  { name: "Offer", href: "#", current: false },
-  { name: "Disqualified", href: "#", current: false },
-];
+  { name: 'Applied', href: '#', count: '2', current: false },
+  { name: 'Phone Screening', href: '#', count: '4', current: false },
+  { name: 'Interview', href: '#', count: '6', current: true },
+  { name: 'Offer', href: '#', current: false },
+  { name: 'Disqualified', href: '#', current: false }
+]
 const candidates = [
   {
-    name: "Emily Selman",
-    email: "emilyselman@example.com",
+    name: 'Emily Selman',
+    email: 'emilyselman@example.com',
     imageUrl:
-      "https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-    applied: "January 7, 2020",
-    appliedDatetime: "2020-07-01T15:34:56",
-    status: "Completed phone screening",
-  },
+      'https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
+    applied: 'January 7, 2020',
+    appliedDatetime: '2020-07-01T15:34:56',
+    status: 'Completed phone screening'
+  }
   // More candidates...
-];
+]
 const publishingOptions = [
   {
-    name: "Published",
-    description: "This job posting can be viewed by anyone who has the link.",
-    current: true,
+    name: 'Published',
+    description: 'This job posting can be viewed by anyone who has the link.',
+    current: true
   },
   {
-    name: "Draft",
-    description: "This job posting will no longer be publicly accessible.",
-    current: false,
-  },
-];
+    name: 'Draft',
+    description: 'This job posting will no longer be publicly accessible.',
+    current: false
+  }
+]
 
-export default function ClusterActions() {
-  const [selected, setSelected] = useState(publishingOptions[0]);
+export default function ClusterActions () {
+  const [selected, setSelected] = useState(publishingOptions[0])
 
   return (
     <Fragment>
@@ -141,9 +141,9 @@ export default function ClusterActions() {
                         className={({ active }) =>
                           classNames(
                             active
-                              ? "text-white bg-purple-500"
-                              : "text-gray-900",
-                            "cursor-default select-none relative p-4 text-sm"
+                              ? 'text-white bg-purple-500'
+                              : 'text-gray-900',
+                            'cursor-default select-none relative p-4 text-sm'
                           )
                         }
                         value={option}
@@ -153,15 +153,16 @@ export default function ClusterActions() {
                             <div className="flex justify-between">
                               <p
                                 className={
-                                  selected ? "font-semibold" : "font-normal"
+                                  selected ? 'font-semibold' : 'font-normal'
                                 }
                               >
                                 {option.name}
                               </p>
-                              {selected ? (
+                              {selected
+                                ? (
                                 <span
                                   className={
-                                    active ? "text-white" : "text-purple-500"
+                                    active ? 'text-white' : 'text-purple-500'
                                   }
                                 >
                                   <CheckIcon
@@ -169,12 +170,13 @@ export default function ClusterActions() {
                                     aria-hidden="true"
                                   />
                                 </span>
-                              ) : null}
+                                  )
+                                : null}
                             </div>
                             <p
                               className={classNames(
-                                active ? "text-purple-200" : "text-gray-500",
-                                "mt-2"
+                                active ? 'text-purple-200' : 'text-gray-500',
+                                'mt-2'
                               )}
                             >
                               {option.description}
@@ -191,5 +193,5 @@ export default function ClusterActions() {
         </Listbox>
       </span>
     </Fragment>
-  );
+  )
 }

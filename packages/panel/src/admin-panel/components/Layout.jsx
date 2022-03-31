@@ -1,86 +1,86 @@
-import { Fragment, useState } from "react";
-import { Dialog, Menu, Transition } from "@headlessui/react";
+import { Fragment, useState } from 'react'
+import { Dialog, Menu, Transition } from '@headlessui/react'
 import {
   ChevronLeftIcon,
   FilterIcon,
   MailIcon,
   PhoneIcon,
-  SearchIcon,
-} from "@heroicons/react/solid";
-import Image from "next/image";
-import DatabaseSelect from "./DatabaseSelect";
-import { useRouter } from "next/router";
-import Directory from "./Directory";
+  SearchIcon
+} from '@heroicons/react/solid'
+import Image from 'next/image'
+import DatabaseSelect from './DatabaseSelect'
+import { useRouter } from 'next/router'
+import Directory from './Directory'
 import {
   XIcon,
   MenuIcon,
   HomeIcon,
-  PlusIcon as PlusIconOutline,
-} from "@heroicons/react/outline";
-import { classNames } from "../utils/classNames";
-import Link from "next/link";
-import { useMainNavigation } from "../hooks/useMainNavigation";
-import { useSecondaryNavigation } from "../hooks/useSecondaryNavigation";
-import GalleryAside from "./GalleryAside";
-import FunctionsAside from "./FunctionsAside";
-import { useAppContext } from "../Context";
-import { useWindowSize } from "../hooks/useWindowSize";
+  PlusIcon as PlusIconOutline
+} from '@heroicons/react/outline'
+import { classNames } from '../utils/classNames'
+import Link from 'next/link'
+import { useMainNavigation } from '../hooks/useMainNavigation'
+import { useSecondaryNavigation } from '../hooks/useSecondaryNavigation'
+import GalleryAside from './GalleryAside'
+import FunctionsAside from './FunctionsAside'
+import { useAppContext } from '../Context'
+import { useWindowSize } from '../hooks/useWindowSize'
 
 const userNavigation = [
-  { name: "Your profile", href: "#" },
-  { name: "Sign out", href: "#" },
-];
+  { name: 'Your profile', href: '#' },
+  { name: 'Sign out', href: '#' }
+]
 
 const team = [
   {
-    name: "Leslie Alexander",
-    handle: "lesliealexander",
-    role: "Co-Founder / CEO",
+    name: 'Leslie Alexander',
+    handle: 'lesliealexander',
+    role: 'Co-Founder / CEO',
     imageUrl:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
   },
   {
-    name: "Michael Foster",
-    handle: "michaelfoster",
-    role: "Co-Founder / CTO",
+    name: 'Michael Foster',
+    handle: 'michaelfoster',
+    role: 'Co-Founder / CTO',
     imageUrl:
-      "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+      'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
   },
   {
-    name: "Dries Vincent",
-    handle: "driesvincent",
-    role: "Manager, Business Relations",
+    name: 'Dries Vincent',
+    handle: 'driesvincent',
+    role: 'Manager, Business Relations',
     imageUrl:
-      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+      'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
   },
   {
-    name: "Lindsay Walton",
-    handle: "lindsaywalton",
-    role: "Front-end Developer",
+    name: 'Lindsay Walton',
+    handle: 'lindsaywalton',
+    role: 'Front-end Developer',
     imageUrl:
-      "https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-  },
-];
+      'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+  }
+]
 
 const user = {
-  name: "Tom Cook",
+  name: 'Tom Cook',
   imageUrl:
-    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-};
+    'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+}
 
-export default function Layout({ children, title, actions, aside }) {
-  const { pathname, query } = useRouter();
+export default function Layout ({ children, title, actions, aside }) {
+  const { pathname, query } = useRouter()
 
-  const { width, height, ref } = useAppContext();
-  const size = useWindowSize();
+  const { width, height, ref } = useAppContext()
+  const size = useWindowSize()
 
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false)
 
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(true)
 
-  const navigation = useMainNavigation(pathname, query.db);
+  const navigation = useMainNavigation(pathname, query.db)
 
-  const secondaryNavigation = useSecondaryNavigation(pathname, query.db);
+  const secondaryNavigation = useSecondaryNavigation(pathname, query.db)
 
   return (
     <div>
@@ -156,18 +156,18 @@ export default function Layout({ children, title, actions, aside }) {
                           href={item.href}
                           className={classNames(
                             item.current
-                              ? "bg-gray-100 text-gray-900"
-                              : "text-gray-600 hover:bg-green-500 hover:text-gray-900",
-                            "group flex items-center px-2 py-2 text-base font-medium rounded-md"
+                              ? 'bg-gray-100 text-gray-900'
+                              : 'text-gray-600 hover:bg-green-500 hover:text-gray-900',
+                            'group flex items-center px-2 py-2 text-base font-medium rounded-md'
                           )}
-                          aria-current={item.current ? "page" : undefined}
+                          aria-current={item.current ? 'page' : undefined}
                         >
                           <item.icon
                             className={classNames(
                               item.current
-                                ? "text-gray-500"
-                                : "text-gray-400 group-hover:text-gray-500",
-                              "mr-4 h-6 w-6"
+                                ? 'text-gray-500'
+                                : 'text-gray-400 group-hover:text-gray-500',
+                              'mr-4 h-6 w-6'
                             )}
                             aria-hidden="true"
                           />
@@ -228,20 +228,21 @@ export default function Layout({ children, title, actions, aside }) {
         <div className="hidden lg:flex lg:flex-shrink-0">
           <div
             className={classNames(
-              isExpanded ? "w-64" : " w-14",
-              "flex flex-col transition-all ease-in-out duration-300"
+              isExpanded ? 'w-64' : ' w-14',
+              'flex flex-col transition-all ease-in-out duration-300'
             )}
           >
             {/* Sidebar component, swap this element with another sidebar if you like */}
             <div
               className={classNames(
-                "",
-                "flex flex-col h-0 flex-1 border-r border-gray-200"
+                '',
+                'flex flex-col h-0 flex-1 border-r border-gray-200'
               )}
             >
               <div className="flex-1 flex flex-col pt-5 pb-4 overflow-hidden">
                 <div className="h-[67px]">
-                  {isExpanded ? (
+                  {isExpanded
+                    ? (
                     <Image
                       width={300}
                       height={67}
@@ -249,7 +250,8 @@ export default function Layout({ children, title, actions, aside }) {
                       src="/logo.png"
                       alt="DomeDB Logo"
                     />
-                  ) : (
+                      )
+                    : (
                     <div className="flex justify-center">
                       <Image
                         width={40}
@@ -258,16 +260,18 @@ export default function Layout({ children, title, actions, aside }) {
                         alt="DomeDB Logo"
                       />
                     </div>
-                  )}
+                      )}
                 </div>
 
                 <nav className="flex-1" aria-label="Sidebar">
                   <div className="px-2 space-y-1 h-24">
-                    {isExpanded ? (
+                    {isExpanded
+                      ? (
                       <div className="text-gray-600 px-2 py-2 text-sm font-medium rounded-md">
                         <DatabaseSelect label="Projects" />
                       </div>
-                    ) : (
+                        )
+                      : (
                       <div>
                         <Link href="#">
                           <a className="text-gray-600 hover:bg-[#EAEAEA] hover:text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
@@ -277,7 +281,7 @@ export default function Layout({ children, title, actions, aside }) {
                             />
                             <span
                               className={classNames(
-                                !isExpanded ? "hidden" : ""
+                                !isExpanded ? 'hidden' : ''
                               )}
                             >
                               DB
@@ -285,7 +289,7 @@ export default function Layout({ children, title, actions, aside }) {
                           </a>
                         </Link>
                       </div>
-                    )}
+                        )}
                   </div>
                   <div className="px-2 space-y-1">
                     {navigation.map((item) => (
@@ -293,24 +297,24 @@ export default function Layout({ children, title, actions, aside }) {
                         <a
                           className={classNames(
                             item.current
-                              ? "bg-[#EAEAEA] text-gray-900"
-                              : "text-gray-600 hover:bg-[#EAEAEA] hover:text-gray-900",
-                            "group flex items-center px-2 py-2 text-sm font-medium rounded-md"
+                              ? 'bg-[#EAEAEA] text-gray-900'
+                              : 'text-gray-600 hover:bg-[#EAEAEA] hover:text-gray-900',
+                            'group flex items-center px-2 py-2 text-sm font-medium rounded-md'
                           )}
-                          aria-current={item.current ? "page" : undefined}
+                          aria-current={item.current ? 'page' : undefined}
                         >
                           <item.icon
                             className={classNames(
                               item.current
-                                ? "text-gray-500"
-                                : "text-gray-400 group-hover:text-gray-500",
-                              "mr-3 flex-shrink-0 h-6 w-6"
+                                ? 'text-gray-500'
+                                : 'text-gray-400 group-hover:text-gray-500',
+                              'mr-3 flex-shrink-0 h-6 w-6'
                             )}
                             aria-hidden="true"
                           />
                           <span
                             className={classNames(
-                              !isExpanded ? "hidden" : "whitespace-nowrap"
+                              !isExpanded ? 'hidden' : 'whitespace-nowrap'
                             )}
                           >
                             {item.name}
@@ -330,9 +334,9 @@ export default function Layout({ children, title, actions, aside }) {
                         <a
                           className={classNames(
                             item.current
-                              ? "bg-[#EAEAEA] text-gray-900"
-                              : "text-gray-600 hover:bg-[#EAEAEA] hover:text-gray-900",
-                            "group flex items-center px-2 py-2 text-sm font-medium rounded-md"
+                              ? 'bg-[#EAEAEA] text-gray-900'
+                              : 'text-gray-600 hover:bg-[#EAEAEA] hover:text-gray-900',
+                            'group flex items-center px-2 py-2 text-sm font-medium rounded-md'
                           )}
                         >
                           <item.icon
@@ -340,7 +344,7 @@ export default function Layout({ children, title, actions, aside }) {
                             aria-hidden="true"
                           />
                           <span
-                            className={classNames(!isExpanded ? "hidden" : "")}
+                            className={classNames(!isExpanded ? 'hidden' : '')}
                           >
                             {item.name}
                           </span>
@@ -358,7 +362,7 @@ export default function Layout({ children, title, actions, aside }) {
                         className="text-gray-400 group-hover:text-gray-500 mr-3 flex-shrink-0 h-6 w-6"
                         aria-hidden="true"
                       />
-                      <span className={classNames(!isExpanded ? "hidden" : "")}>
+                      <span className={classNames(!isExpanded ? 'hidden' : '')}>
                         DBs
                       </span>
                     </a>
@@ -369,10 +373,10 @@ export default function Layout({ children, title, actions, aside }) {
           </div>
         </div>
         <div
-          onClick={() => setIsExpanded(isExpanded ? false : true)}
+          onClick={() => setIsExpanded(!isExpanded)}
           className="bg-gray-200 w-4 opacity-70 flex items-center justify-center hover:bg-gray-300 transition-all ease-in-out duration-75 cursor-pointer"
         >
-          {"<"}
+          {'<'}
         </div>
         <div className="flex flex-col min-w-0 flex-1 overflow-hidden border-l border-gray-200">
           <div className="lg:hidden">
@@ -509,8 +513,8 @@ export default function Layout({ children, title, actions, aside }) {
                                     <a
                                       href={item.href}
                                       className={classNames(
-                                        active ? "bg-gray-100" : "",
-                                        "block px-4 py-2 text-sm text-gray-700"
+                                        active ? 'bg-gray-100' : '',
+                                        'block px-4 py-2 text-sm text-gray-700'
                                       )}
                                     >
                                       {item.name}
@@ -561,10 +565,10 @@ export default function Layout({ children, title, actions, aside }) {
       </div>
       <div
         className="bg-black text-white flex items-center justify-end p-2"
-        style={{ height: "32px" }}
+        style={{ height: '32px' }}
       >
         <div>version: 0.2</div>
       </div>
     </div>
-  );
+  )
 }

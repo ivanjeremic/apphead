@@ -1,5 +1,5 @@
-import { Fragment, useState } from "react";
-import { Dialog, Menu, Transition } from "@headlessui/react";
+import { Fragment, useState } from 'react'
+import { Dialog, Menu, Transition } from '@headlessui/react'
 import {
   CogIcon,
   CollectionIcon,
@@ -10,50 +10,50 @@ import {
   PlusIcon as PlusIconOutline,
   UserGroupIcon,
   ViewGridIcon as ViewGridIconOutline,
-  XIcon,
-} from "@heroicons/react/outline";
+  XIcon
+} from '@heroicons/react/outline'
 import {
   PencilIcon,
   PlusIcon as PlusIconSolid,
   SearchIcon,
   ViewGridIcon as ViewGridIconSolid,
-  ViewListIcon,
-} from "@heroicons/react/solid";
+  ViewListIcon
+} from '@heroicons/react/solid'
 
 const navigation = [
-  { name: "Home", href: "#", icon: HomeIcon, current: false },
-  { name: "All Files", href: "#", icon: ViewGridIconOutline, current: false },
-  { name: "Photos", href: "#", icon: PhotographIcon, current: true },
-  { name: "Shared", href: "#", icon: UserGroupIcon, current: false },
-  { name: "Albums", href: "#", icon: CollectionIcon, current: false },
-  { name: "Settings", href: "#", icon: CogIcon, current: false },
-];
+  { name: 'Home', href: '#', icon: HomeIcon, current: false },
+  { name: 'All Files', href: '#', icon: ViewGridIconOutline, current: false },
+  { name: 'Photos', href: '#', icon: PhotographIcon, current: true },
+  { name: 'Shared', href: '#', icon: UserGroupIcon, current: false },
+  { name: 'Albums', href: '#', icon: CollectionIcon, current: false },
+  { name: 'Settings', href: '#', icon: CogIcon, current: false }
+]
 const userNavigation = [
-  { name: "Your profile", href: "#" },
-  { name: "Sign out", href: "#" },
-];
+  { name: 'Your profile', href: '#' },
+  { name: 'Sign out', href: '#' }
+]
 const tabs = [
-  { name: "Recently Viewed", href: "#", current: true },
-  { name: "Recently Added", href: "#", current: false },
-  { name: "Favorited", href: "#", current: false },
-];
+  { name: 'Recently Viewed', href: '#', current: true },
+  { name: 'Recently Added', href: '#', current: false },
+  { name: 'Favorited', href: '#', current: false }
+]
 const files = [
   {
-    name: "IMG_4985.HEIC",
-    size: "3.9 MB",
+    name: 'IMG_4985.HEIC',
+    size: '3.9 MB',
     source:
-      "https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80",
-    current: true,
-  },
+      'https://images.unsplash.com/photo-1582053433976-25c00369fc93?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=512&q=80',
+    current: true
+  }
   // More files...
-];
+]
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
+function classNames (...classes) {
+  return classes.filter(Boolean).join(' ')
 }
 
-export default function MediaGallery() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+export default function MediaGallery () {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
     <div className="relative h-screen bg-gray-50 flex overflow-hidden">
@@ -123,18 +123,18 @@ export default function MediaGallery() {
                         href={item.href}
                         className={classNames(
                           item.current
-                            ? "bg-indigo-800 text-white"
-                            : "text-indigo-100 hover:bg-indigo-800 hover:text-white",
-                          "group py-2 px-3 rounded-md flex items-center text-sm font-medium"
+                            ? 'bg-indigo-800 text-white'
+                            : 'text-indigo-100 hover:bg-indigo-800 hover:text-white',
+                          'group py-2 px-3 rounded-md flex items-center text-sm font-medium'
                         )}
-                        aria-current={item.current ? "page" : undefined}
+                        aria-current={item.current ? 'page' : undefined}
                       >
                         <item.icon
                           className={classNames(
                             item.current
-                              ? "text-white"
-                              : "text-indigo-300 group-hover:text-white",
-                            "mr-3 h-6 w-6"
+                              ? 'text-white'
+                              : 'text-indigo-300 group-hover:text-white',
+                            'mr-3 h-6 w-6'
                           )}
                           aria-hidden="true"
                         />
@@ -207,12 +207,12 @@ export default function MediaGallery() {
                         <a
                           key={tab.name}
                           href={tab.href}
-                          aria-current={tab.current ? "page" : undefined}
+                          aria-current={tab.current ? 'page' : undefined}
                           className={classNames(
                             tab.current
-                              ? "border-indigo-500 text-indigo-600"
-                              : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300",
-                            "whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm"
+                              ? 'border-indigo-500 text-indigo-600'
+                              : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
+                            'whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm'
                           )}
                         >
                           {tab.name}
@@ -256,17 +256,17 @@ export default function MediaGallery() {
                       <div
                         className={classNames(
                           file.current
-                            ? "ring-2 ring-offset-2 ring-indigo-500"
-                            : "focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-offset-gray-100 focus-within:ring-indigo-500",
-                          "group block w-full aspect-w-10 aspect-h-7 rounded-lg bg-gray-100 overflow-hidden"
+                            ? 'ring-2 ring-offset-2 ring-indigo-500'
+                            : 'focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-offset-gray-100 focus-within:ring-indigo-500',
+                          'group block w-full aspect-w-10 aspect-h-7 rounded-lg bg-gray-100 overflow-hidden'
                         )}
                       >
                         <img
                           src={file.source}
                           alt=""
                           className={classNames(
-                            file.current ? "" : "group-hover:opacity-75",
-                            "object-cover pointer-events-none"
+                            file.current ? '' : 'group-hover:opacity-75',
+                            'object-cover pointer-events-none'
                           )}
                         />
                         <button
@@ -293,5 +293,5 @@ export default function MediaGallery() {
         </div>
       </div>
     </div>
-  );
+  )
 }

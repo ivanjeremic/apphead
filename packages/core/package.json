@@ -9,8 +9,12 @@
   ],
   "author": "Ivan Jeremic",
   "license": "MIT",
+  "scripts": {
+    "publish:npm": "npm publish"
+  },
   "dependencies": {
     "@domedb/node-sdk": "1.0.0",
+    "@domedb/graphql": "1.0.0",
     "@domedb/panel": "1.0.3",
     "bcrypt": "^5.0.1",
     "bson-objectid": "^2.0.2",

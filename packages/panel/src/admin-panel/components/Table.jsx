@@ -1,21 +1,21 @@
 /* This example requires Tailwind CSS v2.0+ */
 const people = [
   {
-    name: "Jane Cooper",
-    title: "Regional Paradigm Technician",
-    role: "Admin",
-    email: "jane.cooper@example.com",
+    name: 'Jane Cooper',
+    title: 'Regional Paradigm Technician',
+    role: 'Admin',
+    email: 'jane.cooper@example.com'
   },
   {
-    name: "Cody Fisher",
-    title: "Product Directives Officer",
-    role: "Owner",
-    email: "cody.fisher@example.com",
-  },
+    name: 'Cody Fisher',
+    title: 'Product Directives Officer',
+    role: 'Owner',
+    email: 'cody.fisher@example.com'
+  }
   // More people...
-];
+]
 
-export default function Table() {
+export default function Table () {
   return (
     <div className="flex flex-col">
       <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -57,7 +57,7 @@ export default function Table() {
                 {people.map((person, personIdx) => (
                   <tr
                     key={person.email}
-                    className={personIdx % 2 === 0 ? "bg-white" : "bg-gray-50"}
+                    className={personIdx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}
                   >
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                       {person.name}
@@ -87,5 +87,5 @@ export default function Table() {
         </div>
       </div>
     </div>
-  );
+  )
 }

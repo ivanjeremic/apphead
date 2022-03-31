@@ -1,0 +1,19 @@
+{
+  "name": "@domedb/graphql",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "publish:npm": "npm publish"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "graphql": "^16.3.0",
+    "mercurius": "^9.3.6",
+    "mercurius-auth": "^2.0.0",
+    "mercurius-cache": "^1.7.0"
+  }
+}
