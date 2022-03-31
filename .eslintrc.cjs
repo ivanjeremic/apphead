@@ -55,5 +55,6 @@ module.exports = {
     'jsdoc/require-yields-check': 1, // Recommended
     'jsdoc/tag-lines': 1, // Recommended
     'jsdoc/valid-types': 1, // Recommended
+    'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
   },
 };

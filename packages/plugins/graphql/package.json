@@ -14,6 +14,7 @@
     "graphql": "^16.3.0",
     "mercurius": "^9.3.6",
     "mercurius-auth": "^2.0.0",
+    "mercurius-auto-schema": "^0.2.0",
     "mercurius-cache": "^1.7.0"
   }
 }

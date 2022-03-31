@@ -1,4 +1,5 @@
 .domedb
+.next
 .storybook
 
 node_modules

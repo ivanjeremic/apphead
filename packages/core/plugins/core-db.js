@@ -1,3 +1,4 @@
+//@ts-check
 import { open } from 'lmdb';
 
 class CrudUtil {
@@ -33,7 +34,7 @@ class CrudUtil {
    *
    * @param {string} collection
    * @param {string} key
-   * @returns {Promise<any>}
+   * @returns {Promise<any>} data
    */
   async get(collection, key) {
     const doc = await this.currentDB(collection).get(key);
@@ -67,10 +68,10 @@ class CrudUtil {
  * core-db plugin
  *
  * @param {*} db
- * @param {*} opts
- * @param {*} next
+ * @param {*} _opts
+ * @param {*} _next
  */
-export default async function (db, opts, next) {
+export default async function (db, _opts, _next) {
   const currentDB = new CrudUtil({
     db: 'todolist',
   });
@@ -103,7 +104,7 @@ export default async function (db, opts, next) {
   });
 
   // remove document
-  db.post('/remove', async (request, reply) => {
+  db.post('/remove', async (request, _reply) => {
     await currentDB.remove(request.body.documentID);
   });
 }
