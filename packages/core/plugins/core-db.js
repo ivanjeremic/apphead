@@ -1,5 +1,5 @@
-//@ts-check
 import { open } from 'lmdb';
+import ObjectID from 'bson-objectid';
 
 class CrudUtil {
   /**
@@ -12,9 +12,9 @@ class CrudUtil {
 
     this.hasOfflineCache = opts.hasOfflineCache;
 
-    this.currentDB = (collection) =>
+    this.currentDB = (node) =>
       open({
-        path: `.domedb/databases/${this.db}/${collection}`,
+        path: `.domedb/databases/${this.db}/${node}`,
         // any options go here, we can turn on compression like this:
         compression: true,
       });
@@ -26,7 +26,32 @@ class CrudUtil {
    * @param {string} collection
    */
   async createCollection(collection) {
-    await this.currentDB(collection).put(collection, { collectionMeta: {} });
+    await this.currentDB(collection).put('collection_meta', {
+      label: collection,
+      createdAt: Date.now(),
+    });
+  }
+
+  /**
+   * Insert a Single Document
+   *
+   * @param {string} collection
+   * @param {*} value
+   */
+  async insertOne(collection, value) {
+    await this.currentDB(collection).put(String(ObjectID()), value);
+  }
+
+  /**
+   * Insert Multiple Documents
+   *
+   * @param {string} collection
+   * @param {*} value
+   */
+  async insertMany(collection, value) {
+    for (const doc of value) {
+      await this.currentDB(collection).put(String(ObjectID()), doc);
+    }
   }
 
   /**
@@ -36,21 +61,11 @@ class CrudUtil {
    * @param {string} key
    * @returns {Promise<any>} data
    */
-  async get(collection, key) {
-    const doc = await this.currentDB(collection).get(key);
+  async findOne(collection, key) {
+    //const doc = await this.currentDB(collection).get(key);
+    const doce = this.currentDB(collection).getEntry(key);
 
-    return doc;
-  }
-
-  /**
-   * write to document2
-   *
-   * @param {string} collection
-   * @param {string} key
-   * @param {*} value
-   */
-  async write(collection, key, value) {
-    await this.currentDB(collection).put(key, value);
+    return doce;
   }
 
   /**
@@ -77,34 +92,47 @@ export default async function (db, _opts, _next) {
   });
 
   /**
-   * add collection
+   * create collection
    */
-  db.post('/create-collection', async (request, reply) => {
+  db.post('/createCollection', async (request, reply) => {
     await currentDB.createCollection(request.body.name);
 
     reply.send({ status: 'success', info: `Added new Collection [${request.body.name}]` });
   });
 
   /**
-   * get document
+   * Insert a Single Document
    */
-  db.post('/get/:collection/:', async (request, reply) => {
-    const data = await currentDB.get(request.body.collection, request.body.key);
+  db.post('/insertOne', async (request, reply) => {
+    await currentDB.insertOne(request.body.collection, request.body.value);
+
+    reply.send({ status: 'success', info: `Added new Document [${request.body.value}]` });
+  });
+
+  /**
+   * Insert Multiple Documents
+   */
+  db.post('/insertMany', async (request, reply) => {
+    await currentDB.insertMany(request.body.collection, request.body.value);
+
+    reply.send({ status: 'success', info: `Added Documents [${request.body.value}]` });
+  });
+
+  /**
+   * Find a Single Document
+   */
+  db.post('/findOne', async (request, reply) => {
+    const data = await currentDB.findOne(
+      request.body.database,
+      request.body.collection,
+      request.body.key
+    );
 
     reply.send({ data: data });
   });
 
-  /* ************ */
-  /* add document */
-  /* ************ */
-  db.post('/write', async (request, reply) => {
-    await currentDB.write(request.body.collection, request.body.key, request.body.value);
-
-    reply.send({ status: 'success' });
-  });
-
   // remove document
   db.post('/remove', async (request, _reply) => {
-    await currentDB.remove(request.body.documentID);
+    await currentDB.remove(request.body.documentID, 'doc');
   });
 }
