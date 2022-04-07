@@ -1,4 +1,5 @@
 import ObjectID from 'bson-objectid';
+// import produce from 'immer';
 
 /**
  *
@@ -11,12 +12,21 @@ export default async function produceDocs(db, docs) {
   for (const doc of docs) {
     const _id = ObjectID();
 
-    const final = { ...{ _id }, ...doc };
+    const producedDoc = { ...{ _id }, ...doc };
 
-    insertedDocuments.push(final);
+    insertedDocuments.push(producedDoc);
 
-    await db.put(String(_id), final);
+    await db.put(String(_id), producedDoc);
   }
 
   return insertedDocuments;
 }
+
+/* 
+
+const arr = await for(const doc of docs) {
+
+  return result
+}
+
+*/
