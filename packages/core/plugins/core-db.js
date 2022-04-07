@@ -1,6 +1,7 @@
 import { open } from 'lmdb';
 import ObjectID from 'bson-objectid';
 import produce from 'immer';
+import produceDocs from '../utils/utils.js';
 
 class CrudUtil {
   /**
@@ -87,19 +88,9 @@ class CrudUtil {
    * @param {*} value
    */
   async insertMany(collection, value) {
-    let docs = [];
-    for (const doc of value) {
-      const _id = ObjectID();
-      const idField = { _id };
+    const insertedDocuments = await produceDocs(this.currentDB(collection), value);
 
-      const final = { ...idField, ...doc };
-
-      docs.push(final);
-
-      await this.currentDB(collection).put(String(_id), final);
-    }
-
-    return docs;
+    return insertedDocuments;
   }
 
   /**
@@ -173,13 +164,16 @@ export default async function (db, _opts, _next) {
    * Insert Multiple Documents
    */
   db.post('/insertMany', async (request, reply) => {
-    const insertedIds = await currentDB.insertMany(request.body.collection, request.body.value);
+    const insertedDocuments = await currentDB.insertMany(
+      request.body.collection,
+      request.body.value
+    );
 
     reply.send({
       status: 'success',
       operation: 'insertMany',
       collection: request.body.collection,
-      insertedIds,
+      insertedDocuments,
     });
   });
 
