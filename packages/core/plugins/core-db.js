@@ -1,6 +1,5 @@
 import { open } from 'lmdb';
 import ObjectID from 'bson-objectid';
-import produce from 'immer';
 import produceDocs from '../utils/utils.js';
 
 class CrudUtil {
