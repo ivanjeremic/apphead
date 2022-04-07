@@ -1,5 +1,6 @@
 import { open } from 'lmdb';
 import ObjectID from 'bson-objectid';
+import produce from 'immer';
 
 class CrudUtil {
   /**
@@ -33,6 +34,43 @@ class CrudUtil {
   }
 
   /**
+   * Find a Single Document
+   *
+   * @param {string} collection
+   * @param {string} key
+   * @returns {Promise<any>} data
+   */
+  async findOne(collection, key) {
+    //const doc = await this.currentDB(collection).get(key);
+    const doce = this.currentDB(collection).getEntry(key);
+
+    /* 
+    
+    db.getRange({ start, end })
+	.filter(({ key, value }) => test(key))
+	.forEach(({ key, value }) => {
+		// for each key-value pair in the given range that matched the filter
+	})
+    */
+
+    return doce;
+  }
+
+  /**
+   * Find Multiple Documents
+   *
+   * @param {string} collection
+   * @param {string} key
+   * @returns {Promise<any>} data
+   */
+  async find(collection, key) {
+    //const doc = await this.currentDB(collection).get(key);
+    const doce = this.currentDB(collection).getEntry(key);
+
+    return doce;
+  }
+
+  /**
    * Insert a Single Document
    *
    * @param {string} collection
@@ -49,33 +87,29 @@ class CrudUtil {
    * @param {*} value
    */
   async insertMany(collection, value) {
+    let docs = [];
     for (const doc of value) {
-      await this.currentDB(collection).put(String(ObjectID()), doc);
+      const _id = ObjectID();
+      const idField = { _id };
+
+      const final = { ...idField, ...doc };
+
+      docs.push(final);
+
+      await this.currentDB(collection).put(String(_id), final);
     }
-  }
 
-  /**
-   * get document from collection
-   *
-   * @param {string} collection
-   * @param {string} key
-   * @returns {Promise<any>} data
-   */
-  async findOne(collection, key) {
-    //const doc = await this.currentDB(collection).get(key);
-    const doce = this.currentDB(collection).getEntry(key);
-
-    return doce;
+    return docs;
   }
 
   /**
    * remove document
    *
    * @param {string} collection
-   * @param {string} document
+   * @param {string} doc
    */
-  async remove(collection, document) {
-    await this.currentDB(collection).remove(document, 'value1');
+  async remove(collection, doc) {
+    await this.currentDB(collection).remove(doc, 'value1');
   }
 }
 
@@ -101,6 +135,32 @@ export default async function (db, _opts, _next) {
   });
 
   /**
+   * Find a Single Document
+   */
+  db.post('/findOne', async (request, reply) => {
+    const data = await currentDB.findOne(
+      request.body.database,
+      request.body.collection,
+      request.body.key
+    );
+
+    reply.send({ data: data });
+  });
+
+  /**
+   * Find Multiple Documents
+   */
+  db.post('/find', async (request, reply) => {
+    const data = await currentDB.findOne(
+      request.body.database,
+      request.body.collection,
+      request.body.key
+    );
+
+    reply.send({ data: data });
+  });
+
+  /**
    * Insert a Single Document
    */
   db.post('/insertOne', async (request, reply) => {
@@ -113,22 +173,14 @@ export default async function (db, _opts, _next) {
    * Insert Multiple Documents
    */
   db.post('/insertMany', async (request, reply) => {
-    await currentDB.insertMany(request.body.collection, request.body.value);
+    const insertedIds = await currentDB.insertMany(request.body.collection, request.body.value);
 
-    reply.send({ status: 'success', info: `Added Documents [${request.body.value}]` });
-  });
-
-  /**
-   * Find a Single Document
-   */
-  db.post('/findOne', async (request, reply) => {
-    const data = await currentDB.findOne(
-      request.body.database,
-      request.body.collection,
-      request.body.key
-    );
-
-    reply.send({ data: data });
+    reply.send({
+      status: 'success',
+      operation: 'insertMany',
+      collection: request.body.collection,
+      insertedIds,
+    });
   });
 
   // remove document

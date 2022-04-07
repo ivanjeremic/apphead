@@ -13,8 +13,8 @@
     "publish:npm": "npm publish"
   },
   "dependencies": {
-    "@domedb/node-sdk": "1.0.0",
     "@domedb/graphql": "1.0.0",
+    "@domedb/node-sdk": "1.0.0",
     "@domedb/panel": "1.0.3",
     "bcrypt": "^5.0.1",
     "bson-objectid": "^2.0.2",
@@ -34,6 +34,7 @@
     "fastify-oauth2": "^4.5.0",
     "fastify-reply-from": "^6.5.0",
     "fastify-static": "^4.5.0",
+    "immer": "^9.0.12",
     "lmdb": "2.2.6",
     "shelljs": "^0.8.5",
     "undici": "^4.16.0"
