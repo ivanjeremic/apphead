@@ -6,7 +6,7 @@ import ObjectID from 'bson-objectid';
  * @param {*} db
  * @param {Array} docs
  */
-export default async function produceDocs(db, docs) {
+export default async function insertDocuments(db, docs) {
   let insertedDocuments = [];
 
   for (const doc of docs) {

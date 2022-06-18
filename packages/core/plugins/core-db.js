@@ -1,6 +1,6 @@
 import { open } from 'lmdb';
 import ObjectID from 'bson-objectid';
-import produceDocs from '../utils/utils.js';
+import insertDocuments from '../utils/utils.js';
 
 class CrudUtil {
   /**
@@ -84,10 +84,10 @@ class CrudUtil {
    * Insert Multiple Documents
    *
    * @param {string} collection
-   * @param {*} value
+   * @param {*} docs
    */
-  async insertMany(collection, value) {
-    const insertedDocuments = await produceDocs(this.currentDB(collection), value);
+  async insertMany(collection, docs) {
+    const insertedDocuments = await insertDocuments(this.currentDB(collection), docs);
 
     return insertedDocuments;
   }

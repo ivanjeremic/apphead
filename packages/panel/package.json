@@ -8,7 +8,7 @@
   "license": "MIT",
   "scripts": {
     "publish:npm": "npm publish",
-    "tw": "npx tailwindcss -c tailwind.config.cjs -i ./styles/globals.css -o ./styles/main.css --watch",
+    "tw": "npx tailwindcss -c tailwind.config.cjs -i ./src/styles/globals.css -o ./src/styles/main.css --watch",
     "nb": "next build",
     "nd": "next dev",
     "ns": "next start"
