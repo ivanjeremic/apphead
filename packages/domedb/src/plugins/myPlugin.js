@@ -5,16 +5,14 @@ export default async function myPlugin() {
     name: "myPLugin",
     version: "0.0.1",
     onInstall() {
-      console.info(`successfully installed ${this.name}`);
+      console.info("onInstall");
     },
     onRemove() {
       // do stuff when removing a plugin
     },
     api: {
-      v1: {
-        async addTodo(request, reply) {
-          console.log("Now?");
-        },
+      async addTodo(request, reply) {
+        console.log("3000?");
       },
     },
   };

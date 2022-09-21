@@ -8,13 +8,23 @@
     "npm": ">=8.5.0"
   },
   "workspaces": [
-    "core-packages/*",
+    "packages/docs",
+    "packages/domedb",
     "core-plugins/*"
   ],
   "scripts": {
-    "develop:panel": "cross-env NODE_ENV=development node ./core-packages/domedb/bin/domedb.js",
+    "develop:panel": "cross-env NODE_ENV=development node ./packages/domedb/bin/domedb.js",
     "start:production": "cross-env NODE_ENV=production node ./packages/domedb/bin/domedb.js",
-    "tw": "npx tailwindcss -c tailwind.config.cjs -i ./src/styles/globals.css -o ./src/styles/main.css --watch"
+    "tw": "npx tailwindcss -c tailwind.config.cjs -i ./src/styles/globals.css -o ./src/styles/main.css --watch",
+    "website:start": "npm run start --prefix packages/website",
+    "website:build": "npm run build --prefix packages/website",
+    "website:swizzle": "npm run swizzle --prefix packages/website",
+    "website:deploy": "npm run deploy --prefix packages/website",
+    "website:clear": "npm run clear --prefix packages/website",
+    "website:serve": "npm run serve --prefix packages/website",
+    "website:write-translations": "npm run write-translations --prefix packages/website",
+    "website:write-heading-ids": "npm run write-heading-ids --prefix packages/website",
+    "website:typecheck": "npm run typecheck --prefix packages/website"
   },
   "keywords": [
     "cms"
