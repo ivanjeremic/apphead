@@ -1,19 +1,16 @@
 import { createWriteStream } from "fs";
 import { unlink } from "fs/promises";
 import { pipeline } from "stream/promises";
-import { dirname, join } from "path";
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-
-const __dirname = dirname(__filename);
 
 export default async function pluginSystem(fastify, options) {
   // install plugin
   fastify.post("/plugins/install", async (request, reply) => {
     const fileOptions = { limits: { fileSize: 1000 } };
     const data = await request.file(fileOptions);
-    await pipeline(data.file, createWriteStream(data.filename));
+    await pipeline(
+      data.file,
+      createWriteStream(options.pluginPath(data.filename))
+    );
 
     const { default: runPlugin } = await import(
       options.pluginPath(data.filename)
@@ -47,7 +44,6 @@ export default async function pluginSystem(fastify, options) {
 
   // process plugin api endpoint request.
   fastify.get("/plugin/:pluginName/:api/:endpoint", async (request, reply) => {
-    // @ts-ignore
     const { pluginName, api, endpoint } = request.params;
     const { default: runPlugin } = await import(options.pluginPath(pluginName));
     const plugin = await runPlugin();

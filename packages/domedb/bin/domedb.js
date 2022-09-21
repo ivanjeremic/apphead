@@ -10,9 +10,12 @@ const isDev = process.env.NODE_ENV !== "production";
 
 bootstrap({
   isDev,
-  registerPanelPath: join(__dirname, "..", "src/core/registerPanel.js"),
-  pluginSystemPath: join(__dirname, "..", "src/core/pluginSystem.js"),
-  pluginPath: (name) => join(__dirname, "..", `src/plugins/${name}.js`)
+  registerPanel: join(__dirname, "..", "src/core/registerPanel.js"),
+  pluginSystem: join(__dirname, "..", "src/core/pluginSystem.js"),
+  prisma: join(__dirname, "..", "src/core/prisma.js"),
+  pluginPath: (name) => join(__dirname, "..", `plugins/${name}.js`),
+  panelDistPath: join(__dirname, "..", "src/panel/dist"),
+  pluginFolderPath: join(__dirname, "..", "plugins")
 })
 
 
