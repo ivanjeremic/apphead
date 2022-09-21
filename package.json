@@ -8,34 +8,15 @@
     "npm": ">=8.5.0"
   },
   "workspaces": [
-    "packages/SDKs/web-sdk",
-    "packages/SDKs/node-sdk",
-    "packages/core",
-    "packages/domedb",
-    "packages/plugins/*",
-    "packages/panel"
+    "core-packages/*",
+    "core-plugins/*"
   ],
   "scripts": {
-    "develop:panel": "cross-env NODE_ENV=development node ./packages/domedb/bin/domedb.js",
+    "develop:panel": "cross-env NODE_ENV=development node ./core-packages/domedb/bin/domedb.js",
     "start:production": "cross-env NODE_ENV=production node ./packages/domedb/bin/domedb.js",
-    "publish:core": "npm --prefix ./packages/core run publish:npm",
-    "publish:domedb": "npm --prefix ./packages/domedb run publish:npm",
-    "publish:panel": "npm --prefix ./packages/panel run publish:npm",
-    "publish:plugin:graphql": "npm --prefix ./packages/plugins/graphql run publish:npm",
-    "publish:sdk:node": "npm --prefix ./packages/SDKs/node-sdk run publish:npm",
-    "publish:sdk:web": "npm --prefix ./packages/SDKs/web-sdk run publish:npm",
-    "tw": "npm --prefix ./packages/panel run tw",
-    "lint:code": "eslint .",
-    "lint:fix": "eslint --fix .",
-    "prettier:code": "prettier \"**/*.js\"",
-    "format:code": "npm run prettier:code -- --write"
+    "tw": "npx tailwindcss -c tailwind.config.cjs -i ./src/styles/globals.css -o ./src/styles/main.css --watch"
   },
   "keywords": [
-    "database",
-    "nosql",
-    "backend",
-    "api",
-    "graphql",
     "cms"
   ],
   "author": "Ivan Jeremic",
@@ -43,23 +24,6 @@
   "homepage": "https://domedb.com",
   "bugs": "https://github.com/domedb/domedb/issues",
   "devDependencies": {
-    "eslint": "^7.32.0",
-    "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-config-standard": "^16.0.3",
-    "eslint-plugin-babel": "^5.3.1",
-    "eslint-plugin-import": "^2.25.4",
-    "eslint-plugin-jsdoc": "^38.1.4",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-prettier": "^4.0.0",
-    "eslint-plugin-promise": "^5.2.0",
-    "eslint-plugin-react": "^7.29.4",
-    "eslint-plugin-react-hooks": "^4.4.0",
-    "jest": "^27.5.1",
-    "jest-puppeteer": "^6.1.0",
-    "prettier": "^2.6.1"
-  },
-  "dependencies": {
-    "graphql": "^16.3.0"
+    "cross-env": "^7.0.3"
   }
 }
