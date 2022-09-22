@@ -16,5 +16,9 @@
     "mercurius-auth": "^2.0.0",
     "mercurius-auto-schema": "^0.2.0",
     "mercurius-cache": "^1.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.7.18",
+    "typescript": "^4.8.3"
   }
 }

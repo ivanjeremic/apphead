@@ -1,17 +1,17 @@
 export default async function settings(fastify, options) {
-  fastify.post("/users/add", async (request, reply) => {
+  fastify.post("/settings/add", async (request, reply) => {
     //
   });
 
-  fastify.get("/users/:page", async (request, reply) => {
+  fastify.get("/settings/:page", async (request, reply) => {
     //
   });
 
-  fastify.put("/users/:id", async (request, reply) => {
+  fastify.put("/settings/:id", async (request, reply) => {
     //
   });
 
-  fastify.delete("/users/delete/:id", async (request, reply) => {
+  fastify.delete("/settings/delete/:id", async (request, reply) => {
     //
   });
 }

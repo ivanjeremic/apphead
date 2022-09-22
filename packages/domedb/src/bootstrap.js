@@ -4,16 +4,17 @@ import { dirname } from "path";
 import { fileURLToPath } from "url";
 import Fastify from "fastify";
 import autoLoad from "@fastify/autoload";
+import helmet from "@fastify/helmet";
 import chalk from "chalk";
+import { IS_DEV } from "./utils/CONSTANTS.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const PLUGIN_FOLDER = resolve("./plugins")
-const PRISMA_FOLDER = resolve("./prisma")
-const MEDIA_FOLDER = resolve("./media")
+const PLUGIN_FOLDER = resolve("./plugins");
+const MEDIA_FOLDER = resolve("./media");
 const logInfoServerStart = (t) => console.log(chalk.bgYellowBright(t));
 
-export async function bootstrap({ isDev }) {
+export async function bootstrap() {
   const fastify = Fastify();
 
   try {
@@ -23,29 +24,24 @@ export async function bootstrap({ isDev }) {
   }
 
   try {
-    await access(PRISMA_FOLDER);
-  } catch (error) {
-    await mkdir(PRISMA_FOLDER);
-  }
-
-  try {
     await access(MEDIA_FOLDER);
   } catch (error) {
     await mkdir(MEDIA_FOLDER);
   }
 
+  await fastify.register(helmet);
   await fastify.register(import("@fastify/multipart"));
   await fastify.register(import("@fastify/swagger"), {
     routePrefix: "/documentation",
     swagger: {
       info: {
-        title: "Test swagger",
-        description: "Testing the Fastify swagger API",
+        title: "Admin API",
+        description: "Admin API",
         version: "0.1.0",
       },
       externalDocs: {
         url: "https://swagger.io",
-        description: "Find more info here",
+        description: "Back to Dashboard",
       },
       host: "localhost",
       schemes: ["http"],
@@ -92,14 +88,10 @@ export async function bootstrap({ isDev }) {
     exposeRoute: true,
   });
 
-  await fastify.register(import(join(__dirname, "core/panel.js")));
-  await fastify.register(import(join(__dirname, "core/plugins.js")));
-  await fastify.register(import(join(__dirname, "core/prisma.js")));
-
-  //??? log paths to see
-  /* await fastify.register(autoLoad, {
+  await fastify.register(autoLoad, {
     dir: join(__dirname, "core"),
-  }); */
+    forceESM: true
+  });
 
   /**
    * Run the server!
@@ -111,7 +103,7 @@ export async function bootstrap({ isDev }) {
       await fastify.listen({ port });
 
       logInfoServerStart(
-        `Running ${isDev ? "Development" : "Production"} mode on port ${port}.`
+        `Running ${IS_DEV ? "Development" : "Production"} mode on port ${port}.`
       );
     } catch (err) {
       fastify.log.error(err);

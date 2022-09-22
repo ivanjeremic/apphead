@@ -1,6 +1,12 @@
 #!/usr/bin/env node
+import { MongoClient } from "mongodb";
 import { bootstrap } from "../src/bootstrap.js";
 
-const isDev = process.env.NODE_ENV !== "production";
+// Connection URL
+const url = "mongodb://localhost:27017";
+export const client = new MongoClient(url);
 
-bootstrap({ isDev });
+await client.connect();
+console.log('Connected successfully to server');
+
+bootstrap();

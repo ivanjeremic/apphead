@@ -31,7 +31,7 @@ export default async function plugins(fastify, options) {
   fastify.delete("/plugin/delete/:pluginName", async (request, reply) => {
     const { pluginName } = request.params;
     const { default: runPlugin } = await import(pluginPath(pluginName));
-    const plugin = await runPlugin();
+    const plugin = await runPlugin(); 
 
     // onInstall hook
     plugin.onRemove();

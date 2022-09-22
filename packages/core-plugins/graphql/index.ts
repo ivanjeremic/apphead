@@ -1,14 +1,5 @@
-const gql = String.raw;
-
-/**
- * domedb graphql plugin
- *
- * @param {*} db
- * @param {*} _opts
- * @param {*} _next
- */
 export default async function (db, _opts, _next) {
-  const schema = gql`
+  const schema = `
     type Query {
       add(x: Int, y: Int): Int
     }
@@ -20,12 +11,9 @@ export default async function (db, _opts, _next) {
     },
   };
 
-  await db.register(import('mercurius'), {
+  await db.register(import("mercurius"), {
     schema,
     resolvers,
     graphiql: true,
   });
 }
-
-//neo4j
-//h69s7QlY8v4dMI-Ks2kEOz5nGztE8gWGPgEvLNW-yl8
