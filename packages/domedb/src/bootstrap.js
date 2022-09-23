@@ -4,7 +4,6 @@ import { dirname } from "path";
 import { fileURLToPath } from "url";
 import Fastify from "fastify";
 import autoLoad from "@fastify/autoload";
-import helmet from "@fastify/helmet";
 import chalk from "chalk";
 import { IS_DEV } from "./utils/CONSTANTS.js";
 
@@ -15,7 +14,7 @@ const MEDIA_FOLDER = resolve("./media");
 const logInfoServerStart = (t) => console.log(chalk.bgYellowBright(t));
 
 export async function bootstrap() {
-  const fastify = Fastify();
+  const fastify = Fastify({ pluginTimeout: IS_DEV ? 120_000 : undefined });
 
   try {
     await access(PLUGIN_FOLDER);
@@ -29,7 +28,18 @@ export async function bootstrap() {
     await mkdir(MEDIA_FOLDER);
   }
 
-  await fastify.register(helmet);
+  /* await fastify.register(import("@fastify/nextjs"), { dev: IS_DEV }).after(() => {
+    fastify.next("/hello");
+  }); */
+
+  await fastify.register(import("@fastify/mongodb"), {
+    // force to close the mongodb connection when app stopped
+    // the default value is false
+    forceClose: true,
+
+    url: "mongodb://localhost:27017",
+  });
+  await fastify.register(import("@fastify/helmet"));
   await fastify.register(import("@fastify/multipart"));
   await fastify.register(import("@fastify/swagger"), {
     routePrefix: "/documentation",
@@ -90,7 +100,7 @@ export async function bootstrap() {
 
   await fastify.register(autoLoad, {
     dir: join(__dirname, "core"),
-    forceESM: true
+    forceESM: true,
   });
 
   /**

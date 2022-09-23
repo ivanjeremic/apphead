@@ -1,34 +1,41 @@
-import { client } from "../../bin/domedb.js";
-
 export default async function collections(fastify, options) {
-  fastify.post("/admin/collection/insertOne", async (request, reply) => {
+  fastify.post("/admin/collections/createCollection", async (request, reply) => {
+    const { database, collection } = request.body;
+    try {
+      const _database = fastify.mongo.client.db(database);
+      await _database.createCollection(collection);
+    } catch (error) {
+      console.dir(error);
+    } finally {
+      await fastify.mongo.client.close();
+    }
+  });
+
+  fastify.post("/admin/collections/insertOne", async (request, reply) => {
     const { database, collection, document } = request.body;
     try {
-      const db = client.db(database);
-      const coll = db.collection(collection);
-
-      const result = await coll.insertOne(document);
+      const _database = fastify.mongo.client.db(database);
+      const _collection = _database.collection(collection);
+      const result = await _collection.insertOne(document);
       console.log(`A document was inserted with the _id: ${result.insertedId}`);
     } catch (error) {
       console.dir(error);
     } finally {
-      await client.close();
+      await fastify.mongo.client.close();
     }
   });
 
   fastify.post("/admin/collection/insertMany", async (request, reply) => {
     const { database, collection, documents } = request.body;
     try {
-      const _database = client.db(database);
+      const _database = fastify.mongo.client.db(database);
       const _collection = _database.collection(collection);
-
-      const options = { ordered: true };
-      const result = await _collection.insertMany(documents, options);
-      console.log(`${result.insertedCount} documents were inserted`);
+      const result = await _collection.insertMany(documents);
+      console.log(`A document was inserted with the _id: ${result.insertedId}`);
     } catch (error) {
       console.dir(error);
     } finally {
-      await client.close();
+      await fastify.mongo.client.close();
     }
   });
 
@@ -55,7 +62,7 @@ export default async function collections(fastify, options) {
   fastify.delete("/collections/deleteOne", async (request, reply) => {
     //
   });
-  
+
   fastify.delete("/collections/deleteMany", async (request, reply) => {
     //
   });
