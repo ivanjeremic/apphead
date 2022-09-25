@@ -13,6 +13,7 @@ const PLUGIN_FOLDER = resolve("./plugins");
 const MEDIA_FOLDER = resolve("./media");
 const logInfoServerStart = (t) => console.log(chalk.bgYellowBright(t));
 
+// !! run: mongod --dbpath=./data
 export async function bootstrap() {
   const fastify = Fastify({ pluginTimeout: IS_DEV ? 120_000 : undefined });
 
