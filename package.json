@@ -8,14 +8,13 @@
     "npm": ">=8.5.0"
   },
   "workspaces": [
-    "packages/docs",
-    "packages/domedb",
-    "core-plugins/*"
+    "packages/*"
   ],
   "scripts": {
-    "develop:panel": "cross-env NODE_ENV=development node ./packages/domedb/bin/domedb.js",
-    "start:production": "cross-env NODE_ENV=production node ./packages/domedb/bin/domedb.js",
-    "tw": "npx tailwindcss -c tailwind.config.cjs -i ./src/styles/globals.css -o ./src/styles/main.css --watch",
+    "start": "cross-env NODE_ENV=production node ./packages/domedb/bin/domedb.js",
+    "panel:dev": "cross-env NODE_ENV=development node ./packages/domedb/bin/domedb.js & npm run dev --prefix packages/panel",
+    "panel:build": "npm run build --prefix packages/panel",
+    "panel:preview": "npm run preview --prefix packages/panel",
     "website:start": "npm run start --prefix packages/website",
     "website:build": "npm run build --prefix packages/website",
     "website:swizzle": "npm run swizzle --prefix packages/website",

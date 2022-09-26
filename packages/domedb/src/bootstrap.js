@@ -9,13 +9,20 @@ import { IS_DEV } from "./utils/CONSTANTS.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const PLUGIN_FOLDER = resolve("./plugins");
-const MEDIA_FOLDER = resolve("./media");
+const DATA_FOLDER = resolve("./@data");
+const PLUGIN_FOLDER = resolve("./@plugins");
+const MEDIA_FOLDER = resolve("./@media");
 const logInfoServerStart = (t) => console.log(chalk.bgYellowBright(t));
 
-// !! run: mongod --dbpath=./data
+// !! run: mongod --dbpath=./$data
 export async function bootstrap() {
   const fastify = Fastify({ pluginTimeout: IS_DEV ? 120_000 : undefined });
+
+  try {
+    await access(DATA_FOLDER);
+  } catch (error) {
+    await mkdir(DATA_FOLDER);
+  }
 
   try {
     await access(PLUGIN_FOLDER);
@@ -28,10 +35,6 @@ export async function bootstrap() {
   } catch (error) {
     await mkdir(MEDIA_FOLDER);
   }
-
-  /* await fastify.register(import("@fastify/nextjs"), { dev: IS_DEV }).after(() => {
-    fastify.next("/hello");
-  }); */
 
   await fastify.register(import("@fastify/mongodb"), {
     // force to close the mongodb connection when app stopped

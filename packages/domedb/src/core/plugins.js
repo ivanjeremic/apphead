@@ -3,7 +3,7 @@ import { unlink } from "fs/promises";
 import { resolve } from "path";
 import { pipeline } from "stream/promises";
 
-const pluginPath = (name) => resolve(`plugins/${name}.js`);
+const pluginPath = (name) => resolve(`@plugins/${name}/${name}.js`);
 
 export default async function plugins(fastify, options) {
   // install plugin
