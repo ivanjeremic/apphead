@@ -4,6 +4,7 @@ import { dirname } from "path";
 import { fileURLToPath } from "url";
 import Fastify from "fastify";
 import autoLoad from "@fastify/autoload";
+import cors from '@fastify/cors'
 import chalk from "chalk";
 import { IS_DEV } from "./utils/CONSTANTS.js";
 
@@ -16,7 +17,7 @@ const logInfoServerStart = (t) => console.log(chalk.bgYellowBright(t));
 
 // !! run: mongod --dbpath=./$data
 export async function bootstrap() {
-  const fastify = Fastify({ pluginTimeout: IS_DEV ? 120_000 : undefined });
+  const fastify = Fastify();
 
   try {
     await access(DATA_FOLDER);
@@ -43,6 +44,19 @@ export async function bootstrap() {
 
     url: "mongodb://localhost:27017",
   });
+  await fastify.register(cors, { 
+    // put your options here
+    /* origin: (origin, cb) => {
+      const hostname = new URL(origin).hostname
+      if(hostname === "localhost"){
+        //  Request from localhost will pass
+        cb(null, true)
+        return
+      }
+      // Generate an error on other origins, disabling access
+      cb(new Error("Not allowed"), false)
+    } */
+  })
   await fastify.register(import("@fastify/helmet"));
   await fastify.register(import("@fastify/multipart"));
   await fastify.register(import("@fastify/swagger"), {
