@@ -1,11 +1,11 @@
 {
-  "name": "domedb",
-  "version": "1.0.27",
+  "name": "apphead",
+  "version": "0.0.1",
   "description": "",
-  "main": "./bin/domedb.js",
+  "main": "./bin/apphead.js",
   "type": "module",
   "bin": {
-    "domedb": "./bin/domedb.js"
+    "domedb": "./bin/apphead.js"
   },
   "engines": {
     "node": ">=16.14.2",
@@ -15,17 +15,21 @@
     "publish:npm": "npm publish"
   },
   "keywords": [
-    "database",
+    "cms",
     "nosql",
-    "backend",
+    "mongodb",
     "api",
     "graphql",
-    "cms"
+    "data",
+    "digitalization",
+    "apps",
+    "applications",
+    "software"
   ],
   "author": "Ivan Jeremic",
   "license": "MIT",
-  "homepage": "https://domedb.com",
-  "bugs": "https://github.com/domedb/domedb/issues",
+  "homepage": "https://apphead.io",
+  "bugs": "https://github.com/apphead/apphead/issues",
   "dependencies": {
     "@fastify/autoload": "^5.4.0",
     "@fastify/cors": "^8.1.0",

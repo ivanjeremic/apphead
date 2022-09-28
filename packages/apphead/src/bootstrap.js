@@ -44,9 +44,9 @@ export async function bootstrap() {
 
     url: "mongodb://localhost:27017",
   });
-  await fastify.register(cors, { 
+  /* await fastify.register(cors, { 
     // put your options here
-    /* origin: (origin, cb) => {
+    origin: (origin, cb) => {
       const hostname = new URL(origin).hostname
       if(hostname === "localhost"){
         //  Request from localhost will pass
@@ -55,8 +55,8 @@ export async function bootstrap() {
       }
       // Generate an error on other origins, disabling access
       cb(new Error("Not allowed"), false)
-    } */
-  })
+    }
+  }) */
   await fastify.register(import("@fastify/helmet"));
   await fastify.register(import("@fastify/multipart"));
   await fastify.register(import("@fastify/swagger"), {

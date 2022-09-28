@@ -7,19 +7,15 @@ import {
   Link,
   createRoutesFromElements,
 } from "react-router-dom";
-import "./index.css";
 import MainLayout from "./layouts/MainLayout";
+import "./index.css";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<MainLayout />}>
       <Route path="contact" element={<div>contact</div>} />
       <Route path="dashboard" element={<h1>dashboard</h1>} />
-      <Route
-        element={((children) => (
-          <div style={{ color: "blue" }}>{children}</div>
-        ))()}
-      >
+      <Route element={<div>NestedLayout</div>}>
         <Route path="login" element={<h1>Login</h1>} />
         <Route path="logout" />
       </Route>

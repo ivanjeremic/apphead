@@ -1,7 +1,7 @@
 {
-  "name": "domedb-monorepo",
+  "name": "apphead-monorepo",
   "version": "0.0.0",
-  "description": "domedb-monorepo",
+  "description": "apphead-monorepo",
   "type": "module",
   "engines": {
     "node": ">=16.14.2",
