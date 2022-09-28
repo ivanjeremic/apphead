@@ -10,9 +10,9 @@ import { IS_DEV } from "./utils/CONSTANTS.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const DATA_FOLDER = resolve("./@data");
-const PLUGIN_FOLDER = resolve("./@plugins");
-const MEDIA_FOLDER = resolve("./@media");
+const DATA_FOLDER = resolve("./apphead-data");
+const PLUGIN_FOLDER = resolve("./apphead-plugins");
+const MEDIA_FOLDER = resolve("./apphead-media");
 const logInfoServerStart = (t) => console.log(chalk.bgYellowBright(t));
 
 // !! run: mongod --dbpath=./$data

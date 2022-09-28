@@ -1,30 +1,64 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import {
-  createBrowserRouter,
-  RouterProvider,
-  Route,
-  Link,
-  createRoutesFromElements,
-} from "react-router-dom";
+  Router,
+  ReactLocation,
+  createBrowserHistory,
+} from "@tanstack/react-location";
 import MainLayout from "./layouts/MainLayout";
 import "./index.css";
+import Nav from "./components/Nav";
+import {
+  CalendarIcon,
+  ChartBarIcon,
+  FolderIcon,
+  HomeIcon,
+  InboxIcon,
+  UsersIcon,
+} from "@heroicons/react/24/outline";
 
-const router = createBrowserRouter(
-  createRoutesFromElements(
-    <Route path="/" element={<MainLayout />}>
-      <Route path="contact" element={<div>contact</div>} />
-      <Route path="dashboard" element={<h1>dashboard</h1>} />
-      <Route element={<div>NestedLayout</div>}>
-        <Route path="login" element={<h1>Login</h1>} />
-        <Route path="logout" />
-      </Route>
-    </Route>
-  )
-);
+const history = createBrowserHistory();
+const location = new ReactLocation({ history });
+
+const navigation = [
+  { name: "Dashboard", href: "#", icon: HomeIcon, current: true, count: "5" },
+  { name: "Team", href: "#", icon: UsersIcon, current: false },
+  {
+    name: "Projects",
+    href: "#",
+    icon: FolderIcon,
+    current: false,
+    count: "19",
+  },
+  {
+    name: "Calendar",
+    href: "#",
+    icon: CalendarIcon,
+    current: false,
+    count: "20+",
+  },
+  { name: "Documents", href: "#", icon: InboxIcon, current: false },
+  { name: "Reports", href: "#", icon: ChartBarIcon, current: false },
+];
+
+const routes = [
+  {
+    path: "admin",
+    element: <MainLayout />,
+    children: [
+      {
+        path: "/",
+      },
+      {
+        path: "collections",
+        element: <Nav navigation={navigation} />,
+      },
+    ],
+  },
+];
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <Router location={location} routes={routes} />
   </React.StrictMode>
 );

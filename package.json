@@ -11,8 +11,7 @@
     "packages/*"
   ],
   "scripts": {
-    "start": "cross-env NODE_ENV=production node ./packages/domedb/bin/domedb.js",
-    "panel:dev": "cross-env NODE_ENV=development node ./packages/domedb/bin/domedb.js & npm run dev --prefix packages/panel",
+    "apphead:dev": "cross-env NODE_ENV=development node ./packages/apphead/bin/apphead.js & npm run dev --prefix packages/panel",
     "panel:build": "npm run build --prefix packages/panel",
     "panel:preview": "npm run preview --prefix packages/panel",
     "website:start": "npm run start --prefix packages/website",
@@ -25,9 +24,6 @@
     "website:write-heading-ids": "npm run write-heading-ids --prefix packages/website",
     "website:typecheck": "npm run typecheck --prefix packages/website"
   },
-  "keywords": [
-    "cms"
-  ],
   "author": "Ivan Jeremic",
   "license": "MIT",
   "homepage": "https://domedb.com",

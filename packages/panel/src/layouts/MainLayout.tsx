@@ -1,27 +1,24 @@
 import { Fragment, useState } from "react";
 import { Dialog, Menu, Transition } from "@headlessui/react";
 import {
-  CommandLineIcon,
-  HomeIcon,
+  ComputerDesktopIcon,
   PlusIcon,
-  UserGroupIcon,
-  AdjustmentsHorizontalIcon,
+  DocumentIcon,
+  PuzzlePieceIcon,
+  SquaresPlusIcon,
+  PhotoIcon,
+  InboxStackIcon,
+  FolderIcon,
 } from "@heroicons/react/24/outline";
-import { Outlet } from "react-router-dom";
+import { Outlet } from "@tanstack/react-location";
 
 const sidebarNavigation = [
-  { name: "Home", href: "#", icon: HomeIcon, current: false },
-  { name: "Collections", href: "#", icon: UserGroupIcon, current: false },
-  { name: "Users", href: "#", icon: UserGroupIcon, current: false },
-  { name: "Media", href: "#", icon: UserGroupIcon, current: true },
-  { name: "Plugins", href: "#", icon: UserGroupIcon, current: false },
-  { name: "Functions", href: "#", icon: CommandLineIcon, current: false },
-  {
-    name: "Advanced",
-    href: "#",
-    icon: AdjustmentsHorizontalIcon,
-    current: false,
-  },
+  { name: "Dashboard", href: "#", icon: ComputerDesktopIcon, current: false },
+  { name: "Collections", href: "#", icon: FolderIcon, current: false },
+  { name: "Pages", href: "#", icon: DocumentIcon, current: false },
+  { name: "Media", href: "#", icon: PhotoIcon, current: true },
+  { name: "Plugins", href: "#", icon: SquaresPlusIcon, current: false },
+  { name: "Advanced", href: "#", icon: PuzzlePieceIcon, current: false },
 ];
 const userNavigation = [
   { name: "Your Profile", href: "#" },
@@ -122,7 +119,7 @@ export default function MainLayout() {
                       className="h-12 w-12 rounded-full flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-white"
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      <UserGroupIcon
+                      <InboxStackIcon
                         className="h-6 w-6 text-white"
                         aria-hidden="true"
                       />
@@ -186,7 +183,7 @@ export default function MainLayout() {
               onClick={() => setMobileMenuOpen(true)}
             >
               <span className="sr-only">Open sidebar</span>
-              <UserGroupIcon className="h-6 w-6" aria-hidden="true" />
+              <InboxStackIcon className="h-6 w-6" aria-hidden="true" />
             </button>
             <div className="flex-1 flex justify-between px-4 sm:px-6">
               <div className="flex-1 flex">
@@ -196,7 +193,7 @@ export default function MainLayout() {
                   </label>
                   <div className="relative w-full text-gray-400 focus-within:text-gray-600">
                     <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center">
-                      <UserGroupIcon
+                      <InboxStackIcon
                         className="flex-shrink-0 h-5 w-5"
                         aria-hidden="true"
                       />
