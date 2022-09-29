@@ -6,13 +6,12 @@ import {
   InboxIcon,
   UsersIcon,
 } from "@heroicons/react/24/outline";
-import React from "react";
 
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Nav({ navigation }: any) {
+export default function Nav({ navigation, content }: any) {
   return (
     <nav className="space-y-1" aria-label="Sidebar">
       {navigation.map((item: any) => (

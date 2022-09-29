@@ -8,29 +8,86 @@ import {
   SquaresPlusIcon,
   PhotoIcon,
   InboxStackIcon,
-  FolderIcon,
+  MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
-import { Outlet } from "@tanstack/react-location";
+import { Link, Outlet, useLocation } from "react-router-dom";
+import { classNames } from "../helpers/className";
+import CollectionList from "../components/CollectionList";
+
+function Icon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 700 700"
+      fill="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M611.33 74.668H424.66c-10.266 0-25.387-5.04-33.602-11.199l-44.801-33.617c-8.195-6.16-23.332-11.199-33.602-11.199h-93.332c-10.266 0-18.668 8.398-18.668 18.668v37.332h-37.332c-10.266 0-18.668 8.398-18.668 18.668v37.332h-37.332c-10.266 0-18.668 8.398-18.668 18.668v354.67c0 10.266 8.398 18.668 18.668 18.668h392c10.266 0 18.668-8.398 18.668-18.668v-37.332h37.332c10.266 0 18.668-8.398 18.668-18.668v-37.332h37.332c10.266 0 18.668-8.398 18.668-18.668V93.321c.004-10.254-8.394-18.652-18.664-18.652zm-504 74.664h93.332c6.16 0 17.473 3.754 22.383 7.465l44.82 33.602c11.312 8.511 30.594 14.934 44.781 14.934h186.67v37.332h-392v-93.332zm392 354.67h-392v-242.67h392zm56-56h-37.332v-242.67c0-10.266-8.398-18.668-18.668-18.668H312.66c-10.266 0-25.387-5.04-33.602-11.199l-44.801-33.617c-8.195-6.16-23.332-11.199-33.602-11.199h-37.332V93.317h93.332c6.16 0 17.473 3.754 22.383 7.465l44.82 33.602c11.312 8.512 30.594 14.934 44.781 14.934h186.67l.004 298.68zm56-56h-37.332v-242.67c0-10.266-8.398-18.668-18.668-18.668H368.66c-10.266 0-25.387-5.04-33.602-11.199l-44.801-33.617c-8.195-6.16-23.332-11.199-33.602-11.199h-37.332V37.317h93.332c6.16 0 17.473 3.754 22.383 7.465l44.82 33.602c11.312 8.512 30.594 14.934 44.781 14.934h186.67l.004 298.68z"></path>
+    </svg>
+  );
+}
 
 const sidebarNavigation = [
-  { name: "Dashboard", href: "#", icon: ComputerDesktopIcon, current: false },
-  { name: "Collections", href: "#", icon: FolderIcon, current: false },
-  { name: "Pages", href: "#", icon: DocumentIcon, current: false },
-  { name: "Media", href: "#", icon: PhotoIcon, current: true },
-  { name: "Plugins", href: "#", icon: SquaresPlusIcon, current: false },
-  { name: "Advanced", href: "#", icon: PuzzlePieceIcon, current: false },
+  { name: "Apps", href: "/admin/apps", icon: ComputerDesktopIcon },
+  {
+    name: "Collections",
+    href: "/admin/collections",
+    icon: Icon,
+  },
+  { name: "Pages", href: "/admin/pages", icon: DocumentIcon },
+  { name: "Media", href: "/admin/media", icon: PhotoIcon },
+  { name: "Plugins", href: "/admin/plugins", icon: SquaresPlusIcon },
+  { name: "Advanced", href: "/admin/advanced", icon: PuzzlePieceIcon },
 ];
 const userNavigation = [
   { name: "Your Profile", href: "#" },
   { name: "Sign out", href: "#" },
 ];
 
-function classNames(...classes: any) {
-  return classes.filter(Boolean).join(" ");
+function PanelNavTopBar() {
+  return (
+    <div className="relative z-10 flex-shrink-0 h-16 bg-white border-b border-gray-200 shadow-sm flex">
+      <button
+        type="button"
+        className="inline-flex items-center px-4 py-2 shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-1 focus:ring-offset-0 focus:ring-red-500"
+      >
+        {"<"}
+      </button>
+
+      <div className="sm:flex sm:items-center sm:justify-between px-3 py-2">
+        <h3 className="text-lg leading-6 font-medium text-gray-900">
+          Collections
+        </h3>
+      </div>
+    </div>
+  );
+}
+
+function Example() {
+  return (
+    <div className="border-b border-gray-200 shadow-sm sm:flex sm:items-center sm:justify-between h-16 px-3 py-2">
+      <h3 className="text-lg leading-6 font-medium text-gray-900">
+        Collections
+      </h3>
+      <div className="mt-3 flex sm:mt-0 sm:ml-4">
+        <button
+          type="button"
+          className="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        >
+          Create Collection
+        </button>
+      </div>
+    </div>
+  );
 }
 
 export default function MainLayout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  let location = useLocation();
 
   return (
     <div className="h-screen bg-gray-50 flex overflow-hidden">
@@ -46,20 +103,22 @@ export default function MainLayout() {
           </div>
           <div className="flex-1 mt-6 w-full px-2 space-y-1">
             {sidebarNavigation.map((item) => (
-              <a
+              <Link
                 key={item.name}
-                href={item.href}
+                to={item.href}
                 className={classNames(
-                  item.current
+                  location.pathname === item.href
                     ? "bg-gray-900 text-white"
                     : "text-indigo-100 hover:bg-gray-900 hover:text-white",
                   "group w-full p-3 rounded-md flex flex-col items-center text-xs font-medium"
                 )}
-                aria-current={item.current ? "page" : undefined}
+                aria-current={
+                  location.pathname === item.href ? "page" : undefined
+                }
               >
                 <item.icon
                   className={classNames(
-                    item.current
+                    location.pathname === item.href
                       ? "text-white"
                       : "text-indigo-300 group-hover:text-white",
                     "h-6 w-6"
@@ -67,7 +126,7 @@ export default function MainLayout() {
                   aria-hidden="true"
                 />
                 <span className="mt-2">{item.name}</span>
-              </a>
+              </Link>
             ))}
           </div>
         </div>
@@ -138,20 +197,22 @@ export default function MainLayout() {
                   <nav className="h-full flex flex-col">
                     <div className="space-y-1">
                       {sidebarNavigation.map((item) => (
-                        <a
+                        <Link
                           key={item.name}
-                          href={item.href}
+                          to={item.href}
                           className={classNames(
-                            item.current
+                            location.pathname === item.href
                               ? "bg-indigo-800 text-white"
                               : "text-indigo-100 hover:bg-indigo-800 hover:text-white",
                             "group py-2 px-3 rounded-md flex items-center text-sm font-medium"
                           )}
-                          aria-current={item.current ? "page" : undefined}
+                          aria-current={
+                            location.pathname === item.href ? "page" : undefined
+                          }
                         >
                           <item.icon
                             className={classNames(
-                              item.current
+                              location.pathname === item.href
                                 ? "text-white"
                                 : "text-indigo-300 group-hover:text-white",
                               "mr-3 h-6 w-6"
@@ -159,7 +220,7 @@ export default function MainLayout() {
                             aria-hidden="true"
                           />
                           <span>{item.name}</span>
-                        </a>
+                        </Link>
                       ))}
                     </div>
                   </nav>
@@ -172,6 +233,14 @@ export default function MainLayout() {
           </div>
         </Dialog>
       </Transition.Root>
+
+      {/* Secondary column (hidden on smaller screens) */}
+      <aside className="hidden w-96 bg-white border-r border-gray-200 overflow-y-auto lg:block">
+        {/* Your content */}
+        <PanelNavTopBar />
+        <Example />
+        <Outlet />
+      </aside>
 
       {/* Content area */}
       <div className="flex-1 flex flex-col overflow-hidden">
@@ -202,7 +271,7 @@ export default function MainLayout() {
                       name="search-field"
                       id="search-field"
                       className="h-full w-full border-transparent py-2 pl-8 pr-3 text-base text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-0 focus:border-transparent focus:placeholder-gray-400"
-                      placeholder="Search"
+                      placeholder="Search ddd"
                       type="search"
                     />
                   </div>
@@ -216,6 +285,28 @@ export default function MainLayout() {
                       <div>
                         <Menu.Button className="bg-white rounded-full flex text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                           <span className="sr-only">Open user menu</span>
+                          <div className="flex -space-x-2 mr-4 overflow-hidden">
+                            <img
+                              className="inline-block h-8 w-8 rounded-full ring-2 ring-white"
+                              src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                              alt=""
+                            />
+                            <img
+                              className="inline-block h-8 w-8 rounded-full ring-2 ring-white"
+                              src="https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                              alt=""
+                            />
+                            <img
+                              className="inline-block h-8 w-8 rounded-full ring-2 ring-white"
+                              src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.25&w=256&h=256&q=80"
+                              alt=""
+                            />
+                            <img
+                              className="inline-block h-8 w-8 rounded-full ring-2 ring-white"
+                              src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                              alt=""
+                            />
+                          </div>
                           <img
                             className="h-8 w-8 rounded-full"
                             src="https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=256&h=256&q=80"
@@ -268,16 +359,55 @@ export default function MainLayout() {
               </div>
             </div>
           </div>
+          {/* Content Action Section */}
+          <div className="relative z-10 flex-shrink-0 h-16 bg-white border-b border-gray-200 shadow-sm flex">
+            <button
+              type="button"
+              className="border-r border-gray-200 px-4 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden"
+              onClick={() => setMobileMenuOpen(true)}
+            >
+              <span className="sr-only">Open sidebar</span>
+              <InboxStackIcon className="h-6 w-6" aria-hidden="true" />
+            </button>
+            <div className="flex-1 flex justify-between px-4 sm:px-6">
+              <div className="flex-1 flex">
+                <form className="w-full flex md:ml-0" action="#" method="GET">
+                  <label htmlFor="search-field" className="sr-only">
+                    Search all files
+                  </label>
+                  <div className="relative w-full text-gray-400 focus-within:text-gray-600">
+                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center">
+                      <MagnifyingGlassIcon
+                        className="flex-shrink-0 h-5 w-5"
+                        aria-hidden="true"
+                      />
+                    </div>
+                    <input
+                      name="search-field"
+                      id="search-field"
+                      className="h-full w-full border-transparent py-2 pl-8 pr-3 text-base text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-0 focus:border-transparent focus:placeholder-gray-400"
+                      placeholder="Search Users"
+                      type="search"
+                    />
+                  </div>
+                </form>
+              </div>
+              <div className="ml-2 flex items-center space-x-4 sm:ml-6 sm:space-x-6">
+                <button
+                  type="button"
+                  className="flex bg-indigo-600 p-2 items-center justify-center text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                  <PlusIcon className="h-6 w-6" aria-hidden="true" />
+                  Add new User
+                  <span className="sr-only">Add file</span>
+                </button>
+              </div>
+            </div>
+          </div>
         </header>
 
         {/* Main content */}
         <div className="flex-1 flex items-stretch overflow-hidden">
-          {/* Secondary column (hidden on smaller screens) */}
-          <aside className="hidden w-96 bg-white border-r border-gray-200 overflow-y-auto lg:block">
-            {/* Your content */}
-            <Outlet />
-          </aside>
-
           <main className="flex-1 overflow-y-auto">
             {/* Primary column */}
             <section
@@ -288,6 +418,8 @@ export default function MainLayout() {
                 Photos
               </h1>
               {/* Your content */}
+
+              <CollectionList />
             </section>
           </main>
         </div>

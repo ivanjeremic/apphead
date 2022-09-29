@@ -7,7 +7,7 @@ const pluginPath = (name) => resolve(`apphead-plugins/${name}/${name}.js`);
 
 export default async function plugins(fastify, options) {
   // install plugin
-  fastify.post("/plugins/install", async (request, reply) => {
+  fastify.post("/admin/plugins/install", async (request, reply) => {
     const fileOptions = { limits: { fileSize: 1000 } };
     const data = await request.file(fileOptions);
     await pipeline(data.file, createWriteStream(pluginPath(data.filename)));
@@ -22,13 +22,13 @@ export default async function plugins(fastify, options) {
   });
 
   // activate plugin
-  fastify.get("/plugin/activate", async (request, reply) => {
+  fastify.get("/admin/plugin/activate", async (request, reply) => {
     // activate
     reply.send();
   });
 
   // delete plugin
-  fastify.delete("/plugin/delete/:pluginName", async (request, reply) => {
+  fastify.delete("/admin/plugin/delete/:pluginName", async (request, reply) => {
     const { pluginName } = request.params;
     const { default: runPlugin } = await import(pluginPath(pluginName));
     const plugin = await runPlugin(); 

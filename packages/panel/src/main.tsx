@@ -1,10 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import {
-  Router,
-  ReactLocation,
-  createBrowserHistory,
-} from "@tanstack/react-location";
+  createBrowserRouter,
+  RouterProvider,
+  Route,
+  createRoutesFromElements,
+  defer,
+} from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
 import "./index.css";
 import Nav from "./components/Nav";
@@ -17,48 +19,44 @@ import {
   UsersIcon,
 } from "@heroicons/react/24/outline";
 
-const history = createBrowserHistory();
-const location = new ReactLocation({ history });
-
 const navigation = [
-  { name: "Dashboard", href: "#", icon: HomeIcon, current: true, count: "5" },
-  { name: "Team", href: "#", icon: UsersIcon, current: false },
+  { name: "Users", href: "#", icon: HomeIcon, current: true, count: "System" },
   {
-    name: "Projects",
+    name: "Pages",
     href: "#",
-    icon: FolderIcon,
+    icon: UsersIcon,
     current: false,
-    count: "19",
+    count: "System",
   },
-  {
-    name: "Calendar",
-    href: "#",
-    icon: CalendarIcon,
-    current: false,
-    count: "20+",
-  },
-  { name: "Documents", href: "#", icon: InboxIcon, current: false },
-  { name: "Reports", href: "#", icon: ChartBarIcon, current: false },
 ];
 
-const routes = [
-  {
-    path: "admin",
-    element: <MainLayout />,
-    children: [
-      {
-        path: "/",
-      },
-      {
-        path: "collections",
-        element: <Nav navigation={navigation} />,
-      },
-    ],
-  },
-];
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route path="/admin" element={<MainLayout />}>
+      <Route path="apps" element={<h1>apps</h1>} />
+      <Route
+        path="collections"
+        loader={async () => {
+          const data = await fetch(
+            "https://jsonplaceholder.typicode.com/todos/1"
+          ).then((response) => response.json());
+
+          return defer({
+            data,
+          });
+        }}
+        element={<Nav navigation={navigation} />}
+      />
+      <Route path="pages" element={<h1>pages</h1>} />
+      <Route path="media" element={<h1>media</h1>} />
+      <Route path="plugins" element={<h1>plugins</h1>} />
+      <Route path="advanced" element={<h1>advanced</h1>} />
+    </Route>
+  )
+);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <Router location={location} routes={routes} />
+    <RouterProvider router={router} />
   </React.StrictMode>
 );

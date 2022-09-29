@@ -8,4 +8,7 @@ export default async function registerPanel(fastify, options) {
   fastify.get("/admin", function (req, reply) {
     reply.sendFile("index.html");
   });
+  fastify.get("/admin/*", function (req, reply) {
+    reply.sendFile("index.html");
+  });
 }

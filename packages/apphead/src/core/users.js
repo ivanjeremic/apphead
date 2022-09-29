@@ -1,17 +1,17 @@
 export default async function users(fastify, options) {
-  fastify.post("/users/add", async (request, reply) => {
+  fastify.post("/admin/users/add", async (request, reply) => {
     //
   });
 
-  fastify.get("/users/:page", async (request, reply) => {
+  fastify.get("/admin/users/:page", async (request, reply) => {
     //
   });
 
-  fastify.put("/users/:id", async (request, reply) => {
+  fastify.put("/admin/users/:id", async (request, reply) => {
     //
   });
 
-  fastify.delete("/users/delete/:id", async (request, reply) => {
+  fastify.delete("/admin/users/delete/:id", async (request, reply) => {
     //
   });
 }

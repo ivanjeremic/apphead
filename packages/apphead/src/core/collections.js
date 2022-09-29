@@ -39,31 +39,23 @@ export default async function collections(fastify, options) {
     }
   });
 
-  fastify.post("/collections/insertOne", async (request, reply) => {
+  fastify.put("/admin/collections/updateOne", async (request, reply) => {
     //
   });
 
-  fastify.post("/collections/insertMany", async (request, reply) => {
+  fastify.put("/admin/collections/updateMany", async (request, reply) => {
     //
   });
 
-  fastify.put("/collections/updateOne", async (request, reply) => {
+  fastify.put("/admin/collections/replaceOne", async (request, reply) => {
     //
   });
 
-  fastify.put("/collections/updateMany", async (request, reply) => {
+  fastify.delete("/admin/collections/deleteOne", async (request, reply) => {
     //
   });
 
-  fastify.put("/collections/replaceOne", async (request, reply) => {
-    //
-  });
-
-  fastify.delete("/collections/deleteOne", async (request, reply) => {
-    //
-  });
-
-  fastify.delete("/collections/deleteMany", async (request, reply) => {
+  fastify.delete("/admin/collections/deleteMany", async (request, reply) => {
     //
   });
 }
