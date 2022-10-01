@@ -38,12 +38,10 @@ const router = createBrowserRouter(
         path="collections"
         loader={async () => {
           const data = await fetch(
-            "https://jsonplaceholder.typicode.com/todos/1"
-          ).then((response) => response.json());
-
-          return defer({
-            data,
-          });
+            "http://localhost:3000/admin/collections/getCollectionNames?database=apphead"
+          );
+          console.log(data);
+          return data;
         }}
         element={<Nav navigation={navigation} />}
       />

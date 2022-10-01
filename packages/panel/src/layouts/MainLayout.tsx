@@ -9,10 +9,15 @@ import {
   PhotoIcon,
   InboxStackIcon,
   MagnifyingGlassIcon,
+  ArrowDownLeftIcon,
+  ArrowDownIcon,
 } from "@heroicons/react/24/outline";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { classNames } from "../helpers/className";
 import CollectionList from "../components/CollectionList";
+import CreateButton from "../components/CreateButton";
+import { ArrowLeftIcon, ChevronLeftIcon } from "@heroicons/react/24/solid";
+import { ActionBar } from "../components/ActionBar";
 
 function Icon() {
   return (
@@ -53,33 +58,15 @@ function PanelNavTopBar() {
     <div className="relative z-10 flex-shrink-0 h-16 bg-white border-b border-gray-200 shadow-sm flex">
       <button
         type="button"
-        className="inline-flex items-center px-4 py-2 shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-1 focus:ring-offset-0 focus:ring-red-500"
+        className="w-12 p-3 text-black border-l-4 border-r-gray-200 border-r border-x-blue-600 bg-[#f6f7f7] hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
       >
-        {"<"}
+        <ChevronLeftIcon width={20} />
       </button>
 
       <div className="sm:flex sm:items-center sm:justify-between px-3 py-2">
         <h3 className="text-lg leading-6 font-medium text-gray-900">
           Collections
         </h3>
-      </div>
-    </div>
-  );
-}
-
-function Example() {
-  return (
-    <div className="border-b border-gray-200 shadow-sm sm:flex sm:items-center sm:justify-between h-16 px-3 py-2">
-      <h3 className="text-lg leading-6 font-medium text-gray-900">
-        Collections
-      </h3>
-      <div className="mt-3 flex sm:mt-0 sm:ml-4">
-        <button
-          type="button"
-          className="ml-3 inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-        >
-          Create Collection
-        </button>
       </div>
     </div>
   );
@@ -238,7 +225,7 @@ export default function MainLayout() {
       <aside className="hidden w-96 bg-white border-r border-gray-200 overflow-y-auto lg:block">
         {/* Your content */}
         <PanelNavTopBar />
-        <Example />
+        <ActionBar />
         <Outlet />
       </aside>
 
@@ -359,51 +346,9 @@ export default function MainLayout() {
               </div>
             </div>
           </div>
+
           {/* Content Action Section */}
-          <div className="relative z-10 flex-shrink-0 h-16 bg-white border-b border-gray-200 shadow-sm flex">
-            <button
-              type="button"
-              className="border-r border-gray-200 px-4 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden"
-              onClick={() => setMobileMenuOpen(true)}
-            >
-              <span className="sr-only">Open sidebar</span>
-              <InboxStackIcon className="h-6 w-6" aria-hidden="true" />
-            </button>
-            <div className="flex-1 flex justify-between px-4 sm:px-6">
-              <div className="flex-1 flex">
-                <form className="w-full flex md:ml-0" action="#" method="GET">
-                  <label htmlFor="search-field" className="sr-only">
-                    Search all files
-                  </label>
-                  <div className="relative w-full text-gray-400 focus-within:text-gray-600">
-                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center">
-                      <MagnifyingGlassIcon
-                        className="flex-shrink-0 h-5 w-5"
-                        aria-hidden="true"
-                      />
-                    </div>
-                    <input
-                      name="search-field"
-                      id="search-field"
-                      className="h-full w-full border-transparent py-2 pl-8 pr-3 text-base text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-0 focus:border-transparent focus:placeholder-gray-400"
-                      placeholder="Search Users"
-                      type="search"
-                    />
-                  </div>
-                </form>
-              </div>
-              <div className="ml-2 flex items-center space-x-4 sm:ml-6 sm:space-x-6">
-                <button
-                  type="button"
-                  className="flex bg-indigo-600 p-2 items-center justify-center text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                >
-                  <PlusIcon className="h-6 w-6" aria-hidden="true" />
-                  Add new User
-                  <span className="sr-only">Add file</span>
-                </button>
-              </div>
-            </div>
-          </div>
+          <ActionBar />
         </header>
 
         {/* Main content */}

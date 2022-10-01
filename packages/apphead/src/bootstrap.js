@@ -4,8 +4,8 @@ import { dirname } from "path";
 import { fileURLToPath } from "url";
 import Fastify from "fastify";
 import autoLoad from "@fastify/autoload";
-import cors from '@fastify/cors'
-import chalk from "chalk";
+import cors from "@fastify/cors";
+import pc from "picocolors";
 import { IS_DEV } from "./utils/CONSTANTS.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -13,7 +13,7 @@ const __dirname = dirname(__filename);
 const DATA_FOLDER = resolve("./apphead-data");
 const PLUGIN_FOLDER = resolve("./apphead-plugins");
 const MEDIA_FOLDER = resolve("./apphead-media");
-const logInfoServerStart = (t) => console.log(chalk.bgYellowBright(t));
+const logInfoServerStart = (t) => console.log(pc.green(pc.italic(t)));
 
 // !! run: mongod --dbpath=./$data
 export async function bootstrap() {
@@ -37,6 +37,14 @@ export async function bootstrap() {
     await mkdir(MEDIA_FOLDER);
   }
 
+  /*   await fastify.register(import('@fastify/reply-from'), {
+    base: 'http://localhost:3001/'
+  })
+
+   fastify.get('/', (request, reply) => {
+    reply.from('/')
+  }) */
+
   await fastify.register(import("@fastify/mongodb"), {
     // force to close the mongodb connection when app stopped
     // the default value is false
@@ -44,7 +52,7 @@ export async function bootstrap() {
 
     url: "mongodb://localhost:27017",
   });
-  /* await fastify.register(cors, { 
+  await fastify.register(cors, { 
     // put your options here
     origin: (origin, cb) => {
       const hostname = new URL(origin).hostname
@@ -56,7 +64,7 @@ export async function bootstrap() {
       // Generate an error on other origins, disabling access
       cb(new Error("Not allowed"), false)
     }
-  }) */
+  })
   await fastify.register(import("@fastify/helmet"));
   await fastify.register(import("@fastify/multipart"));
   await fastify.register(import("@fastify/swagger"), {
@@ -121,26 +129,20 @@ export async function bootstrap() {
     forceESM: true,
   });
 
-  /**
-   * Run the server!
-   */
-  const start = async () => {
-    const port = 3000;
+  const port = 3000;
 
-    try {
-      await fastify.listen({ port });
+  try {
+    await fastify.listen({ port });
 
-      logInfoServerStart(
-        `Running ${IS_DEV ? "Development" : "Production"} mode on port ${port}.`
-      );
-    } catch (err) {
-      fastify.log.error(err);
-      console.log(err);
-      process.exit(1);
-    }
-  };
+    logInfoServerStart(
+      `Running ${IS_DEV ? "Development" : "Production"} mode on port ${port}.`
+    );
+  } catch (err) {
+    fastify.log.error(err);
+    console.log(err);
+    process.exit(1);
+  }
 
-  await start();
   await fastify.ready();
   fastify.swagger();
 }
