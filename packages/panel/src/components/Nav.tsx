@@ -7,10 +7,7 @@ import {
   UsersIcon,
 } from "@heroicons/react/24/outline";
 import { useLoaderData } from "react-router-dom";
-
-function classNames(...classes: any) {
-  return classes.filter(Boolean).join(" ");
-}
+import { classNames } from "../helpers/className";
 
 // Example POST method implementation:
 async function postData(url = "", data = {}) {

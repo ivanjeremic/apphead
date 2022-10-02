@@ -8,7 +8,6 @@ import {
   defer,
 } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
-import "./index.css";
 import Nav from "./components/Nav";
 import {
   CalendarIcon,
@@ -18,6 +17,11 @@ import {
   InboxIcon,
   UsersIcon,
 } from "@heroicons/react/24/outline";
+
+import "./index.css";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 const navigation = [
   { name: "Users", href: "#", icon: HomeIcon, current: true, count: "System" },

@@ -5,7 +5,7 @@ import {
 
 export function ActionBar({ buttons }: any) {
   return (
-    <div className="relative z-10 flex-shrink-0 bg-white border-b border-gray-200 shadow-sm flex">
+    <div className="relative flex-shrink-0 bg-white border-b border-gray-200 shadow-sm flex">
       <button
         type="button"
         className="border-r border-gray-200 px-4 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden"
