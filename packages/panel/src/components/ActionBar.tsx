@@ -2,9 +2,8 @@ import {
   InboxStackIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/outline";
-import CreateButton from "./CreateButton";
 
-export function ActionBar() {
+export function ActionBar({ buttons }: any) {
   return (
     <div className="relative z-10 flex-shrink-0 bg-white border-b border-gray-200 shadow-sm flex">
       <button
@@ -38,7 +37,7 @@ export function ActionBar() {
           </form>
         </div>
         <div className="ml-2 flex items-center space-x-4 sm:ml-6 sm:space-x-6">
-          <CreateButton />
+          {buttons}
         </div>
       </div>
     </div>

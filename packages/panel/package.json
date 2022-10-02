@@ -16,7 +16,8 @@
     "react-dom": "^18.0.0",
     "react-hook-form": "^7.36.1",
     "react-iframe": "^1.8.4",
-    "react-router-dom": "^6.4.1"
+    "react-router-dom": "^6.4.1",
+    "swiper": "^8.4.2"
   },
   "devDependencies": {
     "@types/react": "^18.0.0",

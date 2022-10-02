@@ -15,7 +15,7 @@ import {
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { classNames } from "../helpers/className";
 import CollectionList from "../components/CollectionList";
-import CreateButton from "../components/CreateButton";
+import { ActionButton } from "../components/ActionButton";
 import { ArrowLeftIcon, ChevronLeftIcon } from "@heroicons/react/24/solid";
 import { ActionBar } from "../components/ActionBar";
 
@@ -225,7 +225,7 @@ export default function MainLayout() {
       <aside className="hidden w-96 bg-white border-r border-gray-200 overflow-y-auto lg:block">
         {/* Your content */}
         <PanelNavTopBar />
-        <ActionBar />
+        <ActionBar buttons={<ActionButton text="Create Collection" />} />
         <Outlet />
       </aside>
 
@@ -348,7 +348,8 @@ export default function MainLayout() {
           </div>
 
           {/* Content Action Section */}
-          <ActionBar />
+          <ActionBar buttons={<ActionButton text="Create User" />} />
+          {/* Content Action Section /> */}
         </header>
 
         {/* Main content */}
@@ -368,6 +369,7 @@ export default function MainLayout() {
             </section>
           </main>
         </div>
+        {/* Main Content /> */}
       </div>
     </div>
   );
