@@ -70,7 +70,7 @@ export default function MainLayout() {
               alt="Workflow"
             />
           </div>
-          <div className="flex-1 mt-6 w-full px-2 space-y-1">
+          <div className="flex-1 mt-6 w-full space-y-1">
             {sidebarNavigation.map((item) => (
               <Link
                 key={item.name}
@@ -79,7 +79,7 @@ export default function MainLayout() {
                   location.pathname === item.href
                     ? "bg-gray-900 text-white"
                     : "text-indigo-100 hover:bg-gray-900 hover:text-white",
-                  "group w-full p-3 rounded-md flex flex-col items-center text-xs font-medium"
+                  "group w-full p-3 flex flex-col items-center text-xs font-medium"
                 )}
                 aria-current={
                   location.pathname === item.href ? "page" : undefined

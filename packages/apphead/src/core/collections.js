@@ -5,13 +5,11 @@ export default async function collections(fastify, options) {
       const { database } = request.query;
       try {
         const db = await fastify.mongo.client.db(database);
-        const colls = await db.listCollections().toArray();
-        console.log(colls);
-        reply
-          .send(colls);
+        const collection = await db.listCollections().toArray();
+        reply.send(collection);
       } catch (error) {
         console.dir(error);
-      } 
+      }
     }
   );
 
@@ -20,12 +18,12 @@ export default async function collections(fastify, options) {
     async (request, reply) => {
       const { database, collection } = request.body;
       try {
-        const _database = fastify.mongo.client.db(database);
-        await _database.createCollection(collection);
+        const db = await fastify.mongo.client.db(database);
+        await db.createCollection(collection);
       } catch (error) {
         console.dir(error);
       } finally {
-        await fastify.mongo.client.close();
+        //await fastify.mongo.client.close();
       }
     }
   );
@@ -33,8 +31,8 @@ export default async function collections(fastify, options) {
   fastify.post("/admin/collections/insertOne", async (request, reply) => {
     const { database, collection, document } = request.body;
     try {
-      const _database = fastify.mongo.client.db(database);
-      const _collection = _database.collection(collection);
+      const db = fastify.mongo.client.db(database);
+      const _collection = db.collection(collection);
       const result = await _collection.insertOne(document);
       console.log(`A document was inserted with the _id: ${result.insertedId}`);
     } catch (error) {
