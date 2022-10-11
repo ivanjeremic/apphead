@@ -6,7 +6,6 @@ const people = [
     role: "Admin",
     email: "jane.cooper@example.com",
   },
-  // More people...
 ];
 
 export default function CollectionList() {

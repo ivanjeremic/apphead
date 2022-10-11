@@ -1,18 +1,8 @@
-import {
-  InboxStackIcon,
-  MagnifyingGlassIcon,
-} from "@heroicons/react/24/outline";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
 export function ActionBar({ buttons }: any) {
   return (
     <div className="relative flex-shrink-0 bg-white border-b border-gray-200 shadow-sm flex">
-      <button
-        type="button"
-        className="border-r border-gray-200 px-4 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden"
-      >
-        <span className="sr-only">Open sidebar</span>
-        <InboxStackIcon className="h-6 w-6" aria-hidden="true" />
-      </button>
       <div className="flex-1 flex justify-between pl-4 sm:pl-6">
         <div className="flex-1 flex">
           <form className="w-full flex md:ml-0" action="#" method="GET">
