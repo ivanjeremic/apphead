@@ -1,24 +1,24 @@
-export default async function collections(fastify, options) {
-  fastify.get(
+export default async function collections(app, options) {
+  app.get(
     "/admin/collections/getCollectionNames",
     async (request, reply) => {
       const { database } = request.query;
       try {
-        const db = await fastify.mongo.client.db(database);
-        const collection = await db.listCollections().toArray();
-        reply.send(collection);
+        const db = await app.mongo.client.db(database);
+        const collections = await db.listCollections().toArray();
+        reply.send(collections);
       } catch (error) {
         console.dir(error);
       }
     }
   );
 
-  fastify.post(
+  app.post(
     "/admin/collections/createCollection",
     async (request, reply) => {
       const { database, collection } = request.body;
       try {
-        const db = await fastify.mongo.client.db(database);
+        const db = await app.mongo.client.db(database);
         await db.createCollection(collection);
       } catch (error) {
         console.dir(error);
@@ -28,51 +28,51 @@ export default async function collections(fastify, options) {
     }
   );
 
-  fastify.post("/admin/collections/insertOne", async (request, reply) => {
+  app.post("/admin/collections/insertOne", async (request, reply) => {
     const { database, collection, document } = request.body;
     try {
-      const db = fastify.mongo.client.db(database);
+      const db = app.mongo.client.db(database);
       const _collection = db.collection(collection);
       const result = await _collection.insertOne(document);
       console.log(`A document was inserted with the _id: ${result.insertedId}`);
     } catch (error) {
       console.dir(error);
     } finally {
-      await fastify.mongo.client.close();
+      await app.mongo.client.close();
     }
   });
 
-  fastify.post("/admin/collection/insertMany", async (request, reply) => {
+  app.post("/admin/collection/insertMany", async (request, reply) => {
     const { database, collection, documents } = request.body;
     try {
-      const _database = fastify.mongo.client.db(database);
-      const _collection = _database.collection(collection);
-      const result = await _collection.insertMany(documents);
+      const db = app.mongo.client.db(database);
+      const coll = db.collection(collection);
+      const result = await coll.insertMany(documents);
       console.log(`A document was inserted with the _id: ${result.insertedId}`);
     } catch (error) {
       console.dir(error);
     } finally {
-      await fastify.mongo.client.close();
+      await app.mongo.client.close();
     }
   });
 
-  fastify.put("/admin/collections/updateOne", async (request, reply) => {
+  app.put("/admin/collections/updateOne", async (request, reply) => {
     //
   });
 
-  fastify.put("/admin/collections/updateMany", async (request, reply) => {
+  app.put("/admin/collections/updateMany", async (request, reply) => {
     //
   });
 
-  fastify.put("/admin/collections/replaceOne", async (request, reply) => {
+  app.put("/admin/collections/replaceOne", async (request, reply) => {
     //
   });
 
-  fastify.delete("/admin/collections/deleteOne", async (request, reply) => {
+  app.delete("/admin/collections/deleteOne", async (request, reply) => {
     //
   });
 
-  fastify.delete("/admin/collections/deleteMany", async (request, reply) => {
+  app.delete("/admin/collections/deleteMany", async (request, reply) => {
     //
   });
 }

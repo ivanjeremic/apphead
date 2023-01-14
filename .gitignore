@@ -14,7 +14,6 @@ dist-ssr
 apphead-data
 apphead-media
 apphead-plugins
-apphead-web
 
 # Editor directories and files
 .vscode/*

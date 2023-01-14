@@ -129,7 +129,7 @@ export async function bootstrap() {
     forceESM: true,
   });
 
-  const port = 3000;
+  const port = 3001;
 
   try {
     await fastify.listen({ port });

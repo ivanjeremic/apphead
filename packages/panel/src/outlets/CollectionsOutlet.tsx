@@ -11,7 +11,7 @@ import { useLoaderData } from "react-router-dom";
 
 export async function collectionsOutletLoader() {
   const data = await fetch(
-    "http://localhost:3000/admin/collections/getCollectionNames?database=apphead"
+    "http://localhost:3001/admin/collections/getCollectionNames?database=apphead"
   );
 
   return data;
@@ -23,7 +23,7 @@ export async function collectionsOutletAction({ request, params }: any) {
     let collection = formData.get("collectionName");
 
     const res = await fetch(
-      "http://localhost:3000/admin/collections/createCollection",
+      "http://localhost:3001/admin/collections/createCollection",
       {
         method: "POST", // *GET, POST, PUT, DELETE, etc.
         mode: "cors", // no-cors, *cors, same-origin
