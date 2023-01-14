@@ -29,7 +29,7 @@ const router = createBrowserRouter(
         action={collectionsOutletAction}
         errorElement={<div>Err</div>}
       >
-        <Route path="collections/create" element={<h1>pages</h1>} />
+        <Route path="create" element={<h1>pages</h1>} />
       </Route>
       <Route path="pages" element={<h1>pages</h1>} />
       <Route path="media" element={<h1>media</h1>} />
