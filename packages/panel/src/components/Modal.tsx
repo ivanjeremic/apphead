@@ -1,9 +1,16 @@
-import { Fragment, useRef } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { Form } from "react-router-dom";
+import { Form, useActionData } from "react-router-dom";
 
 export default function Modal({ open, setOpen }: any) {
   const initialFocus = useRef(null);
+  const errors: any = useActionData();
+
+  useEffect(() => {
+    if (errors?.ok) {
+      setOpen(false);
+    }
+  }, [errors]);
 
   return (
     <Transition.Root show={open} as={Fragment}>

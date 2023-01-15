@@ -2,14 +2,15 @@ import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
 import { Fragment, useState } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { PlusIcon, InboxStackIcon } from "@heroicons/react/24/outline";
-import { classNames } from "../helpers/className";
-import CollectionList from "../components/CollectionList";
+import { classNames } from "../../helpers/className";
+import CollectionList from "../../components/CollectionList";
 import { ChevronLeftIcon } from "@heroicons/react/24/solid";
-import { ActionBar } from "../components/ActionBar";
-import { ActionButton } from "../components/ActionButton";
+import { ActionBar } from "../../components/ActionBar";
+import { ActionButton } from "../../components/ActionButton";
 import { useLoaderData } from "react-router-dom";
 
-export async function collectionsOutletLoader() {
+// Loader
+export async function collectionsLoader() {
   const data = await fetch(
     "http://localhost:3001/admin/collections/getCollectionNames?database=apphead"
   );
@@ -17,7 +18,8 @@ export async function collectionsOutletLoader() {
   return data;
 }
 
-export async function collectionsOutletAction({ request, params }: any) {
+// Action
+export async function collectionsAction({ request, params }: any) {
   if (request.method === "POST") {
     let formData = await request.formData();
     let collection = formData.get("collectionName");
@@ -47,6 +49,7 @@ export async function collectionsOutletAction({ request, params }: any) {
   }
 }
 
+// Outlet
 const userNavigation = [
   { name: "Your Profile", href: "#" },
   { name: "Sign out", href: "#" },

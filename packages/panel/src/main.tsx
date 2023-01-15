@@ -13,10 +13,10 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import {
+  collectionsLoader,
+  collectionsAction,
   CollectionsOutlet,
-  collectionsOutletAction,
-  collectionsOutletLoader,
-} from "./outlets/CollectionsOutlet";
+} from "./routes/collections";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -24,9 +24,9 @@ const router = createBrowserRouter(
       <Route path="apps" element={<h1>apps today</h1>} />
       <Route
         path="collections"
-        loader={collectionsOutletLoader}
+        loader={collectionsLoader}
         element={<CollectionsOutlet />}
-        action={collectionsOutletAction}
+        action={collectionsAction}
         errorElement={<div>Err</div>}
       >
         <Route path="create" element={<h1>pages</h1>} />

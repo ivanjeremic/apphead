@@ -10,7 +10,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { classNames } from "../helpers/className";
-import { CollectionsOutlet } from "../outlets/CollectionsOutlet";
+import { CollectionsOutlet } from "../routes/collections";
 
 function Icon() {
   return (
