@@ -134,7 +134,7 @@ export async function bootstrap() {
     await app.listen({ port });
 
     logInfoServerStart(
-      `Running ${IS_DEV ? "Development" : "Production"} mode on port ${port}.`
+      `Running AppHead in ${IS_DEV ? "Development" : "Production"} mode on port ${port}.`
     );
   } catch (err) {
     app.log.error(err);
