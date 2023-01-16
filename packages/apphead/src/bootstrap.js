@@ -4,7 +4,6 @@ import { dirname } from "path";
 import { fileURLToPath } from "url";
 import Fastify from "fastify";
 import autoLoad from "@fastify/autoload";
-import cors from "@fastify/cors";
 import pc from "picocolors";
 import { IS_DEV } from "./utils/CONSTANTS.js";
 
@@ -52,7 +51,7 @@ export async function bootstrap() {
 
     url: "mongodb://localhost:27017",
   });
-  await app.register(cors, { 
+  await app.register(import("@fastify/cors"), { 
     // put your options here
     origin: (origin, cb) => {
       const hostname = new URL(origin).hostname
