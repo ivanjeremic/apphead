@@ -17,7 +17,7 @@ const logInfoServerStart = (t) => console.log(pc.green(pc.italic(t)));
 
 // !! run: mongod --dbpath=./$data
 export async function bootstrap() {
-  const fastify = Fastify();
+  const app = Fastify();
 
   try {
     await access(DATA_FOLDER);
@@ -45,18 +45,18 @@ export async function bootstrap() {
     reply.from('/')
   }) */
 
-  await fastify.register(import("@fastify/mongodb"), {
+  await app.register(import("@fastify/mongodb"), {
     // force to close the mongodb connection when app stopped
     // the default value is false
     forceClose: true,
 
     url: "mongodb://localhost:27017",
   });
-  await fastify.register(cors, { 
+  await app.register(cors, { 
     // put your options here
     origin: (origin, cb) => {
       const hostname = new URL(origin).hostname
-      if(hostname === "localhost"){
+      if(hostname === "localhost") {
         //  Request from localhost will pass
         cb(null, true)
         return
@@ -65,9 +65,9 @@ export async function bootstrap() {
       cb(new Error("Not allowed"), false)
     }
   })
-  await fastify.register(import("@fastify/helmet"));
-  await fastify.register(import("@fastify/multipart"));
-  await fastify.register(import("@fastify/swagger"), {
+  await app.register(import("@fastify/helmet"));
+  await app.register(import("@fastify/multipart"));
+  await app.register(import("@fastify/swagger"), {
     routePrefix: "/documentation",
     swagger: {
       info: {
@@ -124,7 +124,7 @@ export async function bootstrap() {
     exposeRoute: true,
   });
 
-  await fastify.register(autoLoad, {
+  await app.register(autoLoad, {
     dir: join(__dirname, "core"),
     forceESM: true,
   });
@@ -132,17 +132,17 @@ export async function bootstrap() {
   const port = 3001;
 
   try {
-    await fastify.listen({ port });
+    await app.listen({ port });
 
     logInfoServerStart(
       `Running ${IS_DEV ? "Development" : "Production"} mode on port ${port}.`
     );
   } catch (err) {
-    fastify.log.error(err);
+    app.log.error(err);
     console.log(err);
     process.exit(1);
   }
 
-  await fastify.ready();
-  fastify.swagger();
+  await app.ready();
+  app.swagger();
 }
