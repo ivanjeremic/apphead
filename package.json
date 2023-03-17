@@ -1,35 +1,22 @@
 {
-  "name": "apphead-project",
-  "version": "0.0.0",
-  "description": "apphead-monorepo",
-  "type": "module",
+  "name": "apphead",
+  "version": "1.0.0",
+  "description": "",
   "main": "main.js",
-  "engines": {
-    "node": ">=16.14.2",
-    "npm": ">=8.5.0"
-  },
   "scripts": {
-    "apphead:start": "cross-env NODE_ENV=production ./packages/apphead/bin/apphead.js",
-    "apphead:dev": "cross-env NODE_ENV=development node ./packages/apphead/bin/apphead.js & npm run dev --prefix packages/panel",
-    "panel:build": "npm run build --prefix packages/panel",
-    "panel:preview": "npm run preview --prefix packages/panel",
-    "website:start": "npm run start --prefix packages/website",
-    "website:build": "npm run build --prefix packages/website",
-    "website:swizzle": "npm run swizzle --prefix packages/website",
-    "website:deploy": "npm run deploy --prefix packages/website",
-    "website:clear": "npm run clear --prefix packages/website",
-    "website:serve": "npm run serve --prefix packages/website",
-    "website:write-translations": "npm run write-translations --prefix packages/website",
-    "website:write-heading-ids": "npm run write-heading-ids --prefix packages/website",
-    "website:typecheck": "npm run typecheck --prefix packages/website"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Ivan Jeremic",
-  "license": "MIT",
-  "homepage": "https://domedb.com",
-  "bugs": "https://github.com/domedb/domedb/issues",
-  "devDependencies": {
-    "cross-env": "^7.0.3"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ivanjeremic/apphead.git"
   },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ivanjeremic/apphead/issues"
+  },
+  "homepage": "https://github.com/ivanjeremic/apphead#readme",
   "dependencies": {
     "express": "^4.18.2"
   }
