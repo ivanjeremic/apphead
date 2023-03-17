@@ -4,7 +4,7 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "run": "source /home/ivanfnbe/nodevenv/repositories/apphead/10/bin/activate && cd /home/ivanfnbe/repositories/apphead"
   },
   "repository": {
     "type": "git",
