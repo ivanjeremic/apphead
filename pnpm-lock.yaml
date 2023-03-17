@@ -5,6 +5,9 @@ importers:
   .:
     specifiers:
       cross-env: ^7.0.3
+      express: ^4.18.2
+    dependencies:
+      express: 4.18.2
     devDependencies:
       cross-env: 7.0.3
 

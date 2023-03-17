@@ -1,4 +1,4 @@
-import { mkdir, access } from "fs/promises";
+import { mkdir, access } from "node:fs/promises";
 import { join, resolve } from "path";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
@@ -51,7 +51,7 @@ export async function bootstrap() {
 
     url: "mongodb://localhost:27017",
   });
-  await app.register(import("@fastify/cors"), { 
+  await app.register(import("@fastify/cors"), {
     // put your options here
     origin: (origin, cb) => {
       const hostname = new URL(origin).hostname
