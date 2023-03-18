@@ -7,7 +7,7 @@ app.use(express.static("public"));
 
 // define the first route
 app.get("/", function (req, res) {
-  res.send("<h1>Hello WORKER!</h1>");
+  res.send("<h1>Hello Bre!</h1>");
 });
 
 // start the server listening for requests
