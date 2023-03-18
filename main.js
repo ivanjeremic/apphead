@@ -10,5 +10,9 @@ app.get("/", function (req, res) {
   res.send("<h1>Hello Bre!</h1>");
 });
 
+app.get("/", function (req, res) {
+  res.send("<h1>About</h1>");
+});
+
 // start the server listening for requests
 app.listen(process.env.PORT || 3000, () => console.log("Server is running..."));
