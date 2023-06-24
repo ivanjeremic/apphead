@@ -7,6 +7,10 @@
     "node": ">=16.14.2",
     "npm": ">=8.5.0"
   },
+  "workspaces": [
+    "packages/*",
+    "websites/*"
+  ],
   "scripts": {
     "apphead:start": "cross-env NODE_ENV=production ./packages/apphead/bin/apphead.js",
     "apphead:dev": "cross-env NODE_ENV=development node ./packages/apphead/bin/apphead.js & npm run dev --prefix packages/panel",

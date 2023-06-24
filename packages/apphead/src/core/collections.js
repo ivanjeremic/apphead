@@ -4,13 +4,13 @@ Default collections
 - roles
 */
 
+import { db } from "../../bin/apphead.js";
+
 export default async function collections(app, options) {
   app.get("/admin/collections/getCollectionNames", async (request, reply) => {
     const { database } = request.query;
     try {
-      const db = await app.mongo.client.db(database);
-      const collections = await db.listCollections().toArray();
-      reply.send(collections);
+      reply.send([{name:"users"},{name:"cars"}]);
     } catch (error) {
       console.dir(error);
     }
@@ -18,14 +18,16 @@ export default async function collections(app, options) {
 
   app.post("/admin/collections/createCollection", async (request, reply) => {
     const { database, collection } = request.body;
-    try {
+
+    console.log(...db)
+   /*  try {
       const db = await app.mongo.client.db(database);
       await db.createCollection(collection);
     } catch (error) {
       console.dir(error);
     } finally {
       //await fastify.mongo.client.close();
-    }
+    } */
   });
 
   app.post("/admin/collections/insertOne", async (request, reply) => {

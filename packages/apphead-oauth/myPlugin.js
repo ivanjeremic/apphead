@@ -1,4 +1,5 @@
-export default async function apollo() {
+export default async function myPlugin() {
+
   return {
     name: "myPLugin",
     version: "0.0.1",
@@ -7,10 +8,11 @@ export default async function apollo() {
     },
     onRemove() {
       // do stuff when removing a plugin
+      
     },
     api: {
-      async graphql(request, reply) {
-        console.log("3000?");
+      async addTodo(request, reply) {
+        console.log("Hello PLugin b2200?");
       },
     },
   };
