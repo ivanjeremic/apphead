@@ -11,9 +11,7 @@ node_modules
 dist
 dist-ssr
 *.local
-apphead-data
-apphead-media
-apphead-plugins
+.apphead
 
 # Editor directories and files
 .vscode/*

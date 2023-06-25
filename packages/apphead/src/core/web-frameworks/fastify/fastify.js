@@ -1,35 +1,17 @@
-import { mkdir, access } from "fs/promises";
-import { join, resolve } from "path";
+import { join } from "path";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import Fastify from "fastify";
 import autoLoad from "@fastify/autoload";
 import pc from "picocolors";
-import { IS_DEV } from "./utils/CONSTANTS.js";
+import { IS_DEV } from "../../../utils/CONSTANTS.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const logInfoServerStart = (t) => console.log(pc.green(pc.italic(t)));
 
-export async function bootstrap() {
+export async function apphead_fastify() {
   const app = Fastify();
-
-  try {
-    await access(".apphead");
-  } catch (error) {
-    await mkdir(".apphead");
-    await mkdir(`./.apphead/apphead-data`);
-    await mkdir(`./.apphead/apphead-plugins`);
-    await mkdir(`./.apphead/apphead-media`);
-  }
-
-  /*   await fastify.register(import('@fastify/reply-from'), {
-    base: 'http://localhost:3001/'
-  })
-
-   fastify.get('/', (request, reply) => {
-    reply.from('/')
-  }) */
 
   await app.register(import("@fastify/cors"), {
     // put your options here
@@ -105,7 +87,7 @@ export async function bootstrap() {
   });
 
   await app.register(autoLoad, {
-    dir: join(__dirname, "core"),
+    dir: join(__dirname, "plugins"),
     forceESM: true,
   });
 
