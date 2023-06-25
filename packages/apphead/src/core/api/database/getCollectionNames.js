@@ -1,10 +1,7 @@
-export async function getCollectionNames(req, res) {
-  const { database } = req.query;
+export async function getCollectionNames(req, ajc) {
+  const data = [...ajc.keys()].map((name) => ({
+    name,
+  }));
 
-  console.log("foooooo")
-    try {
-      res.send([{name:"users"},{name:"cars"}]);
-    } catch (error) {
-      console.dir(error);
-    }
+  return data;
 }

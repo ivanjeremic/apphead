@@ -1,4 +1,5 @@
-export async function createCollection(req,res) {
-  const { database, collection } = req.body;
+export async function createCollection(req, ajc) {
+  const { database, collection } = req;
 
+  ajc.set(collection, collection);
 }

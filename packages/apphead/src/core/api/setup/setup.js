@@ -1,7 +1,9 @@
 import { mkdir, access } from "fs/promises";
+import { apphead_fastify } from "../../web-frameworks/fastify/fastify.js";
+import { AJC } from "../database/AJC.js";
 
 export async function setup() {
-  const dbs = new Map([["maz", "spaz"]])
+  const cache = new AJC()
 
   try {
     await access(".apphead");
@@ -11,4 +13,6 @@ export async function setup() {
     await mkdir(`./.apphead/apphead-plugins`);
     await mkdir(`./.apphead/apphead-media`);
   }
+
+  await apphead_fastify(cache);
 }

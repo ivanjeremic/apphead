@@ -5,12 +5,21 @@ import Fastify from "fastify";
 import autoLoad from "@fastify/autoload";
 import pc from "picocolors";
 import { IS_DEV } from "../../../utils/CONSTANTS.js";
+import { getCollectionNames } from "../../api/database/getCollectionNames.js";
+import { createCollection } from "../../api/database/createCollection.js";
+import { deleteMany } from "../../api/database/deleteMany.js";
+import { deleteOne } from "../../api/database/deleteOne.js";
+import { insertMany } from "../../api/database/insertMany.js";
+import { insertOne } from "../../api/database/insertOne.js";
+import { replaceOne } from "../../api/database/replaceOne.js";
+import { updateMany } from "../../api/database/updateMany.js";
+import { updateOne } from "../../api/database/updateOne.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const logInfoServerStart = (t) => console.log(pc.green(pc.italic(t)));
 
-export async function apphead_fastify() {
+export async function apphead_fastify(ajc) {
   const app = Fastify();
 
   await app.register(import("@fastify/cors"), {
@@ -85,6 +94,22 @@ export async function apphead_fastify() {
     transformStaticCSP: (header) => header,
     exposeRoute: true,
   });
+
+  // @ts-ignore
+  if (!app.ajc) {
+    app.decorate("apphead", {
+      ajc,
+      getCollectionNames,
+      createCollection,
+      insertOne,
+      insertMany,
+      updateOne,
+      updateMany,
+      replaceOne,
+      deleteOne,
+      deleteMany,
+    });
+  }
 
   await app.register(autoLoad, {
     dir: join(__dirname, "plugins"),
