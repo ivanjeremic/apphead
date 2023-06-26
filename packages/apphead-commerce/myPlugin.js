@@ -19,19 +19,19 @@ export default async function myPlugin() {
 // or
 
 export class MyPlugin {
-  name = "myPlugin";
-  version = "0.0.1";
+  name = "myPlugin"
+  version = "0.0.1"
   api = {
     async addTodo(request, reply) {
-      console.log("Hello PLugin b2200?");
+      console.log("Hello PLugin b2200?")
     },
-  };
+  }
 
   onInstall() {
-    console.info("onInstall");
+    console.info("onInstall")
   }
 
   onUninstall() {
-    console.info("onUninstall");
+    console.info("onUninstall")
   }
 }
