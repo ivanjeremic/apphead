@@ -1,0 +1,1 @@
+const en = new Intl.DateTimeFormat([])
