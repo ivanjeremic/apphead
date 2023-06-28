@@ -1,4 +1,4 @@
-export default async function myPlugin() {
+export default async function appheadCommerce() {
   return {
     name: "myPLugin",
     version: "0.0.1",
@@ -18,7 +18,7 @@ export default async function myPlugin() {
 
 // or
 
-export class MyPlugin {
+export class AppheadCommerce {
   name = "myPlugin"
   version = "0.0.1"
   api = {

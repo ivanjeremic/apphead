@@ -30,28 +30,36 @@ export class AJC {
   async insertMany(info) {
     const { database, collection, documents } = info;
 
+    /**
+     * // documents
+     * [{database, collection, data: {...} }]
+     */
     for (const doc in documents) {
       this.cache.set(collection, doc);
     }
   }
 
-  async updateOne() {
-    //
+  async updateOne(info) {
+    const { database, collection, documents } = info;
   }
 
-  async updateMany() {
-    //
+  async updateMany(info) {
+    const { database, collection, documents } = info;
   }
 
-  async replaceOne() {
-    //
+  async replaceOne(info) {
+    const { database, collection, documents } = info;
   }
 
-  async deleteOne() {
-    //
+  async deleteOne(info) {
+    const { database, collection, documents } = info;
   }
 
-  async deleteMany() {
-    //
+  async deleteMany(info) {
+    const { database, collection, documents } = info;
+
+    for (const doc in documents) {
+      this.cache.delete(doc);
+    }
   }
 }
