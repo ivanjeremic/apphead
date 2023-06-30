@@ -2,9 +2,9 @@
 export class AJC {
   constructor(options) {
     this.cacheMaxAge = options.cacheMaxAge;
-    setInterval(() => {
+    /* setInterval(() => {
       console.log("cacheState:", this.cache);
-    }, 5000);
+    }, 5000); */
   }
   cache = new Map([["AJC", "AJC"]]);
 

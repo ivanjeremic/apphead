@@ -1,10 +1,10 @@
 import { PlusIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
-import Modal from "./Modal";
+import { AddCollectionModal } from "./Modal";
 
 function useIcon() {}
 
-export function ActionButton({ text }: { text: string }) {
+export function ActionButton({ text, Modal }: { text: string; Modal: any }) {
   const [open, setOpen] = useState(false);
   const BtnIcon = useIcon();
 

@@ -2,7 +2,7 @@ import { Fragment, useEffect, useRef } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Form, useActionData } from "react-router-dom";
 
-export default function Modal({ open, setOpen }: any) {
+export function AddCollectionModal({ open, setOpen }: any) {
   const initialFocus = useRef(null);
   const errors: any = useActionData();
 

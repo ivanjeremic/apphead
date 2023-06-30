@@ -1,4 +1,4 @@
-import { Swiper, SwiperSlide, useSwiper } from "swiper/react";
+import { useSwiper } from "swiper/react";
 import { Fragment, useState } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { PlusIcon, InboxStackIcon } from "@heroicons/react/24/outline";
@@ -8,6 +8,8 @@ import { ChevronLeftIcon } from "@heroicons/react/24/solid";
 import { ActionBar } from "../../components/ActionBar";
 import { ActionButton } from "../../components/ActionButton";
 import { useLoaderData } from "react-router-dom";
+import { AddCollectionModal } from "../../components/Modal";
+import { SwipeMenu } from "../../components/SwipeMenu";
 
 // Loader
 export async function collectionsLoader() {
@@ -55,7 +57,7 @@ const userNavigation = [
   { name: "Sign out", href: "#" },
 ];
 
-function PanelNavTopBar() {
+export function PanelNavTopBar() {
   const swiper = useSwiper();
 
   return (
@@ -79,7 +81,7 @@ function PanelNavTopBar() {
   );
 }
 
-function CollectionsNav() {
+export function CollectionsNav() {
   const data: any = useLoaderData();
 
   return (
@@ -126,28 +128,7 @@ export function CollectionsOutlet() {
 
   return (
     <>
-      <Swiper
-        className="hidden w-96 bg-white border-r border-gray-200 overflow-y-auto lg:block"
-        onSlideChange={() => console.log("slide change")}
-        onSwiper={(swiper) => console.log(swiper)}
-        allowTouchMove={false}
-      >
-        <SwiperSlide>
-          <PanelNavTopBar />
-          <ActionBar buttons={<ActionButton text="Create Collection" />} />
-          <CollectionsNav />
-        </SwiperSlide>
-        <SwiperSlide>
-          <PanelNavTopBar />
-        </SwiperSlide>
-        <SwiperSlide>
-          <PanelNavTopBar />
-        </SwiperSlide>
-        <SwiperSlide>
-          <PanelNavTopBar />
-        </SwiperSlide>
-      </Swiper>
-
+      <SwipeMenu />
       {/* Content area */}
       <div className="flex-1 flex flex-col overflow-hidden">
         <header className="w-full">
@@ -267,7 +248,11 @@ export function CollectionsOutlet() {
           </div>
 
           {/* Content Action Section */}
-          <ActionBar buttons={<ActionButton text="Create User" />} />
+          <ActionBar
+            buttons={
+              <ActionButton text="Create Document" Modal={AddCollectionModal} />
+            }
+          />
         </header>
 
         {/* Main content */}
