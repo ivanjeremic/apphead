@@ -21,13 +21,15 @@ import {
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/admin" element={<MainLayout />}>
-      <Route path="apps" element={<h1>apps today</h1>} />
+      <Route path="dashboard" element={<CollectionsOutlet />} />
+      <Route path="apps" element={<CollectionsOutlet />} />
       <Route
         path="collections"
         loader={collectionsLoader}
         element={<CollectionsOutlet />}
         action={collectionsAction}
         errorElement={<div>Err</div>}
+        id="/admin/collections"
       >
         <Route path="create" element={<h1>pages</h1>} />
       </Route>

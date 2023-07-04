@@ -7,12 +7,12 @@ import CollectionList from "../../components/CollectionList";
 import { ChevronLeftIcon } from "@heroicons/react/24/solid";
 import { ActionBar } from "../../components/ActionBar";
 import { ActionButton } from "../../components/ActionButton";
-import { useLoaderData } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AddCollectionModal } from "../../components/Modal";
-import { SwipeMenu } from "../../components/SwipeMenu";
 
 // Loader
 export async function collectionsLoader() {
+  console.log("COLLECTION____LOADER");
   const data = await fetch(
     "http://localhost:3001/admin/collections/getCollectionNames?database=apphead"
   );
@@ -57,7 +57,7 @@ const userNavigation = [
   { name: "Sign out", href: "#" },
 ];
 
-export function PanelNavTopBar() {
+export function PanelNavTopBar({ title }: any) {
   const swiper = useSwiper();
 
   return (
@@ -71,9 +71,7 @@ export function PanelNavTopBar() {
       </button>
 
       <div className="sm:flex sm:items-center sm:justify-between px-3 py-2">
-        <h3 className="text-lg leading-6 font-medium text-gray-900">
-          Collections
-        </h3>
+        <h3 className="text-lg leading-6 font-medium text-gray-900">{title}</h3>
       </div>
       <button onClick={() => swiper.slidePrev()}>Prev</button>
       <button onClick={() => swiper.slideNext()}>Next</button>
@@ -81,16 +79,20 @@ export function PanelNavTopBar() {
   );
 }
 
-export function CollectionsNav() {
-  const data: any = useLoaderData();
+export function CollectionsNav({ data }: any) {
+  const swiper = useSwiper();
+  const navigate = useNavigate();
 
   return (
     <nav className="space-y-1" aria-label="Sidebar">
       {data &&
         data?.map((item: any) => (
-          <a
+          <Link
             key={item.name}
-            href="#"
+            onClick={() => {
+              swiper.slideNext();
+            }}
+            to={item.to}
             className={classNames(
               item.name
                 ? "bg-gray-50 text-gray-900"
@@ -117,7 +119,7 @@ export function CollectionsNav() {
                 {item.name}
               </span>
             )}
-          </a>
+          </Link>
         ))}
     </nav>
   );
@@ -128,7 +130,6 @@ export function CollectionsOutlet() {
 
   return (
     <>
-      <SwipeMenu />
       {/* Content area */}
       <div className="flex-1 flex flex-col overflow-hidden">
         <header className="w-full">
