@@ -2,55 +2,15 @@ import { useSwiper } from "swiper/react";
 import { Fragment, useState } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { PlusIcon, InboxStackIcon } from "@heroicons/react/24/outline";
-import { classNames } from "../../helpers/className";
-import CollectionList from "../../components/CollectionList";
+import { classNames } from "../../../helpers/className";
+import CollectionList from "../../../components/CollectionList";
 import { ChevronLeftIcon } from "@heroicons/react/24/solid";
-import { ActionBar } from "../../components/ActionBar";
-import { ActionButton } from "../../components/ActionButton";
+import { ActionBar } from "../../../components/ActionBar";
+import { ActionButton } from "../../../components/ActionButton";
 import { Link, useNavigate } from "react-router-dom";
-import { AddCollectionModal } from "../../components/Modal";
-
-// Loader
-export async function collectionsLoader() {
-  console.log("COLLECTION____LOADER");
-  const data = await fetch(
-    "http://localhost:3001/admin/collections/getCollectionNames?database=apphead"
-  );
-
-  return data;
-}
-
-// Action
-export async function collectionsAction({ request, params }: any) {
-  if (request.method === "POST") {
-    let formData = await request.formData();
-    let collection = formData.get("collectionName");
-
-    const res = await fetch(
-      "http://localhost:3001/admin/collections/createCollection",
-      {
-        method: "POST", // *GET, POST, PUT, DELETE, etc.
-        mode: "cors", // no-cors, *cors, same-origin
-        cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-        credentials: "same-origin", // include, *same-origin, omit
-        headers: {
-          "Content-Type": "application/json",
-          // 'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        redirect: "follow", // manual, *follow, error
-        referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-        body: JSON.stringify({
-          database: "apphead",
-          collection,
-        }),
-      }
-    );
-
-    if (!res.ok) throw res;
-    return { ok: true };
-  }
-}
-
+import { AddCollectionModal } from "../../../components/Modal";
+import { BeakerIcon, TvIcon } from "@heroicons/react/24/solid";
+import TabBar from "../../../components/TabBar";
 // Outlet
 const userNavigation = [
   { name: "Your Profile", href: "#" },
@@ -84,7 +44,7 @@ export function CollectionsNav({ data }: any) {
   const navigate = useNavigate();
 
   return (
-    <nav className="space-y-1" aria-label="Sidebar">
+    <nav className="space-y-0.5 mt-1" aria-label="Sidebar">
       {data &&
         data?.map((item: any) => (
           <Link
@@ -94,26 +54,39 @@ export function CollectionsNav({ data }: any) {
             }}
             to={item.to}
             className={classNames(
-              item.name
-                ? "bg-gray-50 text-gray-900"
-                : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
-              "flex items-center px-3 py-2 text-sm font-medium"
+              "flex",
+              "items-center",
+              "p-3",
+              "text-sm",
+              "font-medium",
+              "bg-gray-50",
+              "hover:bg-gray-100",
+              "text-gray-600",
+              "hover:text-gray-900"
             )}
             aria-current={item.name ? "page" : undefined}
           >
-            {/* <item.icon
-  className={classNames(
-    item.name ? "text-gray-500" : "text-gray-400",
-    "flex-shrink-0 -ml-1 mr-3 h-6 w-6"
-  )}
-  aria-hidden="true"
-/> */}
+            <TvIcon
+              className={classNames(
+                "flex-shrink-0",
+                "-ml-1",
+                "mr-3",
+                "h-6",
+                "w-6"
+              )}
+              aria-hidden="true"
+            />
             <span className="truncate">{item.name}</span>
             {item.name && (
               <span
                 className={classNames(
                   item.current ? "bg-gray-50" : "bg-gray-200 text-gray-600",
-                  "ml-auto inline-block py-0.5 px-3 text-xs rounded-full"
+                  "ml-auto",
+                  "inline-block",
+                  "py-0.5",
+                  "px-3",
+                  "text-xs",
+                  "rounded-full"
                 )}
               >
                 {item.name}
@@ -143,27 +116,8 @@ export function CollectionsOutlet() {
               <InboxStackIcon className="h-6 w-6" aria-hidden="true" />
             </button>
             <div className="flex-1 flex justify-between px-4 sm:px-6">
-              <div className="flex-1 flex">
-                <form className="w-full flex md:ml-0" action="#" method="GET">
-                  <label htmlFor="search-field" className="sr-only">
-                    Search all files
-                  </label>
-                  <div className="relative w-full text-gray-400 focus-within:text-gray-600">
-                    <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center">
-                      <InboxStackIcon
-                        className="flex-shrink-0 h-5 w-5"
-                        aria-hidden="true"
-                      />
-                    </div>
-                    <input
-                      name="search-field"
-                      id="search-field"
-                      className="h-full w-full border-transparent py-2 pl-8 pr-3 text-base text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-0 focus:border-transparent focus:placeholder-gray-400"
-                      placeholder="Search ddd"
-                      type="search"
-                    />
-                  </div>
-                </form>
+              <div className="">
+                <TabBar />
               </div>
               <div className="ml-2 flex items-center space-x-4 sm:ml-6 sm:space-x-6">
                 {/* Profile dropdown */}

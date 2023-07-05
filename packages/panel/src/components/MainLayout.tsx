@@ -15,11 +15,14 @@ import {
   useRouteLoaderData,
 } from "react-router-dom";
 import { classNames } from "../helpers/className";
-import { CollectionsNav, PanelNavTopBar } from "../routes/collections";
+import {
+  CollectionsNav,
+  PanelNavTopBar,
+} from "../routes/collections/outlet/CollectionsOutlet";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { ActionBar } from "../components/ActionBar";
-import { ActionButton } from "../components/ActionButton";
-import { AddCollectionModal } from "../components/Modal";
+import { ActionBar } from "./ActionBar";
+import { ActionButton } from "./ActionButton";
+import { AddCollectionModal } from "./Modal";
 
 function Icon() {
   return (
@@ -58,6 +61,7 @@ export default function MainLayout() {
 
   return (
     <>
+      <div className=" p-2 bg-black">Hero</div>
       <div className="h-screen bg-gray-50 flex overflow-hidden">
         {/* Narrow sidebar */}
         {/* <div className="hidden w-28 bg-gray-800 overflow-y-auto md:block">

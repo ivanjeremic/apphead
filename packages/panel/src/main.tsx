@@ -6,17 +6,14 @@ import {
   Route,
   createRoutesFromElements,
 } from "react-router-dom";
-import MainLayout from "./layouts/MainLayout";
-
+import MainLayout from "./components/MainLayout";
+import { CollectionsOutlet } from "./routes/collections/outlet/CollectionsOutlet";
+import { addCollection } from "./routes/collections/actions/addCollection";
+import { collectionsLoader } from "./routes/collections/loader/collectionsLoader";
 import "./index.css";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import {
-  collectionsLoader,
-  collectionsAction,
-  CollectionsOutlet,
-} from "./routes/collections";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -27,7 +24,7 @@ const router = createBrowserRouter(
         path="collections"
         loader={collectionsLoader}
         element={<CollectionsOutlet />}
-        action={collectionsAction}
+        action={addCollection}
         errorElement={<div>Err</div>}
         id="/admin/collections"
       >
