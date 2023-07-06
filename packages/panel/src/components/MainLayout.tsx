@@ -214,7 +214,7 @@ export default function MainLayout() {
           allowTouchMove={false}
         >
           <SwiperSlide>
-            <PanelNavTopBar title="Dashboard" />
+            <PanelNavTopBar title="Dashboard" showBackButton={false} />
             <CollectionsNav
               data={[
                 { name: "Dashboard", to: "dashboard" },
@@ -230,7 +230,7 @@ export default function MainLayout() {
           </SwiperSlide>
 
           <SwiperSlide>
-            <PanelNavTopBar title="Collections" />
+            <PanelNavTopBar title="Collections" showBackButton={true} />
             <ActionBar
               buttons={
                 <ActionButton
