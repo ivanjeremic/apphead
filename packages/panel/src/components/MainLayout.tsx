@@ -1,5 +1,3 @@
-import { Fragment, useState } from "react";
-import { Dialog, Transition } from "@headlessui/react";
 import {
   ComputerDesktopIcon,
   DocumentIcon,
@@ -12,17 +10,20 @@ import {
   Link,
   Outlet,
   useLocation,
+  useNavigation,
   useRouteLoaderData,
 } from "react-router-dom";
-import { classNames } from "../helpers/className";
 import {
   CollectionsNav,
   PanelNavTopBar,
 } from "../routes/collections/outlet/CollectionsOutlet";
+import { Dialog, Transition } from "@headlessui/react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { ActionBar } from "./ActionBar";
+import { classNames } from "../helpers/className";
 import { ActionButton } from "./ActionButton";
 import { AddCollectionModal } from "./Modal";
+import { Fragment, useState } from "react";
+import { ActionBar } from "./ActionBar";
 
 function Icon() {
   return (
@@ -56,6 +57,7 @@ const sidebarNavigation = [
 
 export default function MainLayout() {
   const location = useLocation();
+
   const data = useRouteLoaderData(location.pathname);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 

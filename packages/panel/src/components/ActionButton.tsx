@@ -1,6 +1,6 @@
 import { PlusIcon } from "@heroicons/react/24/solid";
-import { useState } from "react";
 import { AddCollectionModal } from "./Modal";
+import { useState } from "react";
 
 function useIcon() {}
 

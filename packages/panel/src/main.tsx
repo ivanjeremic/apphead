@@ -1,19 +1,19 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
 import {
   createBrowserRouter,
   RouterProvider,
   Route,
   createRoutesFromElements,
 } from "react-router-dom";
-import MainLayout from "./components/MainLayout";
 import { CollectionsOutlet } from "./routes/collections/outlet/CollectionsOutlet";
-import { addCollection } from "./routes/collections/actions/addCollection";
 import { collectionsLoader } from "./routes/collections/loader/collectionsLoader";
-import "./index.css";
-import "swiper/css";
+import { addCollection } from "./routes/collections/actions/addCollection";
+import MainLayout from "./components/MainLayout";
+import ReactDOM from "react-dom/client";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import React from "react";
+import "./index.css";
+import "swiper/css";
 
 const router = createBrowserRouter(
   createRoutesFromElements(

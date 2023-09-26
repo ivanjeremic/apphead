@@ -1,20 +1,21 @@
-import { useSwiper } from "swiper/react";
-import { Fragment, useState } from "react";
-import { Menu, Transition } from "@headlessui/react";
 import {
   PlusIcon,
   InboxStackIcon,
   ArrowRightCircleIcon,
 } from "@heroicons/react/24/outline";
-import { classNames } from "../../../helpers/className";
-import CollectionList from "../../../components/CollectionList";
-import { ChevronLeftIcon } from "@heroicons/react/24/solid";
-import { ActionBar } from "../../../components/ActionBar";
-import { ActionButton } from "../../../components/ActionButton";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import CollectionList from "../../../components/CollectionList";
+import { ActionButton } from "../../../components/ActionButton";
 import { AddCollectionModal } from "../../../components/Modal";
 import { BeakerIcon, TvIcon } from "@heroicons/react/24/solid";
+import { ChevronLeftIcon } from "@heroicons/react/24/solid";
+import { ActionBar } from "../../../components/ActionBar";
+import { classNames } from "../../../helpers/className";
+import { Menu, Transition } from "@headlessui/react";
 import TabBar from "../../../components/TabBar";
+import { Fragment, useState } from "react";
+import { useSwiper } from "swiper/react";
+
 // Outlet
 const userNavigation = [
   { name: "Your Profile", href: "#" },
@@ -57,7 +58,6 @@ export function PanelNavTopBar({ title, showBackButton }: any) {
 
 export function CollectionsNav({ data }: any) {
   const swiper = useSwiper();
-  const navigate = useNavigate();
 
   return (
     <nav className="space-y-0.5 mt-1" aria-label="Sidebar">
@@ -69,27 +69,11 @@ export function CollectionsNav({ data }: any) {
               swiper.slideNext();
             }}
             to={item.to}
-            className={classNames(
-              "flex",
-              "items-center",
-              "p-3",
-              "text-sm",
-              "font-medium",
-              "bg-gray-50",
-              "hover:bg-gray-100",
-              "text-gray-600",
-              "hover:text-gray-900"
-            )}
+            className="flex items-center p-3 text-sm font-medium bg-gray-50 hover:bg-gray-100 text-gray-600 hover:text-gray-900"
             aria-current={item.name ? "page" : undefined}
           >
             <TvIcon
-              className={classNames(
-                "flex-shrink-0",
-                "-ml-1",
-                "mr-3",
-                "h-6",
-                "w-6"
-              )}
+              className="flex-shrink-0 -ml-1 mr-3 h-6 w-6"
               aria-hidden="true"
             />
             <span className="truncate">{item.name}</span>
@@ -97,12 +81,7 @@ export function CollectionsNav({ data }: any) {
               <span
                 className={classNames(
                   item.current ? "bg-gray-50" : "bg-gray-200 text-gray-600",
-                  "ml-auto",
-                  "inline-block",
-                  "py-0.5",
-                  "px-3",
-                  "text-xs",
-                  "rounded-full"
+                  "ml-auto inline-block py-0.5 px-3 text-xs rounded-full"
                 )}
               >
                 {item.name}
