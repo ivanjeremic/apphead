@@ -1,15 +1,12 @@
 {
   "name": "apphead-project",
-  "version": "0.0.0",
   "description": "apphead-monorepo",
-  "type": "module",
   "engines": {
     "node": ">=16.14.2",
     "npm": ">=8.5.0"
   },
   "workspaces": [
-    "packages/*",
-    "websites/*"
+    "packages/*"
   ],
   "scripts": {
     "apphead:start": "cross-env NODE_ENV=production ./packages/apphead/bin/apphead.js",
@@ -28,12 +25,9 @@
   },
   "author": "Ivan Jeremic",
   "license": "MIT",
-  "homepage": "https://domedb.com",
-  "bugs": "https://github.com/domedb/domedb/issues",
+  "homepage": "https://apphead.com",
+  "bugs": "https://github.com/apphead/apphead/issues",
   "devDependencies": {
     "cross-env": "^7.0.3"
-  },
-  "dependencies": {
-    "prettier-plugin-sort-imports": "^1.7.2"
   }
 }

@@ -1,0 +1,17 @@
+{
+  "name": "@apphead/xstorage",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "nitropack dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "nanoid": "^5.0.4",
+    "nitropack": "^2.8.1"
+  }
+}
