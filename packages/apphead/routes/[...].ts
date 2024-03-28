@@ -1,18 +1,14 @@
-export default eventHandler((event) => {
-  //const name = getRouterParam(event, 'name')
+import next from "next"
 
-  return `<!DOCTYPE html>
-  <html lang="en">
-    <head>
-      <meta charset="UTF-8" />
-      <link rel="icon" type="image/svg+xml" href="/src/favicon.svg" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Vite App</title>
-    </head>
-    <body>
-      <div id="root">kotz</div>
-      <script type="module" src="/src/main.tsx"></script>
-    </body>
-  </html>
-  `;
+const dev = process.env.NODE_ENV !== 'production'
+const app = next({ dev })
+const handle = app.getRequestHandler()
+
+export default eventHandler((event) => {
+
+  return app.prepare().then(() => {
+    return handle(event.node.req, event.node.res)
+  }).catch((error) => {
+    throw error
+  })
 });
