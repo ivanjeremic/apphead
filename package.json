@@ -9,8 +9,8 @@
     "packages/*"
   ],
   "scripts": {
-    "apphead:start": "cross-env NODE_ENV=production ./packages/apphead/bin/apphead.js",
-    "apphead:dev": "cross-env NODE_ENV=development node ./packages/apphead/bin/apphead.js & npm run dev --prefix packages/panel",
+    "apphead:dev": "cross-env NODE_ENV=development npm run dev --prefix packages/apphead",
+    "apphead:build": "cross-env NODE_ENV=development npm run build --prefix packages/apphead",
     "panel:build": "npm run build --prefix packages/panel",
     "panel:preview": "npm run preview --prefix packages/panel",
     "website:start": "npm run start --prefix packages/website",
