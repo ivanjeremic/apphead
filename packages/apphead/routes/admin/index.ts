@@ -1,8 +1,5 @@
-import next from "next";
-
+import { app, handle } from "@apphead/ui";
 const dev = process.env.NODE_ENV !== "production";
-const app = next({ dev, dir: "./ui" });
-const handle = app.getRequestHandler();
 
 export default eventHandler((event) => {
   if (event.path)

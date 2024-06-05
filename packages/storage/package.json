@@ -1,5 +1,5 @@
 {
-  "name": "@apphead/xstorage",
+  "name": "@apphead/storage",
   "version": "1.0.0",
   "description": "",
   "main": "src/index.ts",
@@ -12,6 +12,6 @@
   "license": "ISC",
   "dependencies": {
     "nanoid": "^5.0.4",
-    "nitropack": "^2.8.1"
+    "unstorage": "^1.10.2"
   }
 }

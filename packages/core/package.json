@@ -1,5 +1,5 @@
 {
-  "name": "@apphead/auth",
+  "name": "@apphead/core",
   "version": "1.0.0",
   "description": "",
   "main": "src/index.ts",
@@ -11,11 +11,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "cross-env": "^7.0.3",
-    "lucia": "^2.7.6",
-    "next": "14.1.4",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "@apphead/storage": "workspace:*",
+    "lucia": "^3.2.0"
   },
   "devDependencies": {
     "typescript": "^4.9.5"

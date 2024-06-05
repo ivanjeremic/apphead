@@ -19,8 +19,8 @@
     "preview": "node .output/server/index.mjs"
   },
   "dependencies": {
-    "@apphead/auth": "workspace:*",
-    "@apphead/xstorage": "workspace:*",
+    "@apphead/core": "workspace:*",
+    "@apphead/ui": "workspace:*",
     "next": "14.2.3",
     "nitropack": "2.9.6",
     "react": "^18",
