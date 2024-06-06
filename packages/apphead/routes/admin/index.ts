@@ -1,4 +1,4 @@
-import { app, handle } from "@apphead/ui";
+import { app, handle } from "@apphead/core";
 const dev = process.env.NODE_ENV !== "production";
 
 export default eventHandler((event) => {

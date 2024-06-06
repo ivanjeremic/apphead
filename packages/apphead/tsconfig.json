@@ -1,4 +1,3 @@
 {
-  "extends": "./.nitro/types/tsconfig.json",
-  "exclude": ["ui"]
+  "extends": "./.nitro/types/tsconfig.json"
 }

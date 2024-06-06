@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  distDir: "../apphead/dist_ui"
+};
 
 export default nextConfig;
