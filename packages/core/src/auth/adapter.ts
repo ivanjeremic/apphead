@@ -74,8 +74,35 @@ const AppHeadAdapter = (): InitializeAdapter<Adapter> => {
     },
   });
 };
-
+/**
+ * @description Lucia
+ */
 export const auth = lucia({
-  env: "DEV", // "PROD" if deployed to HTTPS
-  adapter: AppHeadAdapter(),
+  env: process.env.NODE_ENV === "development" ? "DEV" : "PROD",
+  middleware: nextjs_future(),
+  sessionCookie: {
+    expires: false,
+  },
+  adapter: {
+    user: AppHeadAdapter(),
+    session: unstorage(storage),
+  },
 });
+
+/**
+ * @description GitHub Auth
+ */
+export const githubAuth = github(auth, {
+  clientId: process.env.GITHUB_CLIENT_ID ?? "",
+  clientSecret: process.env.GITHUB_CLIENT_SECRET ?? "",
+});
+
+/**
+ * @description getPageSession
+ */
+export const getPageSession = cache(() => {
+  const authRequest = auth.handleRequest("GET", context);
+  return authRequest.validate();
+});
+
+export type Auth = typeof auth;
