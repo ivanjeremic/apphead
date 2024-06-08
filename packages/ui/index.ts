@@ -1,10 +1,9 @@
 import next from "next";
 
-const dev = process.env.NODE_ENV !== "production";
-const app = next({
-  dev,
-  dir: "../ui",
-});
-const handle = app.getRequestHandler();
+const createApp = ({ dev }: { dev: boolean }) =>
+  next({
+    dev,
+    dir: dev ? "../ui" : undefined,
+  });
 
-export { app, handle };
+export { createApp };

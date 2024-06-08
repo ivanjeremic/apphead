@@ -1,5 +1,8 @@
-import { app, handle } from "@apphead/core";
+import { createApp } from "@apphead/core";
+
 const dev = process.env.NODE_ENV !== "production";
+const app = createApp({ dev });
+const handle = app.getRequestHandler();
 
 export default eventHandler((event) => {
   if (event.path)

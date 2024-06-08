@@ -33,9 +33,6 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "index.ts",
-    "pages/**/*",
-    "src/**/*",
-    "../apphead/dist_ui/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"
