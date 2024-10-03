@@ -1,4 +1,48 @@
 import { nanoid } from "nanoid";
+import { createStorage, defineDriver } from "unstorage";
+import fsDriver from "unstorage/drivers/fs";
+import { open } from "lmdb";
+
+let myDB = open({
+  path: "my-db",
+  // any options go here, we can turn on compression like this:
+  compression: true,
+});
+
+const lmdbDriver = defineDriver((options) => {
+  return {
+    name: "lmbd-driver",
+    options,
+    async hasItem(key, _opts) {
+      return myDB.doesExist(key);
+    },
+    async getItem(key, _opts) {
+      return myDB.get(key);
+    },
+    async setItem(key, value, _opts) {
+      return myDB.put(key, value);
+    },
+    async removeItem(key, _opts) {
+      return myDB.remove(key);
+    },
+    async getKeys(base, _opts) {
+      return myDB.getKeys();
+    },
+    async clear(base, _opts) {
+      const keys = myDB.getKeys();
+
+      await Promise.all(
+        keys.map((chunk) => {
+          return myDB.remove(chunk);
+        })
+      );
+    },
+  };
+});
+
+const storage = createStorage({
+  driver: lmdbDriver({ base: "./tmp" }),
+});
 
 /**
  * @description STORAGE ENGINE
@@ -43,14 +87,12 @@ export class AppHeadClient {
     const insertFN = async (record: any) => {
       const id = nanoid();
 
-      return useStorage()
-        .getItem(`${collection}-page-${1}`)
-        .then((ids: any) => {
-          useStorage().setItem(`${collection}-page-${1}`, [
-            [id, { id, data: record }],
-            ...ids,
-          ]);
-        });
+      return storage.getItem(`${collection}-page-${1}`).then((ids: any) => {
+        storage.setItem(`${collection}-page-${1}`, [
+          [id, { id, data: record }],
+          ...ids,
+        ]);
+      });
     };
 
     if (Array.isArray(data)) {
@@ -71,7 +113,7 @@ export class AppHeadClient {
   }) {
     let data: any | null = [];
 
-    const collectionIndex: [] | null = await useStorage().getItem(
+    const collectionIndex: [] | null = await storage.getItem(
       `${collection}-page-${1}`
     );
 
@@ -86,8 +128,8 @@ export class AppHeadClient {
 
   async delete({ collection, ids }: { collection: string; ids: any[] }) {
     for (const id of ids) {
-      await useStorage().removeItem(id);
-      const collIds: any[] | null = await useStorage().getItem(
+      await storage.removeItem(id);
+      const collIds: any[] | null = await storage.getItem(
         `${collection}-page-${1}`
       );
 
@@ -95,17 +137,17 @@ export class AppHeadClient {
 
       iDMap.delete(id);
 
-      await useStorage().setItem(`${collection}-page-${1}`, Array.from(iDMap));
+      await storage.setItem(`${collection}-page-${1}`, Array.from(iDMap));
     }
   }
 
   async addCollection(name: string) {
     //await this.storage.setItem(collectionName, { collectionName });
-    if (!(await useStorage().hasItem(`collections-page-${1}`))) {
-      await useStorage().setItem(`collections-page-${1}`, []);
+    if (!(await storage.hasItem(`collections-page-${1}`))) {
+      await storage.setItem(`collections-page-${1}`, []);
     }
 
-    await useStorage().setItem(`${name}-page-${1}`, []);
+    await storage.setItem(`${name}-page-${1}`, []);
 
     await this.insert({
       collection: "collections",

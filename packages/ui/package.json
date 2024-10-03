@@ -1,28 +1,32 @@
 {
   "name": "@apphead/ui",
   "version": "0.1.0",
-  "main": "/src/index.ts",
-  "type": "module",
+  "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "build:css": "postcss app/globals.css -o app/output.css",
+    "dev:css": "postcss app/globals.css -o app/output.css --watch"
   },
   "dependencies": {
+    "@apphead/storage": "workspace:*",
+    "@heroicons/react": "^2.1.5",
+    "next": "14.2.13",
     "react": "^18",
     "react-dom": "^18",
-    "next": "14.2.3",
-    "@apphead/js-sdk": "workspace:*"
+    "swiper": "^11.1.14"
   },
   "devDependencies": {
-    "typescript": "^5",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "postcss": "^8",
-    "tailwindcss": "^3.4.1",
     "eslint": "^8",
-    "eslint-config-next": "14.2.3"
+    "eslint-config-next": "14.2.13",
+    "postcss": "^8.4.47",
+    "postcss-cli": "^11.0.0",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
   }
 }

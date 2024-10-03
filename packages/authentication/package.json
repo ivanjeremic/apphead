@@ -1,0 +1,19 @@
+{
+  "name": "@apphead/authentication",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "nitropack dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@lucia-auth/adapter-sqlite": "^3.0.2",
+    "lucia": "^3.2.0",
+    "nanoid": "^5.0.4",
+    "unstorage": "^1.10.2"
+  }
+}

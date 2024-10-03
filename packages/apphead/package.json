@@ -1,29 +1,12 @@
 {
   "name": "apphead",
-  "version": "0.0.1",
-  "keywords": [
-    "database",
-    "cms",
-    "firebase",
-    "supabase",
-    "strapi",
-    "wordpress",
-    "mongodb"
-  ],
-  "author": "Ivan Jeremic",
-  "license": "MIT",
+  "version": "1.0.0",
+  "main": "index.js",
   "scripts": {
-    "prepare": "nitropack prepare",
-    "dev": "nitropack dev",
-    "build": "nitropack build",
-    "preview": "node .output/server/index.mjs"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "dependencies": {
-    "@apphead/core": "workspace:*",
-    "nitropack": "2.9.6"
-  },
-  "devDependencies": {
-    "@types/node": "^20",
-    "typescript": "^5"
-  }
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }

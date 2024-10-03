@@ -1,4 +1,7 @@
-export { AppHeadClient } from "./client";
-export function myData() {
-  return { data: "der ivan hahah" };
-}
+import { AppHeadClient } from "./client";
+
+const db = new AppHeadClient();
+
+await db.addCollection("posts");
+
+await db.insert({ collection: "posts", data: [{ title: "dee" }] });
