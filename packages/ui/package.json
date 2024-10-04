@@ -11,7 +11,7 @@
     "dev:css": "postcss app/globals.css -o app/output.css --watch"
   },
   "dependencies": {
-    "@apphead/storage": "workspace:*",
+    "@apphead/db": "workspace:*",
     "@heroicons/react": "^2.1.5",
     "next": "14.2.13",
     "react": "^18",
