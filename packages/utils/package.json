@@ -1,0 +1,20 @@
+{
+  "name": "@apphead/utils",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "nitropack dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dayjs": "^1.11.13",
+    "linkedom": "^0.18.5",
+    "lmdb": "^3.1.3",
+    "nanoid": "^5.0.4",
+    "unstorage": "^1.10.2"
+  }
+}

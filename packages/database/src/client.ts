@@ -1,6 +1,6 @@
-import { nanoid } from "nanoid";
 import { createStorage, StorageValue, Storage } from "unstorage";
 import { lmdbDriver } from "./driver";
+import { genIdV001 } from "../../utils/src";
 
 /**
  * @description STORAGE ENGINE
@@ -51,7 +51,7 @@ export class AppHeadClient {
 
   async insert({ collection, data }: { collection: string; data: any[] }) {
     const insertFN = async (record: any) => {
-      const id = nanoid();
+      const id = genIdV001();
 
       return this.storage
         .getItem(`${collection}-page-${1}`)
