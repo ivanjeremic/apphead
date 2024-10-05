@@ -22,5 +22,8 @@
   "author": "Ivan Jeremic",
   "license": "MIT",
   "homepage": "https://apphead.com",
-  "bugs": "https://github.com/apphead/apphead/issues"
+  "bugs": "https://github.com/apphead/apphead/issues",
+  "dependencies": {
+    "@types/bun": "^1.1.10"
+  }
 }
