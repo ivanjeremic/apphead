@@ -8,8 +8,8 @@
     "dev": "nitropack dev"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Ivan Jeremic",
+  "license": "MIT",
   "dependencies": {
     "@apphead/utils": "workspace:*",
     "lmdb": "^3.1.3",

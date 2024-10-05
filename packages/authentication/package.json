@@ -8,8 +8,8 @@
     "dev": "nitropack dev"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Ivan Jeremic",
+  "license": "MIT",
   "dependencies": {
     "@lucia-auth/adapter-sqlite": "^3.0.2",
     "lucia": "^3.2.0",

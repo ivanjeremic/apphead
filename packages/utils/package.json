@@ -8,8 +8,8 @@
     "dev": "nitropack dev"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Ivan Jeremic",
+  "license": "MIT",
   "dependencies": {
     "dayjs": "^1.11.13",
     "linkedom": "^0.18.5",

@@ -10,6 +10,8 @@
     "build:css": "postcss app/globals.css -o app/output.css",
     "dev:css": "postcss app/globals.css -o app/output.css --watch"
   },
+  "author": "Ivan Jeremic",
+  "license": "MIT",
   "dependencies": {
     "@apphead/database": "workspace:*",
     "@heroicons/react": "^2.1.5",
