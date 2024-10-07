@@ -4,14 +4,11 @@
   "description": "",
   "main": "src/index.ts",
   "type": "module",
-  "scripts": {
-    "dev": "nitropack dev"
-  },
   "keywords": [],
   "author": "Ivan Jeremic",
   "license": "MIT",
   "dependencies": {
-    "@lucia-auth/adapter-sqlite": "^3.0.2",
+    "arctic": "^1.9.2",
     "lucia": "^3.2.0",
     "nanoid": "^5.0.4",
     "unstorage": "^1.10.2"

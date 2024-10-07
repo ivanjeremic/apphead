@@ -1,4 +1,5 @@
 import { createStorage, StorageValue, Storage } from "unstorage";
+import fsDriver from "unstorage/drivers/fs";
 import { lmdbDriver } from "./driver";
 import { genIdV001 } from "../../utils/src";
 
@@ -38,17 +39,28 @@ interface INSTRUCTION_RM {
 }
 
 /**
+ *
  * The JavaScript client. Class for creating the client and interacting with the database.
+ *
  */
 export class AppHeadClient {
   storage: Storage<StorageValue>;
 
   constructor() {
     this.storage = createStorage({
-      driver: lmdbDriver({ base: "./tmp" }),
+      driver: lmdbDriver({
+        path: "./tmp",
+        // any options go here, we can turn on compression like this:
+        compression: true,
+      }),
     });
   }
 
+  /**
+   *
+   * @description insert
+   *
+   */
   async insert({ collection, data }: { collection: string; data: any[] }) {
     const insertFN = async (record: any) => {
       const id = genIdV001();
@@ -72,6 +84,11 @@ export class AppHeadClient {
     }
   }
 
+  /**
+   *
+   * @description find
+   *
+   */
   async find({
     collection,
     perPage,
@@ -94,7 +111,12 @@ export class AppHeadClient {
     return data;
   }
 
-  async delete({ collection, ids }: { collection: string; ids: any[] }) {
+  /**
+   *
+   * @description delete
+   *
+   */
+  async deleteMany({ collection, ids }: { collection: string; ids: any[] }) {
     for (const id of ids) {
       await this.storage.removeItem(id);
       const collIds: any[] | null = await this.storage.getItem(
@@ -109,6 +131,11 @@ export class AppHeadClient {
     }
   }
 
+  /**
+   *
+   * @description addCollection
+   *
+   */
   async addCollection(name: string) {
     //await this.storage.setItem(collectionName, { collectionName });
     if (!(await this.storage.hasItem(`collections-page-${1}`))) {
@@ -123,6 +150,11 @@ export class AppHeadClient {
     });
   }
 
+  /**
+   *
+   * @description removeCollection
+   *
+   */
   async removeCollection() {
     "rm";
   }

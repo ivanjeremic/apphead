@@ -1,39 +1,64 @@
 import { defineDriver } from "unstorage";
-import { open } from "lmdb";
+import { open, RootDatabaseOptionsWithPath } from "lmdb";
 
-const db = open({
-  path: "ad-data",
-  // any options go here, we can turn on compression like this:
-  compression: true,
-});
+const DRIVER_NAME = "lmdb";
 
-export const lmdbDriver = defineDriver((options) => {
+export const lmdbDriver = defineDriver((opts: RootDatabaseOptionsWithPath) => {
+  const getLMDBClient = () => {
+    const lmdbClient = open(opts);
+
+    return lmdbClient;
+  };
+
   return {
-    name: "lmbd-driver",
-    options,
+    name: DRIVER_NAME,
+    options: opts,
+    getInstance: getLMDBClient,
     async hasItem(key, _opts) {
-      return db.doesExist(key);
+      const doesExist = getLMDBClient().doesExist(key);
+      return doesExist;
     },
-    async getItem(key, _opts) {
-      return db.get(key);
+    async getItem(key) {
+      const item = getLMDBClient().get(key);
+      return item;
     },
-    async setItem(key, value, _opts) {
-      return db.put(key, value);
+    async setItem(key, value) {
+      getLMDBClient().put(key, value);
+      return;
     },
-    async removeItem(key, _opts) {
-      return db.remove(key);
+    async removeItem(key) {
+      getLMDBClient().remove(key);
     },
-    async getKeys(base, _opts) {
-      return db.getKeys();
-    },
-    async clear(base, _opts) {
-      const keys = db.getKeys();
+    async getKeys() {
+      async function getKeys() {
+        return new Promise((resolve, reject) => {
+          try {
+            resolve(getLMDBClient().getKeys());
+          } catch (error) {
+            reject(error);
+          }
+        });
+      }
 
-      await Promise.all(
-        keys.map((chunk) => {
-          return db.remove(chunk);
-        })
-      );
+      return (await getKeys()) as unknown as Array<string>;
+    },
+    async clear() {
+      const keys = getLMDBClient().getKeys();
+
+      keys.map((chunk) => {
+        getLMDBClient().remove(chunk);
+      });
+    },
+    async getMeta(key) {
+      //const document = await getDB().findOne({ key });
+      console.log(key);
+      return {
+        mtime: new Date(),
+        birthtime: new Date(),
+      };
+    },
+    dispose() {
+      return getLMDBClient().close();
     },
   };
 });

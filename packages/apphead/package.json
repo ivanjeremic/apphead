@@ -19,6 +19,8 @@
     "preview": "node .output/server/index.mjs"
   },
   "dependencies": {
+    "@apphead/database": "workspace:*",
+    "@apphead/authentication": "workspace:*",
     "nitropack": "2.9.6"
   },
   "devDependencies": {

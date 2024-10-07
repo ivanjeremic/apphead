@@ -19,7 +19,7 @@ interface SessionDoc extends RegisteredDatabaseSessionAttributes {
   expires_at: Date;
 }
 
-export class WappheadAdapter implements Adapter {
+export class AppheadAdapter implements Adapter {
   private Session: Collection<SessionDoc>;
   private User: Collection<UserDoc>;
 

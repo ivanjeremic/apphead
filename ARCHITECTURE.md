@@ -1,0 +1,4 @@
+- Mainpackage: apphead
+  -- Subpackage: @apphead/database
+  -- Subpackage: @apphead/authentication
+  -- Subpackage: @apphead/utils
