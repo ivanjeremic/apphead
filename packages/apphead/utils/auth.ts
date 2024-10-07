@@ -4,10 +4,10 @@ import {
   Lucia,
   DatabaseUser,
 } from "@apphead/authentication";
-import { db, dbsql } from "./db";
+import { db } from "./db";
 import { BetterSqlite3Adapter } from "@lucia-auth/adapter-sqlite";
 
-const adapter = new BetterSqlite3Adapter(dbsql, {
+const adapter = new BetterSqlite3Adapter(db, {
   user: "user",
   session: "session",
 });
