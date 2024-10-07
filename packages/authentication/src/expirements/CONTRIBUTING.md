@@ -2,4 +2,4 @@
 
 (we want to build the platform in a way that does not lock us into other ecosystems).
 
-# This is also the place to test other authentication methods and alternatives libraries to the current one (always try to improve the platform, never stop!).
+# This is also the place to test other authentication methods and alternative libraries to the current one (always try to improve the platform, never stop!).

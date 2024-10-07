@@ -1,10 +1,6 @@
 import { Session, User } from "lucia";
 import { H3Event, EventHandlerRequest, getCookie, setCookie } from "h3";
 
-export type VALIDATE_REQ = Promise<
-  { user: User; session: Session } | { user: null; session: null }
->;
-
 export async function validateRequest(
   event: H3Event<EventHandlerRequest>,
   lucia: {
@@ -13,7 +9,7 @@ export async function validateRequest(
     createSessionCookie: (arg0: any) => any;
     createBlankSessionCookie: () => any;
   }
-) {
+): Promise<{ user: User; session: Session } | { user: null; session: null }> {
   const sessionId = getCookie(event, lucia.sessionCookieName) ?? null;
   if (!sessionId) {
     return {

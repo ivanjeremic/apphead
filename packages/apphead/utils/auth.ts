@@ -4,12 +4,18 @@ import {
   Lucia,
   DatabaseUser,
 } from "@apphead/authentication";
-import { db } from "./db";
+import { db, dbsql } from "./db";
+import { BetterSqlite3Adapter } from "@lucia-auth/adapter-sqlite";
 
-const adapter = new AppheadAdapter(db, {
+const adapter = new BetterSqlite3Adapter(dbsql, {
   user: "user",
   session: "session",
 });
+
+/* const adapter = new AppheadAdapter(db, {
+  user: "user",
+  session: "session",
+}); */
 
 export const lucia = new Lucia(adapter, {
   sessionCookie: {
