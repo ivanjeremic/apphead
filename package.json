@@ -2,22 +2,11 @@
   "name": "apphead-project",
   "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "docs"
   ],
   "scripts": {
-    "apphead:dev": "cross-env NODE_ENV=development npm run dev --prefix packages/apphead",
-    "apphead:build": "cross-env NODE_ENV=development npm run build --prefix packages/apphead",
-    "panel:build": "npm run build --prefix packages/panel",
-    "panel:preview": "npm run preview --prefix packages/panel",
-    "website:start": "npm run start --prefix packages/website",
-    "website:build": "npm run build --prefix packages/website",
-    "website:swizzle": "npm run swizzle --prefix packages/website",
-    "website:deploy": "npm run deploy --prefix packages/website",
-    "website:clear": "npm run clear --prefix packages/website",
-    "website:serve": "npm run serve --prefix packages/website",
-    "website:write-translations": "npm run write-translations --prefix packages/website",
-    "website:write-heading-ids": "npm run write-heading-ids --prefix packages/website",
-    "website:typecheck": "npm run typecheck --prefix packages/website"
+    "test": "vitest"
   },
   "author": "Ivan Jeremic",
   "license": "MIT",
@@ -25,5 +14,8 @@
   "bugs": "https://github.com/apphead/apphead/issues",
   "dependencies": {
     "@types/bun": "^1.1.10"
+  },
+  "devDependencies": {
+    "vitest": "^2.1.2"
   }
 }

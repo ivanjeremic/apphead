@@ -1,4 +1,4 @@
 {
   "extends": "./.nitro/types/tsconfig.json",
-  "exclude": ["dist_ui", ".next"]
+  "exclude": ["./public/main.js"]
 }

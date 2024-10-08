@@ -1,5 +1,5 @@
 //import { AppHeadClient } from "@apphead/database";
-import sqlite from "better-sqlite3";
+import { sqlite } from "@apphead/authentication";
 
 export const db = sqlite("main.db");
 

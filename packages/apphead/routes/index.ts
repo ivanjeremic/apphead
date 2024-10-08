@@ -6,8 +6,6 @@ export default eventHandler(async (event) => {
   const { user, session } = await validateRequest(event, lucia);
   const act = getQuery(event);
 
-  console.log("Index");
-
   if (user && act.do === "logout") {
     if (!session) {
       return {

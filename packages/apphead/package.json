@@ -21,12 +21,9 @@
   "dependencies": {
     "@apphead/authentication": "workspace:*",
     "@apphead/database": "workspace:*",
-    "@lucia-auth/adapter-sqlite": "^3.0.2",
-    "better-sqlite3": "^11.3.0",
     "nitropack": "2.9.6"
   },
   "devDependencies": {
-    "@types/better-sqlite3": "^7.6.11",
     "@types/node": "^20",
     "typescript": "^5"
   }

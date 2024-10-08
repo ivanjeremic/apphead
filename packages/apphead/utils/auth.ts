@@ -1,11 +1,12 @@
 import {
-  AppheadAdapter,
-  GitHub,
   Lucia,
+  GitHub,
   DatabaseUser,
+  DatabaseUserGitHub,
+  AppheadAdapter,
+  BetterSqlite3Adapter,
 } from "@apphead/authentication";
 import { db } from "./db";
-import { BetterSqlite3Adapter } from "@lucia-auth/adapter-sqlite";
 
 const adapter = new BetterSqlite3Adapter(db, {
   user: "user",
@@ -23,7 +24,7 @@ export const lucia = new Lucia(adapter, {
       secure: process.env.NODE_ENV === "production",
     },
   },
-  getUserAttributes: (attributes) => {
+  getUserAttributes: (attributes: DatabaseUserGitHub) => {
     return {
       githubId: attributes.github_id,
       username: attributes.username,
@@ -34,11 +35,12 @@ export const lucia = new Lucia(adapter, {
 declare module "lucia" {
   interface Register {
     Lucia: typeof lucia;
-    DatabaseUserAttributes: Omit<DatabaseUser, "id">;
+    DatabaseUserAttributes: Omit<DatabaseUserGitHub, "id">;
   }
 }
 
 export const github = new GitHub(
+  //comes from db later.
   process.env.GITHUB_CLIENT_ID!,
   process.env.GITHUB_CLIENT_SECRET!
 );

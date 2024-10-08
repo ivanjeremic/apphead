@@ -1,11 +1,38 @@
-import {
-  Adapter,
-  DatabaseSession,
-  DatabaseUser,
+import type {
   RegisteredDatabaseSessionAttributes,
   RegisteredDatabaseUserAttributes,
   UserId,
-} from "lucia";
+} from "./index.js";
+
+export interface Adapter {
+  getSessionAndUser(
+    sessionId: string
+  ): Promise<[session: DatabaseSession | null, user: DatabaseUser | null]>;
+  getUserSessions(userId: UserId): Promise<DatabaseSession[]>;
+  setSession(session: DatabaseSession): Promise<void>;
+  updateSessionExpiration(sessionId: string, expiresAt: Date): Promise<void>;
+  deleteSession(sessionId: string): Promise<void>;
+  deleteUserSessions(userId: UserId): Promise<void>;
+  deleteExpiredSessions(): Promise<void>;
+}
+
+export interface DatabaseUser {
+  id: UserId;
+  attributes: RegisteredDatabaseUserAttributes;
+}
+
+export interface DatabaseUserGitHub {
+  id: string;
+  username: string;
+  github_id: number;
+}
+
+export interface DatabaseSession {
+  userId: UserId;
+  expiresAt: Date;
+  id: string;
+  attributes: RegisteredDatabaseSessionAttributes;
+}
 
 interface UserDoc extends RegisteredDatabaseUserAttributes {
   _id: UserId;
@@ -17,6 +44,16 @@ interface SessionDoc extends RegisteredDatabaseSessionAttributes {
   __v?: any;
   user_id: UserId;
   expires_at: Date;
+}
+
+interface Collection<T> {
+  findOneAndDelete: any;
+  deleteMany: any;
+  aggregate: any;
+  collectionName: any;
+  find: any;
+  findOneAndUpdate: any;
+  insertOne: any;
 }
 
 export class AppheadAdapter implements Adapter {
