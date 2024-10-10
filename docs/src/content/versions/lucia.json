@@ -10,11 +10,25 @@
         {
           "label": "Database",
           "slug": "guides/database"
+        },
+        {
+          "label": "Upgrade to v3",
+          "slug": "guides/upgrade-v3"
+        },
+        {
+          "label": "v2 documentation",
+          "slug": "guides/v2-docs"
         }
       ]
     },
     {
-      "label": "Reference",
+      "label": "Tutorials",
+      "autogenerate": {
+        "directory": "tutorials"
+      }
+    },
+    {
+      "label": "API Reference",
       "autogenerate": {
         "directory": "reference"
       }

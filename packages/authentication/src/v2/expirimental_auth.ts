@@ -5,10 +5,14 @@ import {
   Apple,
   generateState,
   Session,
-} from ".";
+} from "..";
 
 let db: any;
 let id: any;
+
+/**
+ * @TUTORIAL https://www.youtube.com/watch?v=v8NJt5REvck
+ */
 
 type BASE<T> = T & {
   createUser: (user: any) => void;
