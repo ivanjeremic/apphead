@@ -1,0 +1,23 @@
+{
+  "sidebar": [
+    {
+      "label": "Guides",
+      "items": [
+        {
+          "label": "Getting-started",
+          "slug": "guides/getting-started"
+        },
+        {
+          "label": "Installation",
+          "slug": "guides/installation"
+        }
+      ]
+    },
+    {
+      "label": "Reference",
+      "autogenerate": {
+        "directory": "reference"
+      }
+    }
+  ]
+}

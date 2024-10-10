@@ -9,7 +9,7 @@ export { TimeSpan } from "./date.js";
 export { Cookie, CookieAttributes } from "./cookie.js";
 export { verifyRequestOrigin } from "./request.js";
 export { validateRequest } from "./validateRequest.js";
-export { GitHub, OAuth2RequestError, generateState } from "arctic";
+export * from "arctic";
 
 // remove in future
 export { BetterSqlite3Adapter } from "@lucia-auth/adapter-sqlite";

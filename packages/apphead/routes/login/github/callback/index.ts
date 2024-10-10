@@ -45,7 +45,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const userId = generateId(15);
-    console.log("userId", userId);
+
     db.prepare(
       "INSERT INTO user (id, github_id, username) VALUES (?, ?, ?)"
     ).run(userId, githubUser.id, githubUser.login);

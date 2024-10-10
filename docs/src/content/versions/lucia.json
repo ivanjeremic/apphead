@@ -1,0 +1,23 @@
+{
+  "sidebar": [
+    {
+      "label": "Guides",
+      "items": [
+        {
+          "label": "Getting-started",
+          "slug": "guides/getting-started"
+        },
+        {
+          "label": "Database",
+          "slug": "guides/database"
+        }
+      ]
+    },
+    {
+      "label": "Reference",
+      "autogenerate": {
+        "directory": "reference"
+      }
+    }
+  ]
+}
