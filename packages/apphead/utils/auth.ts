@@ -1,5 +1,5 @@
 import {
-  Lucia,
+  AuthClient,
   GitHub,
   DatabaseUser,
   DatabaseUserGitHub,
@@ -19,7 +19,7 @@ const adapter = new BetterSqlite3Adapter(db, {
   session: "session",
 }); */
 
-export const lucia = new Lucia(adapter, {
+export const auth = new AuthClient(adapter, {
   sessionCookie: {
     attributes: {
       secure: process.env.NODE_ENV === "production",
@@ -35,7 +35,7 @@ export const lucia = new Lucia(adapter, {
 
 declare module "lucia" {
   interface Register {
-    Lucia: typeof lucia;
+    Lucia: typeof auth;
     DatabaseUserAttributes: Omit<DatabaseUserGitHub, "id">;
   }
 }

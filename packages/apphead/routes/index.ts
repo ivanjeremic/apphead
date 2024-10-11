@@ -1,9 +1,9 @@
 import { validateRequest } from "@apphead/authentication";
-import { lucia } from "~/utils/auth";
+import { auth } from "~/utils/auth";
 import { html } from "~/utils/html";
 
 export default eventHandler(async (event) => {
-  const { user, session } = await validateRequest(event, lucia);
+  const { user, session } = await validateRequest(event, auth);
   const act = getQuery(event);
 
   if (user && act.do === "logout") {
@@ -13,9 +13,9 @@ export default eventHandler(async (event) => {
       };
     }
 
-    await lucia.invalidateSession(session.id);
+    await auth.invalidateSession(session.id);
 
-    const sessionCookie = lucia.createBlankSessionCookie();
+    const sessionCookie = auth.createBlankSessionCookie();
 
     setCookie(
       event,

@@ -3,7 +3,7 @@ import {
   generateId,
   OAuth2RequestError,
 } from "@apphead/authentication";
-import { lucia, github } from "~/utils/auth";
+import { auth, github } from "~/utils/auth";
 import { db } from "~/utils/db";
 
 export default defineEventHandler(async (event) => {
@@ -28,8 +28,8 @@ export default defineEventHandler(async (event) => {
       .get(githubUser.id) as DatabaseUser | undefined;
 
     if (existingUser) {
-      const session = await lucia.createSession(existingUser.id, {});
-      const sessionCookie = lucia.createSessionCookie(session.id);
+      const session = await auth.createSession(existingUser.id, {});
+      const sessionCookie = auth.createSessionCookie(session.id);
       setCookie(
         event,
         sessionCookie.name,
@@ -49,8 +49,8 @@ export default defineEventHandler(async (event) => {
     db.prepare(
       "INSERT INTO user (id, github_id, username) VALUES (?, ?, ?)"
     ).run(userId, githubUser.id, githubUser.login);
-    const session = await lucia.createSession(userId, {});
-    const sessionCookie = lucia.createSessionCookie(session.id);
+    const session = await auth.createSession(userId, {});
+    const sessionCookie = auth.createSessionCookie(session.id);
     setCookie(
       event,
       sessionCookie.name,

@@ -1,4 +1,4 @@
-export { Lucia } from "./core.js";
+export { AuthClient } from "./core.js";
 export {
   Scrypt,
   LegacyScrypt,
@@ -33,7 +33,7 @@ export { AppheadAdapter } from "./database";
 
 export type { PasswordHashingAlgorithm } from "./crypto.js";
 
-import type { Lucia } from "./core.js";
+import type { AuthClient } from "./core.js";
 
 export interface Register {}
 
@@ -44,12 +44,12 @@ export type UserId = Register extends {
   : string;
 
 export type RegisteredLucia = Register extends {
-  Lucia: infer _Lucia;
+  Lucia: infer _AuthClient;
 }
-  ? _Lucia extends Lucia<any, any>
-    ? _Lucia
-    : Lucia
-  : Lucia;
+  ? _AuthClient extends AuthClient<any, any>
+    ? _AuthClient
+    : AuthClient
+  : AuthClient;
 
 export type RegisteredDatabaseUserAttributes = Register extends {
   DatabaseUserAttributes: infer _DatabaseUserAttributes;

@@ -15,14 +15,16 @@ let id: any;
  */
 
 type BASE<T> = T & {
-  createUser: (user: any) => void;
-  saveSession(session: Session): Promise<void>;
+  handleSignUp: (user: any) => void;
+  handleSignIn(session: Session): Promise<void>;
+  handleSignOut: (sessionId: string) => Promise<void>;
   fetchSession: (user: any) => void;
   updateSessionExpiry: (
     sessionId: string,
     updateExpiresAt: Date
   ) => Promise<void>;
-  deleteSession: (sessionId: string) => Promise<void>;
+  sessionConfig?: any;
+  cookieConfig?: any;
   redirectURI?: string;
 };
 
@@ -54,42 +56,45 @@ class Auth {
     google?: any;
   };
 
-  private prepared: boolean = false;
-
   // oauth instances
   private github: GitHub;
   private apple: Apple;
 
   constructor({ prepare, strategies }: Options) {
-    prepare().then(() => {
-      this.prepared = true;
-      this.strategies = strategies;
+    prepare()
+      .then(() => {
+        this.strategies = strategies;
 
-      if (this.strategies.github) {
-        this.github = new GitHub(
-          this.strategies.github.clientId,
-          this.strategies.github.clientSecret,
-          {
-            redirectURI: this.strategies.github.clientSecret,
-            enterpriseDomain: this.strategies.github.enterpriseDomain,
-          }
-        );
-      }
+        if (this.strategies.github) {
+          this.github = new GitHub(
+            this.strategies.github.clientId,
+            this.strategies.github.clientSecret,
+            {
+              redirectURI: this.strategies.github.clientSecret,
+              enterpriseDomain: this.strategies.github.enterpriseDomain,
+            }
+          );
+        }
 
-      if (this.strategies.apple) {
-        this.apple = new Apple(
-          {
-            clientId: this.strategies.apple.clientId,
-            teamId: this.strategies.apple.teamId,
-            keyId: this.strategies.apple.keyId,
-            certificate: this.strategies.apple.certificate,
-          },
-          this.strategies.apple.redirectURI
-            ? this.strategies.apple.redirectURI
-            : ""
+        if (this.strategies.apple) {
+          this.apple = new Apple(
+            {
+              clientId: this.strategies.apple.clientId,
+              teamId: this.strategies.apple.teamId,
+              keyId: this.strategies.apple.keyId,
+              certificate: this.strategies.apple.certificate,
+            },
+            this.strategies.apple.redirectURI
+              ? this.strategies.apple.redirectURI
+              : ""
+          );
+        }
+      })
+      .catch((error) => {
+        throw new Error(
+          `Something went wrong in 'async prepare() {...}' - ${error}`
         );
-      }
-    });
+      });
   }
 
   async validateSession() {
@@ -140,13 +145,16 @@ const auth = new Auth({
   },
   strategies: {
     basic: {
-      createUser(user) {
+      handleSignUp(user) {
         db.prepare(
           "INSERT INTO user (id, username, password) VALUES (?, ?, ?)"
         ).run("108dx", user.username, user.password);
       },
-      saveSession: async (session: Session): Promise<void> => {
+      handleSignIn: async (session: Session): Promise<void> => {
         // Save the session to your database
+      },
+      handleSignOut: async (sessionId: string): Promise<void> => {
+        // Delete the session from your database
       },
       fetchSession(user) {
         db.prepare("SELECT * FROM user WHERE github_id = ?").get(user.id);
@@ -157,18 +165,18 @@ const auth = new Auth({
       ): Promise<void> => {
         // Update the session expiry in your database
       },
-      deleteSession: async (sessionId: string): Promise<void> => {
-        // Delete the session from your database
-      },
     },
     emailPassword: {
-      createUser(user) {
+      handleSignUp(user) {
         db.prepare(
           "INSERT INTO user (id, email, password) VALUES (?, ?, ?)"
         ).run("108dx", user.email, user.password);
       },
-      saveSession: async (session: Session): Promise<void> => {
+      handleSignIn: async (session: Session): Promise<void> => {
         // Save the session to your database
+      },
+      handleSignOut: async (sessionId: string): Promise<void> => {
+        // Delete the session from your database
       },
       fetchSession(user) {
         db.prepare("SELECT * FROM user WHERE github_id = ?").get(user.id);
@@ -178,21 +186,21 @@ const auth = new Auth({
         updateExpiresAt: Date
       ): Promise<void> => {
         // Update the session expiry in your database
-      },
-      deleteSession: async (sessionId: string): Promise<void> => {
-        // Delete the session from your database
       },
     },
     github: {
       clientId: "sada",
       clientSecret: "sdadadad5asds4a",
-      createUser(user) {
+      handleSignUp(user) {
         db.prepare(
           "INSERT INTO user (id, github_id, username) VALUES (?, ?, ?)"
         ).run("108dx", user.id, user.login);
       },
-      saveSession: async (session: Session): Promise<void> => {
+      handleSignIn: async (session: Session): Promise<void> => {
         // Save the session to your database
+      },
+      handleSignOut: async (sessionId: string): Promise<void> => {
+        // Delete the session from your database
       },
       fetchSession(user) {
         db.prepare("SELECT * FROM user WHERE github_id = ?").get(user.id);
@@ -202,9 +210,6 @@ const auth = new Auth({
         updateExpiresAt: Date
       ): Promise<void> => {
         // Update the session expiry in your database
-      },
-      deleteSession: async (sessionId: string): Promise<void> => {
-        // Delete the session from your database
       },
     },
     google: {
@@ -234,13 +239,22 @@ const auth = new Auth({
       teamId: "",
       certificate: "",
       keyId: "",
-      createUser(user) {
+      handleSignUp(user) {
+        // add user to database
         db.prepare(
           "INSERT INTO user (id, github_id, username) VALUES (?, ?, ?)"
         ).run("108dx", user.id, user.login);
       },
-      saveSession: async (session: Session): Promise<void> => {
+      handleSignIn: async (session: Session): Promise<void> => {
+        // create session / cookie
+        // set cookie
         // Save the session to your database
+      },
+      handleSignOut: async (sessionId: string): Promise<void> => {
+        // Delete the session from your database
+        // create empty cookie
+        // set empty cookie
+        // redirect
       },
       fetchSession(user) {
         db.prepare("SELECT * FROM user WHERE github_id = ?").get(user.id);
@@ -250,9 +264,6 @@ const auth = new Auth({
         updateExpiresAt: Date
       ): Promise<void> => {
         // Update the session expiry in your database
-      },
-      deleteSession: async (sessionId: string): Promise<void> => {
-        // Delete the session from your database
       },
     },
   },

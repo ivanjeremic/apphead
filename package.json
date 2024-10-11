@@ -6,6 +6,7 @@
     "docs"
   ],
   "scripts": {
+    "apphead:dev": "npm run dev --prefix packages/apphead",
     "test": "vitest"
   },
   "author": "Ivan Jeremic",

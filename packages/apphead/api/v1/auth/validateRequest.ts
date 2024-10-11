@@ -1,9 +1,9 @@
 import { validateRequest } from "@apphead/authentication";
-import { lucia } from "~/utils/auth";
+import { auth } from "~/utils/auth";
 
 export default defineCachedEventHandler(
   async (event) /* : VALIDATE_REQ */ => {
-    const result = await validateRequest(event, lucia);
+    const result = await validateRequest(event, auth);
 
     return result;
   },

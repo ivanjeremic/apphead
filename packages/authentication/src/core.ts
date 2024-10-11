@@ -11,14 +11,17 @@ import type {
 } from "./index.js";
 import type { Cookie, CookieAttributes } from "./cookie.js";
 
-type SessionAttributes = RegisteredLucia extends Lucia<
+type SessionAttributes = RegisteredLucia extends AuthClient<
   infer _SessionAttributes,
   any
 >
   ? _SessionAttributes
   : {};
 
-type UserAttributes = RegisteredLucia extends Lucia<any, infer _UserAttributes>
+type UserAttributes = RegisteredLucia extends AuthClient<
+  any,
+  infer _UserAttributes
+>
   ? _UserAttributes
   : {};
 
@@ -33,7 +36,7 @@ export interface User extends UserAttributes {
   id: UserId;
 }
 
-export class Lucia<
+export class AuthClient<
   _SessionAttributes extends {} = Record<never, never>,
   _UserAttributes extends {} = Record<never, never>
 > {
