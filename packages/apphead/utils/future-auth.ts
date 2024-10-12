@@ -1,6 +1,6 @@
-import { FutureAuth, Session } from "@apphead/authentication";
+import { Kapiya, Session } from "@apphead/authentication";
 
-export const futureAuth = new FutureAuth({
+export const futureAuth = new Kapiya({
   async prepare() {
     db.exec(`CREATE TABLE IF NOT EXISTS user (
       id TEXT NOT NULL PRIMARY KEY,

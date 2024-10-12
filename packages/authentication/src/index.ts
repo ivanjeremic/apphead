@@ -12,7 +12,7 @@ export { validateRequest } from "./validateRequest.js";
 export * from "arctic";
 
 // FutureAuth
-export { FutureAuth } from "./v2/FutureAuth";
+export { Kapiya } from "./v2/FutureAuth";
 
 // remove in future
 export { BetterSqlite3Adapter } from "@lucia-auth/adapter-sqlite";

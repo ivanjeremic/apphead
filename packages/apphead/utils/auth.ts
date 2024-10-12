@@ -5,7 +5,6 @@ import {
   DatabaseUserGitHub,
   AppheadAdapter,
   BetterSqlite3Adapter,
-  Apple,
 } from "@apphead/authentication";
 import { db } from "./db";
 
@@ -43,14 +42,4 @@ declare module "lucia" {
 export const github = new GitHub(
   process.env.GITHUB_CLIENT_ID!,
   process.env.GITHUB_CLIENT_SECRET!
-);
-
-export const apple = new Apple(
-  {
-    clientId: "string",
-    teamId: "string",
-    keyId: "string",
-    certificate: "string",
-  },
-  "redirect/uri"
 );

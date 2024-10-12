@@ -56,7 +56,7 @@ const adapter = new BetterSqlite3Adapter(db, {
   session: "session",
 });
 
-export class FutureAuth {
+export class Kapiya {
   private strategies: {
     basic?: BASE<{}>;
     emailPassword?: BASE<{}>;
@@ -159,15 +159,13 @@ export class FutureAuth {
     },
   };
 
-  /*
-    const { user, session } = await validateRequest({
-    getSessionCookie: (cookieName) => getCookie(event, cookieName),
-    setSessionCookie: (cookie) =>
-      setCookie(event, cookie.name, cookie.value, cookie.attributes),
-  });
-  */
+  async signOut() {
+    const { user, session } = await this.validateSession();
 
-  async validateSession(payload) {
+    this.authClient.invalidateSession(session.id);
+  }
+
+  async validateSession(payload?: any) {
     const cookie = this.cookies(payload);
     const sessionId = cookie.get(this.authClient.sessionCookieName) ?? null;
 
