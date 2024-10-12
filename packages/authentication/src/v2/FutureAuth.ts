@@ -5,10 +5,10 @@ import {
   Apple,
   generateState,
   Session,
-  AuthClient,
   DatabaseUserGitHub,
   BetterSqlite3Adapter,
 } from "..";
+import { AuthClientFuture } from "./futureCore";
 
 /**
  * @TUTORIAL https://www.youtube.com/watch?v=v8NJt5REvck
@@ -61,18 +61,17 @@ export class FutureAuth {
     google?: any;
   };
 
-  private authClient: AuthClient<
+  private authClient: AuthClientFuture<
     Record<never, never>,
     { githubId: number; username: string }
   >;
-  private validate: ((a: any, b: any) => Promise<any>) | (() => void);
 
   // oauth instances
   private github: GitHub;
   private apple: Apple;
 
   constructor({ prepare, strategies }: Options) {
-    this.authClient = new AuthClient(adapter, {
+    this.authClient = new AuthClientFuture(adapter, {
       sessionCookie: {
         attributes: {
           secure: process.env.NODE_ENV === "production",
@@ -86,6 +85,7 @@ export class FutureAuth {
       },
     });
 
+    // prepare tables/collections other stuff...
     prepare()
       .then(() => {
         this.strategies = strategies;
@@ -153,7 +153,13 @@ export class FutureAuth {
   });
   */
 
-  async validateSession({ getSessionCookie, setSessionCookie }: any) {
+  async validateSession({
+    getSessionCookie,
+    setSessionCookie,
+  }: {
+    getSessionCookie: (sessionCookie: any) => any;
+    setSessionCookie: (sessionCookie: any) => any;
+  }) {
     const sessionId =
       getSessionCookie(this.authClient.sessionCookieName) ?? null;
 
