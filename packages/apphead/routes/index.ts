@@ -5,11 +5,7 @@ import { html } from "~/utils/html";
 
 export default eventHandler(async (event) => {
   // future
-  /* const { user, sessuion, redirectURI } = await futureAuth.validateSession({
-    getSessionCookie: (cookieName) => getCookie(event, cookieName),
-    setSessionCookie: (cookie) =>
-      setCookie(event, cookie.name, cookie.value, cookie.attributes),
-  }); */
+  // const { user, session } = await futureAuth.validateSession(event);
 
   const { user, session } = await validateRequest(event, auth);
 

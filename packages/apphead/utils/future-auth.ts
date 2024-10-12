@@ -15,51 +15,18 @@ export const futureAuth = new FutureAuth({
       FOREIGN KEY (user_id) REFERENCES user(id)
     )`);
   },
+  cookies: (event) => ({
+    get(name) {
+      getCookie(event, name);
+    },
+    set(name, value, options) {
+      setCookie(event, name, value, options);
+    },
+    remove(name, value, options) {
+      setCookie(event, name, value, options);
+    },
+  }),
   strategies: {
-    basic: {
-      handleSignUp(user) {
-        db.prepare(
-          "INSERT INTO user (id, username, password) VALUES (?, ?, ?)"
-        ).run("108dx", user.username, user.password);
-      },
-      handleSignIn: async (session: Session): Promise<void> => {
-        // Save the session to your database
-      },
-      handleSignOut: async (sessionId: string): Promise<void> => {
-        // Delete the session from your database
-      },
-      fetchSession(user) {
-        db.prepare("SELECT * FROM user WHERE github_id = ?").get(user.id);
-      },
-      updateSessionExpiry: async (
-        sessionId: string,
-        updateExpiresAt: Date
-      ): Promise<void> => {
-        // Update the session expiry in your database
-      },
-    },
-    emailPassword: {
-      handleSignUp(user) {
-        db.prepare(
-          "INSERT INTO user (id, email, password) VALUES (?, ?, ?)"
-        ).run("108dx", user.email, user.password);
-      },
-      handleSignIn: async (session: Session): Promise<void> => {
-        // Save the session to your database
-      },
-      handleSignOut: async (sessionId: string): Promise<void> => {
-        // Delete the session from your database
-      },
-      fetchSession(user) {
-        db.prepare("SELECT * FROM user WHERE github_id = ?").get(user.id);
-      },
-      updateSessionExpiry: async (
-        sessionId: string,
-        updateExpiresAt: Date
-      ): Promise<void> => {
-        // Update the session expiry in your database
-      },
-    },
     github: {
       clientId: "sada",
       clientSecret: "sdadadad5asds4a",
@@ -73,60 +40,6 @@ export const futureAuth = new FutureAuth({
       },
       handleSignOut: async (sessionId: string): Promise<void> => {
         // Delete the session from your database
-      },
-      fetchSession(user) {
-        db.prepare("SELECT * FROM user WHERE github_id = ?").get(user.id);
-      },
-      updateSessionExpiry: async (
-        sessionId: string,
-        updateExpiresAt: Date
-      ): Promise<void> => {
-        // Update the session expiry in your database
-      },
-    },
-    google: {
-      handleSignUp(user) {
-        db.prepare(
-          "INSERT INTO user (id, github_id, username) VALUES (?, ?, ?)"
-        ).run("108dx", user.id, user.login);
-      },
-      handleSignIn: async (session: Session): Promise<void> => {
-        // Save the session to your database
-      },
-      handleSignOut: async (sessionId: string): Promise<void> => {
-        // Delete the session from your database
-      },
-      fetchSession(user) {
-        db.prepare("SELECT * FROM user WHERE github_id = ?").get(user.id);
-      },
-      updateSessionExpiry: async (
-        sessionId: string,
-        updateExpiresAt: Date
-      ): Promise<void> => {
-        // Update the session expiry in your database
-      },
-    },
-    apple: {
-      clientId: "",
-      teamId: "",
-      certificate: "",
-      keyId: "",
-      handleSignUp(user) {
-        // add user to database
-        db.prepare(
-          "INSERT INTO user (id, github_id, username) VALUES (?, ?, ?)"
-        ).run("108dx", user.id, user.login);
-      },
-      handleSignIn: async (session: Session): Promise<void> => {
-        // create session / cookie
-        // set cookie
-        // Save the session to your database
-      },
-      handleSignOut: async (sessionId: string): Promise<void> => {
-        // Delete the session from your database
-        // create empty cookie
-        // set empty cookie
-        // redirect
       },
       fetchSession(user) {
         db.prepare("SELECT * FROM user WHERE github_id = ?").get(user.id);

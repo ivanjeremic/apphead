@@ -7,6 +7,7 @@ import {
   Session,
   DatabaseUserGitHub,
   BetterSqlite3Adapter,
+  CookieAttributes,
 } from "..";
 import { AuthClientFuture } from "./futureCore";
 
@@ -28,8 +29,15 @@ type BASE<T> = T & {
   redirectURI?: string;
 };
 
+type CookiesType = {
+  get: (name: string) => any;
+  set: (name: string, value: string, options: CookieAttributes) => any;
+  remove: (name: string, value: string, options: CookieAttributes) => any;
+};
+
 type Options = {
   prepare: () => Promise<void>;
+  cookies?: (payload?: any) => CookiesType;
   strategies: {
     basic?: BASE<{}>;
     emailPassword?: BASE<{}>;
@@ -66,11 +74,13 @@ export class FutureAuth {
     { githubId: number; username: string }
   >;
 
+  private cookies: (payload?: any) => CookiesType;
+
   // oauth instances
   private github: GitHub;
   private apple: Apple;
 
-  constructor({ prepare, strategies }: Options) {
+  constructor({ prepare, strategies, cookies }: Options) {
     this.authClient = new AuthClientFuture(adapter, {
       sessionCookie: {
         attributes: {
@@ -88,6 +98,10 @@ export class FutureAuth {
     // prepare tables/collections other stuff...
     prepare()
       .then(() => {
+        if (cookies) {
+          this.cookies = cookies;
+        }
+
         this.strategies = strategies;
 
         if (this.strategies.github) {
@@ -153,15 +167,9 @@ export class FutureAuth {
   });
   */
 
-  async validateSession({
-    getSessionCookie,
-    setSessionCookie,
-  }: {
-    getSessionCookie: (sessionCookie: any) => any;
-    setSessionCookie: (sessionCookie: any) => any;
-  }) {
-    const sessionId =
-      getSessionCookie(this.authClient.sessionCookieName) ?? null;
+  async validateSession(payload) {
+    const cookie = this.cookies(payload);
+    const sessionId = cookie.get(this.authClient.sessionCookieName) ?? null;
 
     if (!sessionId) {
       return {
@@ -179,13 +187,23 @@ export class FutureAuth {
           result.session.id
         );
 
-        setSessionCookie(sessionCookie);
+        cookie.set(
+          sessionCookie.name,
+          sessionCookie.value,
+          sessionCookie.attributes
+        );
       }
       if (!result.session) {
         const sessionCookie = this.authClient.createBlankSessionCookie();
-        setSessionCookie(sessionCookie);
+        cookie.remove(
+          sessionCookie.name,
+          sessionCookie.value,
+          sessionCookie.attributes
+        );
       }
-    } catch {}
+    } catch (error) {
+      throw new Error(error);
+    }
 
     return { ...result, redirectURI: "" };
   }
