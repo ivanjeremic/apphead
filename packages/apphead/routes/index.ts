@@ -5,10 +5,11 @@ import { html } from "~/utils/html";
 
 export default eventHandler(async (event) => {
   // future
-  /* const {user, sessuion} = await futureAuth.validateSession({
+  /* const { user, sessuion, redirectURI } = await futureAuth.validateSession({
     getSessionCookie: (cookieName) => getCookie(event, cookieName),
-    setSessionCookie: (cookie) => setCookie(event, cookie.name, cookie.value, cookie.attributes),
-  }) */
+    setSessionCookie: (cookie) =>
+      setCookie(event, cookie.name, cookie.value, cookie.attributes),
+  }); */
 
   const { user, session } = await validateRequest(event, auth);
 
@@ -21,6 +22,8 @@ export default eventHandler(async (event) => {
       };
     }
 
+    // from here on down is logout logic!!!
+    // impl in logout
     await auth.invalidateSession(session.id);
 
     const sessionCookie = auth.createBlankSessionCookie();

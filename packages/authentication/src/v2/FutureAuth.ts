@@ -167,6 +167,7 @@ export class FutureAuth {
       return {
         user: null,
         session: null,
+        redirectURI: "",
       };
     }
 
@@ -186,6 +187,6 @@ export class FutureAuth {
       }
     } catch {}
 
-    return result;
+    return { ...result, redirectURI: "" };
   }
 }
