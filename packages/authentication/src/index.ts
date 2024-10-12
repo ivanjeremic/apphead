@@ -11,6 +11,9 @@ export { verifyRequestOrigin } from "./request.js";
 export { validateRequest } from "./validateRequest.js";
 export * from "arctic";
 
+// FutureAuth
+export { FutureAuth } from "./v2/FutureAuth";
+
 // remove in future
 export { BetterSqlite3Adapter } from "@lucia-auth/adapter-sqlite";
 import sqlite from "better-sqlite3";

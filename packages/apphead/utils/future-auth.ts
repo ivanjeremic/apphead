@@ -1,134 +1,6 @@
-import {
-  AppleCredentials,
-  GitHub,
-  Google,
-  Apple,
-  generateState,
-  Session,
-} from "..";
+import { FutureAuth, Session } from "@apphead/authentication";
 
-let db: any;
-let id: any;
-
-/**
- * @TUTORIAL https://www.youtube.com/watch?v=v8NJt5REvck
- */
-
-type BASE<T> = T & {
-  handleSignUp: (user: any) => void;
-  handleSignIn(session: Session): Promise<void>;
-  handleSignOut: (sessionId: string) => Promise<void>;
-  fetchSession: (user: any) => void;
-  updateSessionExpiry: (
-    sessionId: string,
-    updateExpiresAt: Date
-  ) => Promise<void>;
-  sessionConfig?: any;
-  cookieConfig?: any;
-  redirectURI?: string;
-};
-
-type Options = {
-  prepare: () => Promise<void>;
-  strategies: {
-    basic?: BASE<{}>;
-    emailPassword?: BASE<{}>;
-    github?: BASE<{
-      clientId: string;
-      clientSecret: string;
-      enterpriseDomain?: string;
-    }>;
-    apple?: BASE<AppleCredentials>;
-    google?: any;
-  };
-};
-
-class Auth {
-  private strategies: {
-    basic?: BASE<{}>;
-    emailPassword?: BASE<{}>;
-    github?: BASE<{
-      clientId: string;
-      clientSecret: string;
-      enterpriseDomain?: string;
-    }>;
-    apple?: BASE<AppleCredentials>;
-    google?: any;
-  };
-
-  // oauth instances
-  private github: GitHub;
-  private apple: Apple;
-
-  constructor({ prepare, strategies }: Options) {
-    prepare()
-      .then(() => {
-        this.strategies = strategies;
-
-        if (this.strategies.github) {
-          this.github = new GitHub(
-            this.strategies.github.clientId,
-            this.strategies.github.clientSecret,
-            {
-              redirectURI: this.strategies.github.clientSecret,
-              enterpriseDomain: this.strategies.github.enterpriseDomain,
-            }
-          );
-        }
-
-        if (this.strategies.apple) {
-          this.apple = new Apple(
-            {
-              clientId: this.strategies.apple.clientId,
-              teamId: this.strategies.apple.teamId,
-              keyId: this.strategies.apple.keyId,
-              certificate: this.strategies.apple.certificate,
-            },
-            this.strategies.apple.redirectURI
-              ? this.strategies.apple.redirectURI
-              : ""
-          );
-        }
-      })
-      .catch((error) => {
-        throw new Error(
-          `Something went wrong in 'async prepare() {...}' - ${error}`
-        );
-      });
-  }
-
-  async validateSession() {
-    //retunr
-  }
-
-  signIn = {
-    basic: async (username: string, password: string) => {
-      // do
-    },
-    emailPassword: async (email: string, password: string) => {
-      // do
-    },
-    github: async () => {
-      const state = generateState();
-      const url = await this.github.createAuthorizationURL(state);
-
-      // setCookie
-      /* setCookie(event, "github_oauth_state", state, {
-        path: "/",
-        secure: process.env.NODE_ENV === "production",
-        httpOnly: true,
-        maxAge: 60 * 10,
-        sameSite: "lax",
-      }); */
-      return url;
-    },
-  };
-}
-
-/**
- * API
- */
-const auth = new Auth({
+export const futureAuth = new FutureAuth({
   async prepare() {
     db.exec(`CREATE TABLE IF NOT EXISTS user (
       id TEXT NOT NULL PRIMARY KEY,
@@ -213,13 +85,16 @@ const auth = new Auth({
       },
     },
     google: {
-      createUser(user) {
+      handleSignUp(user) {
         db.prepare(
           "INSERT INTO user (id, github_id, username) VALUES (?, ?, ?)"
         ).run("108dx", user.id, user.login);
       },
-      saveSession: async (session: Session): Promise<void> => {
+      handleSignIn: async (session: Session): Promise<void> => {
         // Save the session to your database
+      },
+      handleSignOut: async (sessionId: string): Promise<void> => {
+        // Delete the session from your database
       },
       fetchSession(user) {
         db.prepare("SELECT * FROM user WHERE github_id = ?").get(user.id);
@@ -229,9 +104,6 @@ const auth = new Auth({
         updateExpiresAt: Date
       ): Promise<void> => {
         // Update the session expiry in your database
-      },
-      deleteSession: async (sessionId: string): Promise<void> => {
-        // Delete the session from your database
       },
     },
     apple: {
@@ -268,7 +140,3 @@ const auth = new Auth({
     },
   },
 });
-
-await auth.signIn.emailPassword("me@gmail.com", "2sad4as554asd5");
-
-await auth.signIn.github();

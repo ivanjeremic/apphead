@@ -1,9 +1,11 @@
 import { validateRequest } from "@apphead/authentication";
 import { auth } from "~/utils/auth";
+import { futureAuth } from "~/utils/future-auth";
 import { html } from "~/utils/html";
 
 export default eventHandler(async (event) => {
   const { user, session } = await validateRequest(event, auth);
+
   const act = getQuery(event);
 
   if (user && act.do === "logout") {
