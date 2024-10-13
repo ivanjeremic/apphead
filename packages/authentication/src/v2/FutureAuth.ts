@@ -163,6 +163,8 @@ export class Kapiya {
     const { user, session } = await this.validateSession();
 
     this.authClient.invalidateSession(session.id);
+
+    // handleSignOut method
   }
 
   async validateSession(payload?: any) {
@@ -191,7 +193,11 @@ export class Kapiya {
           sessionCookie.attributes
         );
       }
+
       if (!result.session) {
+        //not sure about this line
+        this.authClient.invalidateSession(sessionId);
+
         const sessionCookie = this.authClient.createBlankSessionCookie();
         cookie.remove(
           sessionCookie.name,
