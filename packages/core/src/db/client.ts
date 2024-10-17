@@ -1,7 +1,7 @@
 import { createStorage, StorageValue, Storage } from "unstorage";
 import fsDriver from "unstorage/drivers/fs";
 import { lmdbDriver } from "./driver";
-import { genIdV001 } from "../../utils/src";
+import { genIdV001 } from "../../../utils/src";
 
 /**
  * @description STORAGE ENGINE
