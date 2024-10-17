@@ -67,7 +67,7 @@ export const lmdbDriver = defineDriver((opts: RootDatabaseOptionsWithPath) => {
   };
 });
 
-export const dataDOMFS = createStorageEngine((storage) => ({
+export const dataDomFS = createStorageEngine((storage) => ({
   UNSAFE_custom_external_kv: fsDriver({ base: "./tmp" }),
   async createCollection(collectionName: string, schema?: any) {
     const tmp = await prettier.format(`<ul created-at="${Date.now()}"></ul>`, {
