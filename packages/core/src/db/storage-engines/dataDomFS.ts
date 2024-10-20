@@ -123,17 +123,16 @@ export const dataDomFS = createStorageEngine((storage) => ({
 
     storage.set(collectionName, tmp);
   },
-  // find
-  /* private async findHandler(
+  async handleFind(
       collectionName: string,
       query: any,
       inFindOne: boolean
     ) {
-      const collectionData = await this.ngin.storage.get(collectionName);
+      const collectionData = await storage.get(collectionName);
+      const { document } = parseHTML(collectionData);
+      const list = document.querySelector("ul");
   
-      const { list } = this.ngin.datadom(collectionData);
-  
-      list.querySelector({});
+      list?.querySelectorAll(`[id=${query.id}], [age=${query.age}]`);
   
       if (inFindOne) {
         if (newDoc) {
@@ -159,15 +158,18 @@ export const dataDomFS = createStorageEngine((storage) => ({
         }
       }
   
-      const tmp = await prettier.format(list.outerHTML, {
+      const htmlResult = await prettier.format(list?.outerHTML, {
         semi: false,
         parser: "html",
       });
   
-      this.ngin.storage.set(collectionName, tmp);
-    } */
+      const jsonResult = toJSON(document);
 
-  // delete
+    return {
+      html: htmlResult,
+      json: jsonResult,
+    };
+  },
   async handleDelete(
     collectionName: string,
     query: string | object,

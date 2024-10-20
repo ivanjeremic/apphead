@@ -15,6 +15,7 @@
   "dependencies": {
     "@apphead/core": "workspace:*",
     "@heroicons/react": "^2.1.5",
+    "ag-grid-react": "^32.2.2",
     "next": "14.2.13",
     "react": "^18",
     "react-dom": "^18",
