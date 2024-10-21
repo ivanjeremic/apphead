@@ -44,10 +44,6 @@ export default function Collections() {
         rowData={rowData}
         columnDefs={colDefs as any} // Type assertion to bypass type checking
         sortingOrder={["asc", "desc"]}
-        suppressRowTransform={true}
-        isFullWidthRow={(params) =>
-          params.rowNode.data.someProperty === "someValue"
-        }
       />
     </div>
   );
