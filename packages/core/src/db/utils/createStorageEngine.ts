@@ -21,7 +21,7 @@ export type NGIN = {
   ) => Promise<void>;
   handleDelete: (
     collectionName: string,
-    query: string | object,
+    query: object,
     isDeleteOne: boolean
   ) => Promise<void>;
 };

@@ -2,7 +2,6 @@ import fsDriver from "unstorage/drivers/fs";
 import { parseHTML, parseJSON, toJSON } from "linkedom";
 import { defineDriver } from "unstorage";
 import { open, RootDatabaseOptionsWithPath } from "lmdb";
-import * as prettier from "prettier";
 import { createStorageEngine } from "../utils/createStorageEngine";
 
 const DRIVER_NAME = "lmdb";
@@ -70,12 +69,8 @@ export const lmdbDriver = defineDriver((opts: RootDatabaseOptionsWithPath) => {
 export const dataDomFS = createStorageEngine((storage) => ({
   UNSAFE_custom_external_kv: fsDriver({ base: "./tmp" }),
   async createCollection(collectionName: string, schema?: any) {
-    const tmp = await prettier.format(`<ul created-at="${Date.now()}"></ul>`, {
-      semi: false,
-      parser: "html",
-    });
 
-    storage.setItem(collectionName, tmp);
+    storage.setItem(collectionName, `<ul created-at="${Date.now()}"></ul>`);
   },
   async handleInsert(
     collectionName: string,
@@ -116,14 +111,11 @@ export const dataDomFS = createStorageEngine((storage) => ({
       }
     }
 
-    const tmp = await prettier.format(list?.outerHTML, {
-      semi: false,
-      parser: "html",
-    });
-
-    storage.set(collectionName, tmp);
+    if (list) {
+    storage.set(collectionName, list.outerHTML);
+    }
   },
-  async handleFind(
+  /* async handleFind(
       collectionName: string,
       query: any,
       inFindOne: boolean
@@ -169,10 +161,10 @@ export const dataDomFS = createStorageEngine((storage) => ({
       html: htmlResult,
       json: jsonResult,
     };
-  },
+  }, */
   async handleDelete(
     collectionName: string,
-    query: string | object,
+    query: object,
     isDeleteOne: boolean
   ) {
     const collectionData = await storage.get(collectionName);
@@ -183,8 +175,8 @@ export const dataDomFS = createStorageEngine((storage) => ({
 
     if (list) {
       for (const doc of Array.from(list.children)) {
-        for (const key of Object.keys(query)) {
-          if (doc.getAttribute(key) === query[key]) {
+        for (const [key, value] of Object.entries(query)) {
+          if (doc.getAttribute(key) === value) {
             rm = true;
           } else {
             rm = false;
@@ -196,11 +188,7 @@ export const dataDomFS = createStorageEngine((storage) => ({
         if (rm) {
           doc.remove();
           rm = false;
-          const tmp = await prettier.format(list.outerHTML, {
-            semi: false,
-            parser: "html",
-          });
-          storage.set(collectionName, tmp);
+          storage.set(collectionName, list.outerHTML);
           if (isDeleteOne) break;
         }
       }
