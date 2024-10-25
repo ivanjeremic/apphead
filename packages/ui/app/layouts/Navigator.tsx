@@ -3,6 +3,8 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { ChevronLeftIcon } from "@heroicons/react/24/outline";
 import { useSwiper } from "swiper/react";
+import { Input } from "@chakra-ui/react";
+import { Field } from "@/components/ui/field";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
@@ -26,22 +28,22 @@ const NavItem = ({ title, href }: { title: string; href: string }) => {
 
   return (
     <Link
-      onClick={slideHandler}
       href={href}
-      className="flex items-center p-3 text-sm font-medium bg-gray-50 hover:bg-gray-100 text-gray-600 hover:text-gray-900"
+      onClick={slideHandler}
+      className="flex items-center p-3 text-sm font-medium border-b bg-gray-50 hover:bg-gray-100 text-gray-600 hover:text-gray-900"
     >
-      <span className="truncate">{title}</span>
+      {title}
     </Link>
   );
 };
 
-const BackButton = () => {
+export const BackButton = () => {
   const swiper = useSwiper();
   const router = useRouter();
 
   return (
     <button
-      className="w-12 p-3 text-black border-l-4  border-l-orange-600 bg-[#f6f7f7] hover:bg-white focus:outline-none"
+      className="w-12 p-3 text-black border-l-4 border-l-blue-600 bg-[#f6f7f7] hover:bg-white focus:outline-none cursor-pointer"
       onClick={() => {
         swiper.slideTo(currentIndex - 1);
         router.back();
@@ -89,35 +91,41 @@ export const Navigator = () => {
 
   return (
     <Swiper
-      className="w-full h-screen bg-white border-r border-gray-200 overflow-y-auto lg:block"
       onSlideChange={() => console.log("slide change")}
       onSwiper={(swiper) => console.log(swiper)}
       allowTouchMove={true}
-      initialSlide={pathname.includes("collections") ? 1 : 0}
+      //initialSlide={pathname.includes("collections") ? 1 : 0}
     >
-      {menus.map(({ title, NavItems }) => (
-        <SwiperSlide className="flex flex-col">
-          <div className="relative z-10 flex-shrink-0 h-16 bg-white border-b border-gray-200 flex">
-            {title !== "Dashboard" && <BackButton />}
+      <>
+        {menus.map(({ title, NavItems }) => (
+          <SwiperSlide key={title} className=" box-border w-full">
+            <div className="h-16 bg-white border-b border-gray-200 flex">
+              {title !== "Dashboard" && <BackButton />}
 
-            <div className="sm:flex sm:items-center sm:justify-between px-3 py-2">
-              <h3 className="text-lg leading-6 font-medium text-gray-900">
-                {title}
-              </h3>
+              <div className="sm:flex sm:items-center sm:justify-between p-2">
+                <h3 className="text-lg leading-6 font-medium text-gray-900">
+                  {title}
+                </h3>
+              </div>
             </div>
-          </div>
-          <div className="relative flex-shrink-0 bg-white border-b border-gray-200 shadow-sm flex">
-            Search
-          </div>
+            <div className="relative flex-shrink-0 bg-white border-b border-gray-200 flex p-2">
+              <Field /** inject comp later in > */ helperText={""}>
+                <Input
+                  placeholder={
+                    pathname === "/admin/collections"
+                      ? "Search Collections"
+                      : "Search"
+                  }
+                />
+              </Field>
+            </div>
 
-          <nav
-            className="space-y-0.5 mt-1 overflow-y-auto"
-            aria-label="Sidebar"
-          >
-            {NavItems}
-          </nav>
-        </SwiperSlide>
-      ))}
+            <nav className="overflow-y-auto" aria-label="Sidebar">
+              {NavItems}
+            </nav>
+          </SwiperSlide>
+        ))}
+      </>
     </Swiper>
   );
 };
