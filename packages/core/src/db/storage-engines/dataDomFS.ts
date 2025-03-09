@@ -27,8 +27,8 @@ export const lmdbDriver = defineDriver((opts: RootDatabaseOptionsWithPath) => {
     name: DRIVER_NAME,
     options: opts,
     getInstance: getLMDBClient,
-    async hasItem(key, _opts) {
-      const doesExist = getLMDBClient().doesExist(key);
+    async hasItem(key, client_opts) {
+      const doesExist = getLMDBClient(client_opts).doesExist(key);
       return doesExist;
     },
     async getItem(key) {

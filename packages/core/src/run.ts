@@ -1,20 +1,23 @@
 import { DB } from "./db/db";
-import { createStorage } from "unstorage";
 import { lmdbDriver } from "./db/storage-engines/dataDomFS";
 
-const storage = createStorage({
+export const db = new DB({
   driver: lmdbDriver({ path: "./bess" }),
 });
 
-export const db = new DB(storage);
-
-db.createCollection("pederi", [
+db.createCollection("stones", [
   { field: "make", index: 1, type: "string" },
   { field: "model", index: 2, type: "string" },
   { field: "year", index: 3, type: "int32" },
 ]);
 
-const vals = await db.findMany("__collections", "personal");
-//const vals = await db.findOne("__collections", "personal");
+//const vals = await db.findMany("__collections", "personal");
+await db.insert("stones", { breed: "kies" });
+
+const vals = await db.query(
+  "stones",
+  { id: "any" },
+  { limit: 10, sort: "asc", fields: ["make", "model"] }
+);
 
 console.log(vals);

@@ -1,7 +1,12 @@
-import { StorageValue, Storage } from "unstorage";
+import {
+  StorageValue,
+  Storage,
+  createStorage,
+  CreateStorageOptions,
+} from "unstorage";
 import protobuf from "protobufjs";
 import { open } from "lmdb";
-import { env } from "bun";
+import { nanoid } from "nanoid";
 
 /**
  * Creates a Protobuf schema dynamically from an array of field definitions.
@@ -20,10 +25,11 @@ function createSchema(name, fields) {
 }
 
 export class DB {
-  ngin: Storage<StorageValue>;
   path = "./data/";
-  constructor(ngin: Storage<StorageValue>) {
-    this.ngin = ngin;
+  ngin: Storage<StorageValue>;
+
+  constructor(ngin: CreateStorageOptions | undefined) {
+    this.ngin = createStorage(ngin);
   }
 
   /**
@@ -35,10 +41,6 @@ export class DB {
     });
   }
 
-  public async createCollectionSchema(collectionName: string, schema?: any) {
-    protobuf.parse(schema);
-  }
-
   public async deleteCollection(collectionName: string) {
     //this.ngin.storage.remove(collectionName);
   }
@@ -46,12 +48,18 @@ export class DB {
   /**
    * handle document inserts
    */
-  public async insertOne(collectionName: string, data: any) {
-    //await this.ngin.handleInsert(collectionName, data, true);
-  }
+  public async insert(collectionName: string, data: any) {
+    const collectionExists = await this.ngin.hasItem(collectionName, {
+      path: this.path + "__collections",
+    });
 
-  public async insertMany(collectionName: string, data: any[]) {
-    //await this.ngin.handleInsert(collectionName, data, false);
+    if (collectionExists) {
+      await this.ngin.setItem(nanoid(), JSON.stringify(data), {
+        path: this.path + collectionName,
+      });
+    } else {
+      throw new Error(`collection '${collectionName}' does not exist`);
+    }
   }
 
   /**
@@ -65,9 +73,9 @@ export class DB {
     return item;
   }
 
-  public async findMany(collectionName, query) {
+  public async query(collectionName, query, options) {
     const db = open({
-      path: "./data/" + "__collections",
+      path: "./data/" + collectionName,
     });
 
     const values = db.getRange();
