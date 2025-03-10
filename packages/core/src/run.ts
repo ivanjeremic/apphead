@@ -1,23 +1,23 @@
-import { DB } from "./db/db";
+import { DomeDB } from "./db/db";
 import { lmdbDriver } from "./db/storage-engines/dataDomFS";
 
-export const db = new DB({
+export const db = new DomeDB({
   driver: lmdbDriver({ path: "./bess" }),
 });
 
-db.createCollection("stones", [
+db.createCollection("languages", [
   { field: "make", index: 1, type: "string" },
   { field: "model", index: 2, type: "string" },
   { field: "year", index: 3, type: "int32" },
 ]);
 
-//const vals = await db.findMany("__collections", "personal");
-await db.insert("stones", { breed: "kies" });
+// rest api shape: /db/insert/collection=stones&make=string&model=string&year=int32
+await db.insert("languageasdsadasds", { lang: "english" });
 
-const vals = await db.query(
-  "stones",
-  { id: "any" },
-  { limit: 10, sort: "asc", fields: ["make", "model"] }
-);
+const data = await db.query({
+  collection: "languages",
+  filter: { id: "any" },
+  options: { limit: 10, sort: "asc", fields: ["make", "model"] },
+});
 
-console.log(vals);
+console.log(data);

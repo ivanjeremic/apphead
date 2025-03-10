@@ -4,27 +4,14 @@ import {
   createStorage,
   CreateStorageOptions,
 } from "unstorage";
-import protobuf from "protobufjs";
 import { open } from "lmdb";
 import { nanoid } from "nanoid";
+import { errors } from "./utils/errors";
 
 /**
- * Creates a Protobuf schema dynamically from an array of field definitions.
- * @param {string} name - The name of the message type.
- * @param {Array} fields - The schema definition array.
- * @returns {protobuf.Type} - The generated Protobuf Type.
+ * DomeDB class.
  */
-function createSchema(name, fields) {
-  const messageType = new protobuf.Type(name);
-
-  fields.forEach((field) => {
-    messageType.add(new protobuf.Field(field.field, field.index, field.type));
-  });
-
-  return messageType;
-}
-
-export class DB {
+export class DomeDB {
   path = "./data/";
   ngin: Storage<StorageValue>;
 
@@ -32,7 +19,7 @@ export class DB {
     this.ngin = createStorage(ngin);
   }
 
-  /**
+  /*
    * handle collections
    */
   public async createCollection(collectionName: string, schema?: any) {
@@ -46,43 +33,51 @@ export class DB {
   }
 
   /**
-   * handle document inserts
+   *
+   * @param collectionName
+   * @param data
    */
   public async insert(collectionName: string, data: any) {
-    const collectionExists = await this.ngin.hasItem(collectionName, {
-      path: this.path + "__collections",
-    });
-
-    if (collectionExists) {
-      await this.ngin.setItem(nanoid(), JSON.stringify(data), {
-        path: this.path + collectionName,
+    try {
+      const collectionExists = await this.ngin.hasItem(collectionName, {
+        path: this.path + "__collections",
       });
-    } else {
-      throw new Error(`collection '${collectionName}' does not exist`);
+
+      if (collectionExists) {
+        await this.ngin.setItem(nanoid(), JSON.stringify(data), {
+          path: this.path + collectionName,
+        });
+      } else {
+        throw new Error("sad");
+      }
+    } catch (error) {
+      new Error(errors.insertErrors.collectionDoesNotExist);
     }
   }
 
   /**
-   * handle find documents
+   *
+   * @param param0
+   * @returns {Promise<any>}
    */
-  public async findOne(collectionName, query) {
+  public async query({
+    collection,
+    filter,
+    options,
+  }: {
+    collection: string;
+    filter: any;
+    options: any;
+  }): Promise<any> {
     const db = open({
-      path: "./data/" + "__collections",
-    });
-    const item = await db.get(query);
-    return item;
-  }
-
-  public async query(collectionName, query, options) {
-    const db = open({
-      path: "./data/" + collectionName,
+      path: "./data/" + collection,
     });
 
     const values = db.getRange();
     return [...values];
   }
 
-  /**
+  /*
    * handle delte documents
    */
   public async deleteOne(collectionName: string, query: string | object) {
