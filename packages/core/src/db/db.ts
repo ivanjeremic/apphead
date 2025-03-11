@@ -3,20 +3,47 @@ import {
   Storage,
   createStorage,
   CreateStorageOptions,
+  Driver,
 } from "unstorage";
 import { open } from "lmdb";
 import { nanoid } from "nanoid";
 import { errors } from "./utils/errors";
 
+class Auth {
+  currentUser: any;
+
+  async createUser(username: string) {
+    return {
+      id: nanoid(),
+      username,
+    };
+  }
+
+  async registerUsernamePassword(username: string, password: string) {
+    this.currentUser = username;
+    return true;
+  }
+
+  async loginUsernamePassword(username: string, password: string) {
+    this.currentUser = username;
+    return true;
+  }
+}
+
 /**
  * DomeDB class.
  */
-export class DomeDB {
+export class DomeDB extends Auth {
   path = "./data/";
   ngin: Storage<StorageValue>;
+  user: any;
 
-  constructor(ngin: CreateStorageOptions | undefined) {
-    this.ngin = createStorage(ngin);
+  constructor(ngin: { engine: Driver<any, any> | undefined }) {
+    super();
+
+    this.ngin = createStorage({
+      driver: ngin.engine,
+    });
   }
 
   /*
@@ -38,20 +65,16 @@ export class DomeDB {
    * @param data
    */
   public async insert(collectionName: string, data: any) {
-    try {
-      const collectionExists = await this.ngin.hasItem(collectionName, {
-        path: this.path + "__collections",
-      });
+    const collectionExists = await this.ngin.hasItem(collectionName, {
+      path: this.path + "__collections",
+    });
 
-      if (collectionExists) {
-        await this.ngin.setItem(nanoid(), JSON.stringify(data), {
-          path: this.path + collectionName,
-        });
-      } else {
-        throw new Error("sad");
-      }
-    } catch (error) {
-      new Error(errors.insertErrors.collectionDoesNotExist);
+    if (collectionExists) {
+      await this.ngin.setItem(nanoid(), JSON.stringify(data), {
+        path: this.path + collectionName,
+      });
+    } else {
+      console.error(errors.insertErrors.collectionDoesNotExist);
     }
   }
 

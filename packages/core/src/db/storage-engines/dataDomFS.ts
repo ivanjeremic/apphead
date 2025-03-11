@@ -1,26 +1,13 @@
 import { defineDriver } from "unstorage";
-import { open, RootDatabaseOptionsWithPath, Database } from "lmdb";
-
-export interface LMDBOptions {
-  /**
-   * The name of the database to use.
-   * @default "unstorage"
-   */
-  databaseName?: string;
-
-  /**
-   * The name of the collection to use.
-   * @default "unstorage"
-   */
-  collectionName?: string;
-}
+import { open, RootDatabaseOptionsWithPath } from "lmdb";
 
 const DRIVER_NAME = "lmdb";
 
-export const lmdbDriver = defineDriver((opts: RootDatabaseOptionsWithPath) => {
+const lmdbDriver = defineDriver((opts: RootDatabaseOptionsWithPath) => {
+  // client
   const getLMDBClient = (client_opts?: RootDatabaseOptionsWithPath) => {
-    const lmdbClient = open(client_opts || opts);
-    return lmdbClient;
+    const client = open(client_opts || opts);
+    return client;
   };
 
   return {
@@ -75,3 +62,7 @@ export const lmdbDriver = defineDriver((opts: RootDatabaseOptionsWithPath) => {
     },
   };
 });
+
+export function nodeStorageEngine() {
+  return lmdbDriver({ path: "./data" });
+}
