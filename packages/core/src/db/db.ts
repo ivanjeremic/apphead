@@ -54,6 +54,14 @@ export class DomeDB {
    * handle collections
    */
   public async createCollection(collectionName: string, schema?: any) {
+    //check if valid collection name
+    if (collectionName.includes("_")) {
+      console.error(
+        errors.createCollection.invalidCollectionName(collectionName)
+      );
+      return;
+    }
+
     await this.ngin.setItem(collectionName, JSON.stringify(schema), {
       path: this.path + "__collections",
     });
@@ -75,7 +83,7 @@ export class DomeDB {
 
     if (collectionExists) {
       await this.ngin.setItem(nanoid(), JSON.stringify(data), {
-        path: this.path + collectionName,
+        path: this.path + this.user + "/" + collectionName,
       });
     } else {
       console.error(errors.shared.collectionDoesNotExist(collectionName));
@@ -102,11 +110,17 @@ export class DomeDB {
 
     if (collectionExists) {
       const db = open({
-        path: "./data/" + collection,
+        path: this.path + this.user + "/" + collection,
       });
 
       const values = db.getRange();
-      return [...values];
+      return new Promise((resolve, reject) => {
+        try {
+          resolve([...values]);
+        } catch (error) {
+          reject(error);
+        }
+      });
     } else {
       console.error(
         errors.shared.collectionDoesNotExist(collection + " in query")

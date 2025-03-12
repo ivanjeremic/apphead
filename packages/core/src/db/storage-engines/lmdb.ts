@@ -19,11 +19,11 @@ const lmdbDriver = defineDriver((opts: RootDatabaseOptionsWithPath) => {
       return doesExist;
     },
     async getItem(key) {
-      const item = getLMDBClient().get(key);
+      const item = await getLMDBClient().getAsync(key);
       return item;
     },
     async setItem(key, value, client_opts) {
-      getLMDBClient(client_opts).put(key, value);
+      await getLMDBClient(client_opts).put(key, value);
       return;
     },
     async removeItem(key) {
