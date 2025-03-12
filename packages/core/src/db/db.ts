@@ -9,41 +9,45 @@ import { open } from "lmdb";
 import { nanoid } from "nanoid";
 import { errors } from "./utils/errors";
 
-class Auth {
-  currentUser: any;
-
-  async createUser(username: string) {
-    return {
-      id: nanoid(),
-      username,
-    };
-  }
-
-  async registerUsernamePassword(username: string, password: string) {
-    this.currentUser = username;
-    return true;
-  }
-
-  async loginUsernamePassword(username: string, password: string) {
-    this.currentUser = username;
-    return true;
-  }
-}
-
 /**
  * DomeDB class.
  */
-export class DomeDB extends Auth {
+export class DomeDB {
   path = "./data/";
   ngin: Storage<StorageValue>;
   user: any;
 
   constructor(ngin: { engine: Driver<any, any> | undefined }) {
-    super();
-
     this.ngin = createStorage({
       driver: ngin.engine,
     });
+
+    // create system collections
+    this.ngin.setItem("__collections", JSON.stringify({}), {
+      path: this.path + "__collections",
+    });
+
+    this.ngin.setItem("__users", JSON.stringify({}), {
+      path: this.path + "__collections",
+    });
+  }
+
+  public async createUser() {
+    const id = nanoid();
+
+    const collectionExists = await this.ngin.hasItem("__users", {
+      path: this.path + "__collections",
+    });
+
+    if (collectionExists) {
+      await this.ngin.setItem(id, JSON.stringify({ id }), {
+        path: this.path + "__users",
+      });
+    } else {
+      console.error(
+        errors.shared.collectionDoesNotExist("__users in createUser")
+      );
+    }
   }
 
   /*
@@ -74,7 +78,7 @@ export class DomeDB extends Auth {
         path: this.path + collectionName,
       });
     } else {
-      console.error(errors.insertErrors.collectionDoesNotExist);
+      console.error(errors.shared.collectionDoesNotExist(collectionName));
     }
   }
 
@@ -92,12 +96,22 @@ export class DomeDB extends Auth {
     filter: any;
     options: any;
   }): Promise<any> {
-    const db = open({
-      path: "./data/" + collection,
+    const collectionExists = await this.ngin.hasItem(collection, {
+      path: this.path + "__collections",
     });
 
-    const values = db.getRange();
-    return [...values];
+    if (collectionExists) {
+      const db = open({
+        path: "./data/" + collection,
+      });
+
+      const values = db.getRange();
+      return [...values];
+    } else {
+      console.error(
+        errors.shared.collectionDoesNotExist(collection + " in query")
+      );
+    }
   }
 
   /*

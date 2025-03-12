@@ -1,5 +1,6 @@
 export const errors = {
-  insertErrors: {
-    collectionDoesNotExist: "collection does not exist",
+  shared: {
+    collectionDoesNotExist: (collectionName: string) =>
+      `collection '${collectionName}' does not exist`,
   },
 };
