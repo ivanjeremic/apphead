@@ -1,2 +1,2 @@
-export { DB } from "./db/db";
-export { dataDomFS } from "./db/storage-engines/dataDomFS";
+export { DomeDB } from "./db/db";
+export { nodeStorageEngine } from "./db/storage-engines/lmdb";

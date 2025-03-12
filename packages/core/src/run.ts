@@ -1,4 +1,3 @@
-import { nanoid } from "nanoid";
 import { DomeDB } from "./db/db";
 import { nodeStorageEngine } from "./db/storage-engines/lmdb";
 
