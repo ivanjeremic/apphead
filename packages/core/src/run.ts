@@ -17,12 +17,12 @@ await db.createCollection("animals", [
 
 // rest api shape: /db/insert/collection=stones&make=string&model=string&year=int32
 await db.insert({
-  collection: "animals",
+  collection: "flowers",
   data: { make: "ford", model: "f150", year: 2021 },
 });
 
 const data = await db.query({
-  collection: "animals",
+  collection: "flowers",
   filter: { id: "any" },
   options: { limit: 10, sort: "asc", fields: ["make", "model"] },
 });

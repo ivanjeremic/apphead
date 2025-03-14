@@ -109,7 +109,6 @@ export class DomeDB {
       path: this.path + "__collections",
     });
 
-    console.log(collectionExists);
     if (collectionExists) {
       const db = open({
         path: this.path + this.user + "/" + collection,
