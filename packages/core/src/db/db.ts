@@ -76,17 +76,18 @@ export class DomeDB {
    * @param collectionName
    * @param data
    */
-  public async insert(collectionName: string, data: any) {
-    const collectionExists = await this.ngin.hasItem(collectionName, {
+  public async insert({ collection, data }: { collection: string; data: any }) {
+    const collectionExists = await this.ngin.hasItem(collection, {
       path: this.path + "__collections",
     });
 
+    console.log(collectionExists);
     if (collectionExists) {
       await this.ngin.setItem(nanoid(), JSON.stringify(data), {
-        path: this.path + this.user + "/" + collectionName,
+        path: this.path + this.user + "/" + collection,
       });
     } else {
-      console.error(errors.shared.collectionDoesNotExist(collectionName));
+      console.error(errors.shared.collectionDoesNotExist(collection));
     }
   }
 
@@ -108,19 +109,15 @@ export class DomeDB {
       path: this.path + "__collections",
     });
 
+    console.log(collectionExists);
     if (collectionExists) {
       const db = open({
         path: this.path + this.user + "/" + collection,
       });
 
       const values = db.getRange();
-      return new Promise((resolve, reject) => {
-        try {
-          resolve([...values]);
-        } catch (error) {
-          reject(error);
-        }
-      });
+
+      return [...values];
     } else {
       console.error(
         errors.shared.collectionDoesNotExist(collection + " in query")

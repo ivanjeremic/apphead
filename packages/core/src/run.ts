@@ -5,18 +5,21 @@ export const db = new DomeDB({
   engine: nodeStorageEngine(),
 });
 
-db.user = "myuserid";
+db.user = "myuser";
 
 //await db.createUser();
 
-/* await db.createCollection("animals", [
+await db.createCollection("animals", [
   { field: "make", index: 1, type: "string" },
   { field: "model", index: 2, type: "string" },
   { field: "year", index: 3, type: "int32" },
-]); */
+]);
 
 // rest api shape: /db/insert/collection=stones&make=string&model=string&year=int32
-await db.insert("animals", { lang: "english" });
+await db.insert({
+  collection: "animals",
+  data: { make: "ford", model: "f150", year: 2021 },
+});
 
 const data = await db.query({
   collection: "animals",
