@@ -110,8 +110,12 @@ export class DomeDB {
     });
 
     if (collectionExists) {
+      const cleanPath = collection.startsWith("__")
+        ? collection
+        : this.user + "/" + collection;
+
       const db = open({
-        path: this.path + this.user + "/" + collection,
+        path: this.path + cleanPath,
       });
 
       const values = db.getRange();
