@@ -1,4 +1,0 @@
-{
-  "extends": "./.nitro/types/tsconfig.json",
-  "exclude": ["./public/main.js"]
-}
