@@ -1,0 +1,16 @@
+{
+  "name": "driver-lmdb",
+  "version": "1.0.0",
+  "main": "./src/index.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "lmdb": "^3.2.6",
+    "unstorage": "^1.15.0"
+  }
+}

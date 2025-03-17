@@ -1,6 +1,3 @@
-import { fileURLToPath } from "node:url";
-import { resolve, dirname } from "node:path";
-
 // Detect the Nitro preset (runtime environment)
 const preset = process.env.NITRO_PRESET || "";
 
@@ -10,10 +7,7 @@ const isDev =
 
 const storageConfig = {
   customDb: {
-    driver: resolve(
-      dirname(fileURLToPath(import.meta.url)),
-      "./custom-driver.mjs"
-    ),
+    driver: "driver-lmdb",
   },
   vercelDb: {
     driver: "vercel-kv",

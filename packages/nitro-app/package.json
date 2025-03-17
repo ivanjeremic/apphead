@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@apphead/core": "workspace:*",
+    "driver-lmdb": "workspace:*",
     "@vercel/kv": "^3.0.0",
     "aws4fetch": "^1.0.20"
   },

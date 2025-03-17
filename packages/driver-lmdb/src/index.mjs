@@ -15,7 +15,7 @@ export default defineDriver((opts) => {
   }; */
 
   const getDbInstance = (client_opts) => {
-    return open(client_opts);
+    return open(client_opts || opts);
   };
 
   return {
