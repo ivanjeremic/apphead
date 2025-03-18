@@ -1,5 +1,5 @@
 // Detect the Nitro preset (runtime environment)
-const preset = process.env.NITRO_PRESET || "";
+const preset = process.env.NITRO_PRESET || "node_server";
 
 // Detect local development
 const isDev =
@@ -27,9 +27,16 @@ const selectedStorage =
     ? storageConfig.cloundflareKV
     : storageConfig.customDb; // ✅ Fallback (should never hit, but ensures safety)
 
+// Define a unique output directory for each deployment target
+const outputDir = `.output-${preset}`;
+
 //https://nitro.unjs.io/config
 export default defineNitroConfig({
   srcDir: "server",
+  preset,
+  output: {
+    dir: outputDir, // ✅ Custom output directory based on target
+  },
   storage: {
     db: selectedStorage, // "db" alias dynamically assigned
     ...storageConfig, // Keep other storage configs
