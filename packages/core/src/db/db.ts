@@ -2,6 +2,7 @@ import { StorageValue, Storage, createStorage, Driver } from "unstorage";
 import { open } from "lmdb";
 import { nanoid } from "nanoid";
 import { errors } from "./utils/errors";
+import { resolve, join } from "pathe";
 
 /**
  * DomeDB class.
@@ -11,18 +12,20 @@ export class DomeDB {
   ngin: Storage<StorageValue>;
   user: any;
 
-  constructor(ngin: { engine: Driver<any, any> | undefined }) {
+  constructor(ngin: { engine: Driver<any, any> | undefined; path: string }) {
+    this.path = ngin.path;
+
     this.ngin = createStorage({
       driver: ngin.engine,
     });
 
     // create system collections
     this.ngin.setItem("__collections", JSON.stringify({}), {
-      path: this.path + "__collections",
+      path: join(this.path, "__collections"),
     });
 
     this.ngin.setItem("__users", JSON.stringify({}), {
-      path: this.path + "__collections",
+      path: join(this.path, "__collections"),
     });
   }
 
@@ -30,12 +33,12 @@ export class DomeDB {
     const id = nanoid();
 
     const collectionExists = await this.ngin.hasItem("__users", {
-      path: this.path + "__collections",
+      path: join(this.path, "__collections"),
     });
 
     if (collectionExists) {
       await this.ngin.setItem(id, JSON.stringify({ id }), {
-        path: this.path + "__users",
+        path: join(this.path, "__users"),
       });
     } else {
       console.error(
@@ -57,7 +60,7 @@ export class DomeDB {
     }
 
     await this.ngin.setItem(collectionName, JSON.stringify(schema), {
-      path: this.path + "__collections",
+      path: join(this.path, "__collections"),
     });
   }
 
@@ -72,13 +75,13 @@ export class DomeDB {
    */
   public async insert({ collection, data }: { collection: string; data: any }) {
     const collectionExists = await this.ngin.hasItem(collection, {
-      path: this.path + "__collections",
+      path: join(this.path, "__collections"),
     });
 
     console.log(collectionExists);
     if (collectionExists) {
       await this.ngin.setItem(nanoid(), JSON.stringify(data), {
-        path: this.path + this.user + "/" + collection,
+        path: join(this.path, this.user, collection),
       });
     } else {
       console.error(errors.shared.collectionDoesNotExist(collection));
@@ -100,7 +103,7 @@ export class DomeDB {
     options: any;
   }): Promise<any> {
     const collectionExists = await this.ngin.hasItem(collection, {
-      path: this.path + "__collections",
+      path: join(this.path, "__collections"),
     });
 
     if (collectionExists) {
@@ -109,7 +112,7 @@ export class DomeDB {
         : this.user + "/" + collection;
 
       const db = open({
-        path: this.path + cleanPath,
+        path: join(this.path, cleanPath),
       });
 
       const values = db.getRange();

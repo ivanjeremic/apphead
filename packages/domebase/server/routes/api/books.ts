@@ -2,6 +2,7 @@ import { DomeDB } from "@apphead/core";
 
 const db = new DomeDB({
   engine: useStorage("db"),
+  path: ".domebase",
 });
 
 export default defineEventHandler(async (event) => {
