@@ -9,7 +9,7 @@
     "preview:node": "node .output-node_server/server/index.mjs"
   },
   "dependencies": {
-    "@apphead/core": "workspace:*",
+    "@domebase/core": "workspace:*",
     "@vercel/kv": "^3.0.0",
     "aws4fetch": "^1.0.20",
     "driver-lmdb": "workspace:*",

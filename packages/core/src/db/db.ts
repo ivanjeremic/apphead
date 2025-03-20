@@ -2,7 +2,7 @@ import { StorageValue, Storage, createStorage, Driver } from "unstorage";
 import { open } from "lmdb";
 import { nanoid } from "nanoid";
 import { errors } from "./utils/errors";
-import { resolve, join } from "pathe";
+import { join } from "pathe";
 
 /**
  * DomeDB class.
@@ -12,8 +12,10 @@ export class DomeDB {
   ngin: Storage<StorageValue>;
   user: any;
 
-  constructor(ngin: { engine: Driver<any, any> | undefined; path: string }) {
-    this.path = ngin.path;
+  constructor(ngin: { engine: Driver<any, any> | undefined; path?: string }) {
+    if (ngin.path) {
+      this.path = ngin.path;
+    }
 
     this.ngin = createStorage({
       driver: ngin.engine,

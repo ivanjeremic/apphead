@@ -9,9 +9,11 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.69.0",
     "@tanstack/react-router": "^1.114.3",
     "@tanstack/react-router-devtools": "^1.114.3",
     "@tanstack/router-plugin": "^1.114.3",
+    "neverthrow": "^8.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
