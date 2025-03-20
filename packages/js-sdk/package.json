@@ -10,6 +10,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@domebase/core": "workspace:*"
+    "@domebase/core": "workspace:*",
+    "unstorage": "^1.15.0"
   }
 }

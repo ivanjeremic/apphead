@@ -93,6 +93,7 @@
       "version": "1.0.0",
       "dependencies": {
         "@domebase/core": "workspace:*",
+        "unstorage": "^1.15.0",
       },
     },
   },
