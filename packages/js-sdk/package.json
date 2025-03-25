@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "cc": "bun build sdk.js --outdir dist --target wasm"
   },
   "keywords": [],
   "author": "",
@@ -11,6 +11,7 @@
   "description": "",
   "dependencies": {
     "@domebase/core": "workspace:*",
+    "assemblyscript": "^0.27.35",
     "unstorage": "^1.15.0"
   }
 }
