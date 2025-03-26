@@ -1,23 +1,12 @@
+// src/lmdb.ts
 import { defineDriver } from "unstorage";
 import { open } from "lmdb";
-
-const DRIVER_NAME = "lmdb";
-
-export default defineDriver((opts) => {
+var DRIVER_NAME = "lmdb";
+var lmdb_default = defineDriver((opts) => {
   let db = null;
-
-  // Lazy initialization of LMDB instance
-  /* const getDbInstance = (client_opts?: RootDatabaseOptionsWithPath) => {
-    if (!db) {
-      db = open(client_opts || { path: opts.path || "./data" });
-    }
-    return db;
-  }; */
-
   const getDbInstance = (client_opts) => {
     return open(client_opts || opts);
   };
-
   return {
     name: DRIVER_NAME,
     options: opts,
@@ -37,30 +26,30 @@ export default defineDriver((opts) => {
       return;
     },
     async getMeta(key, client_opts) {
-      const db = getDbInstance(client_opts);
-      const data = db.get(key);
-      return data
-        ? { mtime: data.modifiedAt ?? null, birthtime: data.createdAt ?? null }
-        : {};
+      const db2 = getDbInstance(client_opts);
+      const data = db2.get(key);
+      return data ? { mtime: data.modifiedAt ?? null, birthtime: data.createdAt ?? null } : {};
     },
     async getKeys(prefix = "") {
-      const db = getDbInstance({});
+      const db2 = getDbInstance({});
       const keys = [];
-      for (const key of db.getKeys({ start: prefix })) {
+      for (const key of db2.getKeys({ start: prefix })) {
         keys.push(String(key));
       }
       return keys;
     },
     async clear(base, client_opts) {
-      const db = getDbInstance(client_opts);
-
-      db.drop();
+      const db2 = getDbInstance(client_opts);
+      db2.drop();
     },
     dispose() {
       if (db) {
         db.close();
         db = null;
       }
-    },
+    }
   };
 });
+export {
+  lmdb_default as default
+};

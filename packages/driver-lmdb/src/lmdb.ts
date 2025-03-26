@@ -11,7 +11,7 @@ export interface LmdbOptions {
 
 const DRIVER_NAME = "lmdb";
 
-export const lmdbDriver = defineDriver((opts: LmdbOptions) => {
+export default defineDriver((opts: LmdbOptions) => {
   let db: Database | null = null;
 
   // Lazy initialization of LMDB instance
@@ -72,7 +72,3 @@ export const lmdbDriver = defineDriver((opts: LmdbOptions) => {
     },
   };
 });
-
-export function nodeStorageEngine() {
-  return lmdbDriver({ path: "./data" });
-}

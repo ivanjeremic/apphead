@@ -1,8 +1,8 @@
 import { DomeDB } from "./db/db";
-import { nodeStorageEngine } from "./db/storage-engines/lmdb";
+import lmdb from "driver-lmdb";
 
 export const db = new DomeDB({
-  engine: nodeStorageEngine(),
+  engine: lmdb({ path: "./mydb" }),
 });
 
 db.user = "myuser";

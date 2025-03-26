@@ -1,9 +1,10 @@
 {
   "name": "driver-lmdb",
   "version": "1.0.0",
-  "main": "./src/index.mjs",
+  "main": "./out/lmdb.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "bun build ./src/lmdb.ts --outdir ./out --external '*'"
   },
   "keywords": [],
   "author": "",
