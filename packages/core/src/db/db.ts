@@ -1,4 +1,5 @@
-import { StorageValue, Storage, createStorage, Driver } from "unstorage";
+import { createStorage } from "unstorage";
+import type { StorageValue, Storage, Driver } from "unstorage";
 import { open } from "lmdb";
 import { nanoid } from "nanoid";
 import { errors } from "./utils/errors";

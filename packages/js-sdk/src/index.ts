@@ -1,7 +1,7 @@
 import { DomeDB } from "@domebase/core";
 import localStorageDriver from "unstorage/drivers/localstorage";
 
-class DomebaseClient extends DomeDB {
+export class DomebaseClient extends DomeDB {
   constructor() {
     super({
       engine: localStorageDriver({ base: "domebase:" }),
@@ -9,7 +9,3 @@ class DomebaseClient extends DomeDB {
     });
   }
 }
-
-const db = new DomebaseClient();
-
-db;

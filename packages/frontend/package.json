@@ -9,6 +9,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@domebase/js-sdk": "workspace:*",
     "@tanstack/react-query": "^5.69.0",
     "@tanstack/react-router": "^1.114.3",
     "@tanstack/react-router-devtools": "^1.114.3",
