@@ -4,7 +4,12 @@ import localStorageDriver from "unstorage/drivers/localstorage";
 export class DomebaseClient extends DomeDB {
   constructor() {
     super({
-      engine: localStorageDriver({ base: "domebase:" }),
+      engine: {
+        driver: localStorageDriver({ base: "domebase:" }),
+        handleQuery: (cleanPath: string) => {
+          return [];
+        },
+      },
       path: ".domebase",
     });
   }

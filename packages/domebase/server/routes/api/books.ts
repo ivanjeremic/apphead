@@ -1,7 +1,23 @@
 import { DomeDB } from "@domebase/core";
+import { open } from "lmdb";
+
+function nodeEngine() {
+  return {
+    driver: useStorage("db"),
+    handleQuery: async (cleanPath: string) => {
+      const db = open({
+        path: cleanPath,
+      });
+
+      const values = db.getRange();
+
+      return values;
+    },
+  };
+}
 
 const db = new DomeDB({
-  engine: useStorage("db"),
+  engine: nodeEngine(),
   path: ".domebase",
 });
 

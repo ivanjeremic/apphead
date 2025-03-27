@@ -1,33 +1,40 @@
 import { createStorage } from "unstorage";
 import type { StorageValue, Storage, Driver } from "unstorage";
-import { open } from "lmdb";
 import { nanoid } from "nanoid";
 import { errors } from "./utils/errors";
 import { join } from "pathe";
+
+type ENGINE = {
+  driver: Driver<any, any>;
+  handleQuery: (cleanPath: string) => any;
+};
 
 /**
  * DomeDB class.
  */
 export class DomeDB {
   path = "./data/";
-  ngin: Storage<StorageValue>;
+  kv: Storage<StorageValue>;
+  handleQuery: (cleanPath: string) => any;
   user: any;
 
-  constructor(ngin: { engine: Driver<any, any> | undefined; path?: string }) {
+  constructor(ngin: { engine: ENGINE; path?: string }) {
     if (ngin.path) {
       this.path = ngin.path;
     }
 
-    this.ngin = createStorage({
-      driver: ngin.engine,
+    this.handleQuery = ngin.engine.handleQuery;
+
+    this.kv = createStorage({
+      driver: ngin.engine?.driver,
     });
 
     // create system collections
-    this.ngin.setItem("__collections", JSON.stringify({}), {
+    this.kv.setItem("__collections", JSON.stringify({}), {
       path: join(this.path, "__collections"),
     });
 
-    this.ngin.setItem("__users", JSON.stringify({}), {
+    this.kv.setItem("__users", JSON.stringify({}), {
       path: join(this.path, "__collections"),
     });
   }
@@ -35,12 +42,12 @@ export class DomeDB {
   public async createUser() {
     const id = nanoid();
 
-    const collectionExists = await this.ngin.hasItem("__users", {
+    const collectionExists = await this.kv.hasItem("__users", {
       path: join(this.path, "__collections"),
     });
 
     if (collectionExists) {
-      await this.ngin.setItem(id, JSON.stringify({ id }), {
+      await this.kv.setItem(id, JSON.stringify({ id }), {
         path: join(this.path, "__users"),
       });
     } else {
@@ -62,7 +69,7 @@ export class DomeDB {
       return;
     }
 
-    await this.ngin.setItem(collectionName, JSON.stringify(schema), {
+    await this.kv.setItem(collectionName, JSON.stringify(schema), {
       path: join(this.path, "__collections"),
     });
   }
@@ -77,13 +84,13 @@ export class DomeDB {
    * @param data
    */
   public async insert({ collection, data }: { collection: string; data: any }) {
-    const collectionExists = await this.ngin.hasItem(collection, {
+    const collectionExists = await this.kv.hasItem(collection, {
       path: join(this.path, "__collections"),
     });
 
     console.log(collectionExists);
     if (collectionExists) {
-      await this.ngin.setItem(nanoid(), JSON.stringify(data), {
+      await this.kv.setItem(nanoid(), JSON.stringify(data), {
         path: join(this.path, this.user, collection),
       });
     } else {
@@ -105,7 +112,7 @@ export class DomeDB {
     filter: any;
     options: any;
   }): Promise<any> {
-    const collectionExists = await this.ngin.hasItem(collection, {
+    const collectionExists = await this.kv.hasItem(collection, {
       path: join(this.path, "__collections"),
     });
 
@@ -114,11 +121,7 @@ export class DomeDB {
         ? collection
         : this.user + "/" + collection;
 
-      const db = open({
-        path: join(this.path, cleanPath),
-      });
-
-      const values = db.getRange();
+      const values = await this.handleQuery(join(this.path, cleanPath));
 
       return [...values];
     } else {
