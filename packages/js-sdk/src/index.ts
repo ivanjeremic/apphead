@@ -5,7 +5,7 @@ export class DomebaseClient extends DomeDB {
   constructor() {
     super({
       engine: {
-        driver: localStorageDriver({ base: "domebase:" }),
+        driver: localStorageDriver({ base: "domebase" }),
         handleQuery: (cleanPath: string) => {
           return [];
         },

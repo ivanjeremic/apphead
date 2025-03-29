@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "src/index.ts",
   "scripts": {
-    "cc": "bun build sdk.js --outdir dist --target wasm"
+    "build": "bun build sdk.js --outdir dist --target wasm"
   },
   "keywords": [],
   "author": "",
