@@ -1,6 +1,4 @@
 import { issuer } from "@openauthjs/openauth";
-import { CodeUI } from "@openauthjs/openauth/ui/code";
-import { CodeProvider } from "@openauthjs/openauth/provider/code";
 import { subjects } from "./subjects";
 import { existsSync, readFileSync } from "node:fs";
 import { writeFile } from "node:fs/promises";
@@ -9,6 +7,8 @@ import {
   splitKey,
   StorageAdapter,
 } from "@openauthjs/openauth/storage/storage";
+import { PasswordProvider } from "@openauthjs/openauth/provider/password";
+import { PasswordUI } from "@openauthjs/openauth/ui/password";
 
 /**
  * Configure the memory store.
@@ -121,8 +121,11 @@ export default issuer({
   subjects,
   storage: MemoryStorage(),
   providers: {
-    code: CodeProvider(
-      CodeUI({
+    password: PasswordProvider(
+      PasswordUI({
+        copy: {
+          error_email_taken: "This email is already taken.",
+        },
         sendCode: async (email, code) => {
           console.log(email, code);
         },
@@ -130,9 +133,9 @@ export default issuer({
     ),
   },
   success: async (ctx, value) => {
-    if (value.provider === "code") {
+    if (value.provider === "password") {
       return ctx.subject("user", {
-        id: await getUser(value.claims.email),
+        id: await getUser(value.email),
       });
     }
     throw new Error("Invalid provider");
