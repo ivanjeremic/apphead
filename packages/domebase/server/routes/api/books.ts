@@ -1,25 +1,4 @@
-import { DomeDB } from "@domebase/core";
-import { open } from "lmdb";
-
-function lmdbEngine() {
-  return {
-    driver: useStorage("db"),
-    handleQuery: async (cleanPath: string) => {
-      const db = open({
-        path: cleanPath,
-      });
-
-      const values = db.getRange();
-
-      return values;
-    },
-  };
-}
-
-const db = new DomeDB({
-  engine: lmdbEngine(),
-  path: ".domebase",
-});
+import { domedb } from "~/utils/domedb";
 
 export default defineEventHandler(async (event) => {
   setResponseHeaders(event, {
@@ -28,13 +7,13 @@ export default defineEventHandler(async (event) => {
     "Access-Control-Allow-Headers": "Content-Type, Authorization",
   });
 
-  await db.createCollection("flowers", [
+  await domedb.createCollection("flowers", [
     { field: "make", index: 1, type: "string" },
     { field: "model", index: 2, type: "string" },
     { field: "year", index: 3, type: "int32" },
   ]);
 
-  const data = await db.query({
+  const data = await domedb.query({
     collection: "__collections",
     filter: { id: "any" },
     options: { limit: 10, sort: "asc", fields: ["make", "model"] },
