@@ -16,7 +16,9 @@ export default defineEventHandler(async (event) => {
     return send(event, exchanged.err);
   }
 
-  await setTokens(event, exchanged.tokens.access, exchanged.tokens.refresh);
+  if ('tokens' in exchanged) {
+    await setTokens(event, exchanged.tokens.access, exchanged.tokens.refresh);
+  }
 
   return sendRedirect(event, `${url.origin}/`);
 });

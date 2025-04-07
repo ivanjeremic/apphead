@@ -69,7 +69,7 @@ export class DomeDB {
       return;
     }
 
-    await this.kv.setItem(collectionName, JSON.stringify(schema), {
+    await this.kv.setItem(".domebase:"+collectionName, JSON.stringify(schema), {
       path: join(this.path, "__collections"),
     });
   }
@@ -121,7 +121,9 @@ export class DomeDB {
         ? collection
         : this.user + "/" + collection;
 
-      const values = await this.handleQuery(join(this.path, cleanPath));
+      //const values = await this.handleQuery(join(this.path, cleanPath));
+
+      const values = await this.kv.getItems([{key: join(this.path, cleanPath)}]);
 
       return [...values];
     } else {

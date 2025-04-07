@@ -2,7 +2,7 @@ import { H3Event, EventHandlerRequest } from "h3";
 import { subjects } from "../auth/subjects";
 import { client, setTokens } from "./auth";
 
-export async function auth(event: H3Event<EventHandlerRequest>) {
+export async function verifyAuth(event: H3Event<EventHandlerRequest>) {
   const accessToken = getCookie(event, "access_token");
   const refreshToken = getCookie(event, "refresh_token");
 
@@ -17,11 +17,12 @@ export async function auth(event: H3Event<EventHandlerRequest>) {
   if (verified.err) {
     return false;
   }
-  if (verified.tokens) {
+
+  if ('tokens' in verified) {
     await setTokens(event, verified.tokens.access, verified.tokens.refresh);
   }
 
-  return verified.subject;
+  return 'subject' in verified ? verified.subject : null;
 }
 
 export async function login(event: H3Event<EventHandlerRequest>) {
@@ -33,7 +34,7 @@ export async function login(event: H3Event<EventHandlerRequest>) {
       refresh: refreshToken,
     });
 
-    if (!verified.err && verified.tokens) {
+    if (!verified.err && 'tokens' in verified) {
       await setTokens(event, verified.tokens.access, verified.tokens.refresh);
 
       sendRedirect(event, "/");
