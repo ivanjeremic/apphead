@@ -1,6 +1,6 @@
-// scripts/start-frontend.js
-const { exec } = require("child_process");
-const path = require("path");
+// scripts/start-frontend.mjs
+import { exec } from "node:child_process";
+import path from "node:path";
 
 const frontendPath = path.resolve(process.cwd(), "..", "frontend");
 const command = `cd ${frontendPath} && bun run start`;
