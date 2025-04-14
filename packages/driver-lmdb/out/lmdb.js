@@ -15,23 +15,9 @@ var lmdb_default = defineDriver((opts) => {
       return getDbInstance(client_opts).doesExist(key);
     },
     async getItem(key, client_opts) {
-      return getDbInstance(client_opts).getAsync(key);
-    },
-    async getItems(key, client_opts) {
-      const db2 = open({
-        path: client_opts?.cleanPath
-      });
+      const db2 = getDbInstance(client_opts);
       const values = db2.getRange();
-      return new Promise((resolve, reject) => {
-        try {
-          resolve(Array.from(values).map(({ key: key2, value }) => ({
-            key: String(key2),
-            value
-          })));
-        } catch (error) {
-          reject(error);
-        }
-      });
+      return values;
     },
     async setItem(key, value, client_opts) {
       getDbInstance(client_opts).put(key, value);

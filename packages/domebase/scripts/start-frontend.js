@@ -2,7 +2,7 @@
 import { exec } from "node:child_process";
 import path from "node:path";
 
-const frontendPath = path.resolve(process.cwd(), "..", "frontend");
+const frontendPath = path.resolve(process.cwd(), "..", "ui");
 const command = `cd ${frontendPath} && bun run start`;
 
 try {
