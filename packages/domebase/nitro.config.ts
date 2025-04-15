@@ -23,10 +23,10 @@ const selectedStorage =
   isDev || ["node_server", "bun", "deno_server"].includes(preset)
     ? storageConfig.customDb // ✅ Always use `customDb` for dev, Node.js, Bun, and Deno
     : preset === "vercel"
-    ? storageConfig.vercelDb
-    : preset === "cloudflare_module"
-    ? storageConfig.cloundflareKV
-    : storageConfig.customDb; // ✅ Fallback (should never hit, but ensures safety)
+      ? storageConfig.vercelDb
+      : preset === "cloudflare_module"
+        ? storageConfig.cloundflareKV
+        : storageConfig.customDb; // ✅ Fallback (should never hit, but ensures safety)
 
 // Define a unique output directory for each deployment target
 const outputDir = `.output-${preset}`;

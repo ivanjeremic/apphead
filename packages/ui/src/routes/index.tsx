@@ -1,37 +1,52 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import logo from "../logo.svg";
-import "../App.css";
+import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
+
+async function getCollectionList() {
+  const res = await fetch("http://localhost:3001/api/__collections");
+  const data = await res.json();
+  return data;
+}
 
 export const Route = createFileRoute("/")({
   component: App,
+  loader: () => getCollectionList(),
 });
 
 function App() {
+  const collection = Route.useLoaderData();
+  const [collectionName, setCollectionName] = useState("");
+
+  const handleAddCollection = async () => {
+    const res = await fetch("http://localhost:3001/api/createCollection", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ collectionName, fields: "{}" }),
+    });
+    const data = await res.json();
+    console.log(data);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>TANSTACK SPA</p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <a
-          className="App-link"
-          href="https://tanstack.com"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn TanStack
-        </a>
-        <Link to="/settings" className="App-link">
-          Go to Settings
-        </Link>
-      </header>
+    <div>
+      <h1>Collections</h1>
+      <span>
+        <input
+          type="text"
+          placeholder="Collection Name"
+          value={collectionName}
+          onChange={(e) => setCollectionName(e.target.value)}
+        />
+        <button onClick={handleAddCollection}>Add Collection</button>
+      </span>
+      <ul>
+        {collection.data.map((item: any) => (
+          <li key={item.key}>
+            {item.key}: {item.value}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
