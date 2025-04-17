@@ -2,7 +2,14 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 
 async function getCollectionList() {
-  const res = await fetch("http://localhost:3001/api/__collections");
+  const res = await fetch("http://localhost:3001/api/db/query", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ collectionName: "__collections" }),
+  });
+
   const data = await res.json();
   return data;
 }
@@ -17,7 +24,7 @@ function App() {
   const [collectionName, setCollectionName] = useState("");
 
   const handleAddCollection = async () => {
-    const res = await fetch("http://localhost:3001/api/createCollection", {
+    const res = await fetch("http://localhost:3001/api/db/insert", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -41,9 +48,9 @@ function App() {
         <button onClick={handleAddCollection}>Add Collection</button>
       </span>
       <ul>
-        {collection.data.map((item: any) => (
+        {collection.data.map((item: any, index: number) => (
           <li key={item.key}>
-            {item.key}: {item.value}
+            {index + 1}::{item.key}: {item.value}
           </li>
         ))}
       </ul>
