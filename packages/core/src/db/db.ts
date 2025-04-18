@@ -1,12 +1,8 @@
 import { createStorage } from "unstorage";
 import type { StorageValue, Storage, Driver } from "unstorage";
 import { nanoid } from "nanoid";
-import { errors } from "./utils/errors";
+import { checkErrors } from "./utils/errors";
 import { join } from "pathe";
-
-type ENGINE = {
-  driver: Driver<any, any>;
-};
 
 /**
  * DomeDB class.
@@ -43,32 +39,57 @@ export class DomeDB {
       path: join(this.path, "__collections"),
     });
 
-    if (collectionExists) {
-      await this.kv.setItem(id, JSON.stringify({ id }), {
-        path: join(this.path, "__users"),
-      });
-    } else {
-      console.error(
-        errors.shared.collectionDoesNotExist("__users in createUser")
-      );
+    const { hasErrors, errorList } = checkErrors([
+      {
+        condition: collectionExists,
+        msg: (errors) => errors.shared.collectionDoesNotExist("__users"),
+      },
+    ]);
+
+    if (hasErrors) {
+      return { hasErrors, errorList };
     }
+
+    await this.kv.setItem(id, JSON.stringify({ id }), {
+      path: join(this.path, "__users"),
+    });
   }
 
   /*
    * handle collections
    */
   public async createCollection(collectionName: string, schema?: any) {
-    //check if valid collection name
-    if (collectionName.includes("_")) {
-      console.error(
-        errors.createCollection.invalidCollectionName(collectionName)
-      );
-      return;
-    }
-
-    await this.kv.setItem(collectionName, JSON.stringify(schema), {
+    const collectionExists = await this.kv.hasItem(collectionName, {
       path: join(this.path, "__collections"),
     });
+
+    const { hasErrors, errorList } = checkErrors([
+      {
+        condition: collectionName.includes("_"),
+        msg: (errors) =>
+          errors.createCollection.invalidCollectionName(collectionName),
+      },
+      {
+        condition: collectionExists,
+        msg: (errors) =>
+          errors.createCollection.collectionAlreadyExists(collectionName),
+      },
+    ]);
+
+    if (hasErrors) {
+      return { hasErrors, errorList };
+    }
+
+    /* await this.kv.setItem(collectionName, JSON.stringify(schema), {
+      path: join(this.path, "__collections"),
+    }); */
+
+    await this.insert({
+      collection: "__collections",
+      data: { collectionName, schema },
+    });
+
+    return { hasErrors, errorList };
   }
 
   public async deleteCollection(collectionName: string) {
@@ -85,14 +106,20 @@ export class DomeDB {
       path: join(this.path, "__collections"),
     });
 
-    console.log(collectionExists);
-    if (collectionExists) {
-      await this.kv.setItem(nanoid(), JSON.stringify(data), {
-        path: join(this.path, this.user, collection),
-      });
-    } else {
-      console.error(errors.shared.collectionDoesNotExist(collection));
+    const { hasErrors, errorList } = checkErrors([
+      {
+        condition: !collectionExists,
+        msg: (errors) => errors.shared.collectionDoesNotExist(collection),
+      },
+    ]);
+
+    if (hasErrors) {
+      return { hasErrors, errorList };
     }
+
+    await this.kv.setItem(nanoid(), JSON.stringify(data), {
+      path: join(this.path, this.user, collection),
+    });
   }
 
   /**
@@ -113,20 +140,26 @@ export class DomeDB {
       path: join(this.path, "__collections"),
     });
 
-    if (collectionExists) {
-      const cleanPath = collection.startsWith("__")
-        ? collection
-        : `${this.user}/${collection}`;
+    const { hasErrors, errorList } = checkErrors([
+      {
+        condition: !collectionExists,
+        msg: (errors) => errors.shared.collectionDoesNotExist(collection),
+      },
+    ]);
 
-      const values = await this.kv.getItem(join(this.path, cleanPath), {
-        path: join(this.path, cleanPath),
-      });
-
-      return values;
+    if (hasErrors) {
+      return { hasErrors, errorList };
     }
-    console.error(
-      errors.shared.collectionDoesNotExist(`${collection} in query`)
-    );
+
+    const cleanPath = collection.startsWith("__")
+      ? collection
+      : `${this.user}/${collection}`;
+
+    const values = await this.kv.getItem(join(this.path, cleanPath), {
+      path: join(this.path, cleanPath),
+    });
+
+    return values;
   }
 
   /*

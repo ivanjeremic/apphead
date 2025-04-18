@@ -11,6 +11,7 @@ async function getCollectionList() {
   });
 
   const data = await res.json();
+  console.log("data", data);
   return data;
 }
 
@@ -32,7 +33,12 @@ function App() {
       body: JSON.stringify({ collectionName, fields: "{}" }),
     });
     const data = await res.json();
-    console.log(data);
+
+    if (!data.success && data.message) {
+      data.message.forEach((message: string) => {
+        console.error(message);
+      });
+    }
   };
 
   return (
@@ -50,7 +56,7 @@ function App() {
       <ul>
         {collection.data.map((item: any, index: number) => (
           <li key={item.key}>
-            {index + 1}::{item.key}: {item.value}
+            {index + 1}::{item.collectionName || item.key}: {item.value}
           </li>
         ))}
       </ul>
