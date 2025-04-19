@@ -1,6 +1,6 @@
-function defineErrors<T>(definedErrors: T) {
+function defineErrorMessages<T>(definedErrors: T) {
   const checkErrors = (
-    errorsToCheck: { condition: boolean; msg: (dErr: T) => string }[]
+    errorsToCheck: { condition: boolean; msg: (errors: T) => string }[]
   ) => {
     const errorList = [];
     for (const { condition, msg } of errorsToCheck) {
@@ -16,7 +16,7 @@ function defineErrors<T>(definedErrors: T) {
   return checkErrors;
 }
 
-export const checkErrors = defineErrors({
+export const checkErrors = defineErrorMessages({
   shared: {
     collectionDoesNotExist: (collectionName: string) =>
       `collection '${collectionName}' does not exist`,

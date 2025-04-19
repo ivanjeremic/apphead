@@ -100,6 +100,8 @@ export class DomeDB {
    *
    * @param collectionName
    * @param data
+   *
+   * @TODO THE ID NEEDS TO BE CHANGES TO BE creatorId:fields
    */
   public async insert({ collection, data }: { collection: string; data: any }) {
     const collectionExists = await this.kv.hasItem(collection, {
@@ -158,6 +160,23 @@ export class DomeDB {
     const values = await this.kv.getItem(join(this.path, cleanPath), {
       path: join(this.path, cleanPath),
     });
+
+    /* console.log("values", Object.entries(...values));
+
+    const data = Array(values).map((item) => ({
+      id: item.key,
+      ...item.value,
+    }));
+
+    console.log("data", data); */
+
+    /* const result = [];
+    for await (const item of values) {
+      // Apply filtering logic if needed
+      if (Object.entries(filter).every(([key, value]) => item[key] === value)) {
+        result.push(item);
+      }
+    }    */
 
     return values;
   }
