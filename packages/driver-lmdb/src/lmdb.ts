@@ -10,11 +10,13 @@ export interface LmdbOptions {
   path?: string;
 }
 
+interface CLIENT_OPTS {
+  lmdb_path?: string;
+}
+
 const DRIVER_NAME = "lmdb";
 
 export default defineDriver((opts: LmdbOptions) => {
-  let db: Database | null = null;
-
   // Lazy initialization of LMDB instance
   /* const getDbInstance = (client_opts?: RootDatabaseOptionsWithPath) => {
     if (!db) {
@@ -23,8 +25,18 @@ export default defineDriver((opts: LmdbOptions) => {
     return db;
   }; */
 
-  const getDbInstance = (client_opts?: RootDatabaseOptionsWithPath) => {
-    return open(client_opts || opts);
+  let db: Database | null = null;
+  let currentPath: string | null = null;
+
+  const getDbInstance = (client_opts?: CLIENT_OPTS): Database => {
+    const newPath = client_opts ? client_opts.lmdb_path : opts.path;
+
+    if (!db || currentPath !== newPath) {
+      db = open({ path: newPath || "./data" });
+      currentPath = newPath || null;
+    }
+
+    return db;
   };
 
   return {
@@ -34,13 +46,17 @@ export default defineDriver((opts: LmdbOptions) => {
     async hasItem(key, client_opts) {
       return getDbInstance(client_opts).doesExist(key);
     },
-    async getItem(key, client_opts) {
+    async getItem(keyd, client_opts) {
       const db = getDbInstance(client_opts);
 
-      const values = db.getRange();
+      const filtered = db.getRange().asArray.map(({ key, value }) => ({
+        id: key,
+        ...JSON.parse(value),
+      }));
 
-      //return getDbInstance(client_opts).getAsync(key);
-      return values;
+      console.log("filtered", filtered);
+
+      return filtered;
     },
     async setItem(key, value, client_opts) {
       getDbInstance(client_opts).put(key, value);

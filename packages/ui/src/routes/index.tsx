@@ -11,7 +11,7 @@ async function getCollectionList() {
   });
 
   const data = await res.json();
-  console.log("data", data);
+  console.log(data);
   return data;
 }
 
@@ -55,9 +55,7 @@ function App() {
       </span>
       <ul>
         {collection.data.map((item: any, index: number) => (
-          <li key={item.key}>
-            {index + 1}::{item.collectionName || item.key}: {item.value}
-          </li>
+          <li key={item.id}>{item.collectionName}</li>
         ))}
       </ul>
     </div>

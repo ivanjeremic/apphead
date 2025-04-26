@@ -23,20 +23,34 @@ export class DomeDB {
     });
 
     // create system collections
-    this.kv.setItem("__collections", JSON.stringify({}), {
-      path: join(this.path, "__collections"),
-    });
+    this.kv.setItem(
+      nanoid(),
+      {
+        collectionName: "__collections",
+        schema: { collectionName: "string" },
+      },
+      {
+        lmdb_path: join(this.path, "__collections"),
+      }
+    );
 
-    this.kv.setItem("__users", JSON.stringify({}), {
-      path: join(this.path, "__collections"),
-    });
+    this.kv.setItem(
+      nanoid(),
+      {
+        collectionName: "__users",
+        schema: { collectionName: "string" },
+      },
+      {
+        lmdb_path: join(this.path, "__collections"),
+      }
+    );
   }
 
   public async createUser() {
     const id = nanoid();
 
     const collectionExists = await this.kv.hasItem("__users", {
-      path: join(this.path, "__collections"),
+      lmdb_path: join(this.path, "__collections"),
     });
 
     const { hasErrors, errorList } = checkErrors([
@@ -51,7 +65,7 @@ export class DomeDB {
     }
 
     await this.kv.setItem(id, JSON.stringify({ id }), {
-      path: join(this.path, "__users"),
+      lmdb_path: join(this.path, "__users"),
     });
   }
 
@@ -60,7 +74,7 @@ export class DomeDB {
    */
   public async createCollection(collectionName: string, schema?: any) {
     const collectionExists = await this.kv.hasItem(collectionName, {
-      path: join(this.path, "__collections"),
+      lmdb_path: join(this.path, "__collections"),
     });
 
     const { hasErrors, errorList } = checkErrors([
@@ -105,7 +119,7 @@ export class DomeDB {
    */
   public async insert({ collection, data }: { collection: string; data: any }) {
     const collectionExists = await this.kv.hasItem(collection, {
-      path: join(this.path, "__collections"),
+      lmdb_path: join(this.path, "__collections"),
     });
 
     const { hasErrors, errorList } = checkErrors([
@@ -120,7 +134,7 @@ export class DomeDB {
     }
 
     await this.kv.setItem(nanoid(), JSON.stringify(data), {
-      path: join(this.path, this.user, collection),
+      lmdb_path: join(this.path, this.user, collection),
     });
   }
 
@@ -138,7 +152,7 @@ export class DomeDB {
     filter: any;
     options: any;
   }): Promise<any> {
-    const collectionExists = await this.kv.hasItem(collection, {
+    /* const collectionExists = await this.kv.hasItem(collection, {
       path: join(this.path, "__collections"),
     });
 
@@ -151,34 +165,17 @@ export class DomeDB {
 
     if (hasErrors) {
       return { hasErrors, errorList };
-    }
-
+    } */
+    //dddd
     const cleanPath = collection.startsWith("__")
       ? collection
       : `${this.user}/${collection}`;
 
     const values = await this.kv.getItem(join(this.path, cleanPath), {
-      path: join(this.path, cleanPath),
+      lmdb_path: join(this.path, cleanPath),
     });
 
-    /* console.log("values", Object.entries(...values));
-
-    const data = Array(values).map((item) => ({
-      id: item.key,
-      ...item.value,
-    }));
-
-    console.log("data", data); */
-
-    /* const result = [];
-    for await (const item of values) {
-      // Apply filtering logic if needed
-      if (Object.entries(filter).every(([key, value]) => item[key] === value)) {
-        result.push(item);
-      }
-    }    */
-
-    return values;
+    return JSON.stringify({ data: values });
   }
 
   /*

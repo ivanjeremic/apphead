@@ -4,8 +4,14 @@ import { open } from "lmdb";
 var DRIVER_NAME = "lmdb";
 var lmdb_default = defineDriver((opts) => {
   let db = null;
+  let currentPath = null;
   const getDbInstance = (client_opts) => {
-    return open(client_opts || opts);
+    const newPath = client_opts ? client_opts.lmdb_path : opts.path;
+    if (!db || currentPath !== newPath) {
+      db = open({ path: newPath || "./data" });
+      currentPath = newPath || null;
+    }
+    return db;
   };
   return {
     name: DRIVER_NAME,
@@ -14,10 +20,14 @@ var lmdb_default = defineDriver((opts) => {
     async hasItem(key, client_opts) {
       return getDbInstance(client_opts).doesExist(key);
     },
-    async getItem(key, client_opts) {
+    async getItem(keyd, client_opts) {
       const db2 = getDbInstance(client_opts);
-      const values = db2.getRange();
-      return values;
+      const filtered = db2.getRange().asArray.map(({ key, value }) => ({
+        id: key,
+        ...JSON.parse(value)
+      }));
+      console.log("filtered", filtered);
+      return filtered;
     },
     async setItem(key, value, client_opts) {
       getDbInstance(client_opts).put(key, value);
