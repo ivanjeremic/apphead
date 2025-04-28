@@ -115,7 +115,7 @@ export class DomeDB {
    * @param collectionName
    * @param data
    *
-   * @TODO THE ID NEEDS TO BE CHANGES TO BE creatorId:fields
+   * @TODO THE ID NEEDS TO BE CHANGES TO BE creatorId:fields.
    */
   public async insert({ collection, data }: { collection: string; data: any }) {
     const collectionExists = await this.kv.hasItem(collection, {
@@ -166,7 +166,7 @@ export class DomeDB {
     if (hasErrors) {
       return { hasErrors, errorList };
     } */
-    //dddd
+    //ddddddsdsa
     const cleanPath = collection.startsWith("__")
       ? collection
       : `${this.user}/${collection}`;
@@ -175,7 +175,7 @@ export class DomeDB {
       lmdb_path: join(this.path, cleanPath),
     });
 
-    return JSON.stringify({ data: values });
+    return { data: values };
   }
 
   /*

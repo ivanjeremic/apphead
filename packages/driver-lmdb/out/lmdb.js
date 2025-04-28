@@ -25,7 +25,7 @@ var lmdb_default = defineDriver((opts) => {
       const filtered = db2.getRange().asArray.map(({ key, value }) => ({
         id: key,
         ...JSON.parse(value)
-      }));
+      })).filter((item) => item.collectionName === "__users");
       console.log("filtered", filtered);
       return filtered;
     },

@@ -49,12 +49,15 @@ export default defineDriver((opts: LmdbOptions) => {
     async getItem(keyd, client_opts) {
       const db = getDbInstance(client_opts);
 
-      const filtered = db.getRange().asArray.map(({ key, value }) => ({
-        id: key,
-        ...JSON.parse(value),
-      }));
+      const filtered = db
+        .getRange()
+        .asArray.map(({ key, value }) => ({
+          id: key,
+          ...JSON.parse(value),
+        }))
+        .filter((item) => item.collectionName === "__users");
 
-      console.log("filtered", filtered);
+      console.log("filteresd", filtered);
 
       return filtered;
     },

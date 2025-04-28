@@ -1,4 +1,5 @@
 import { resolve } from "node:path";
+
 // Detect the Nitro preset (runtime environment)
 const preset = process.env.NITRO_PRESET || "node_server";
 
