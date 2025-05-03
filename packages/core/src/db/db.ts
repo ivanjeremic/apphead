@@ -3,9 +3,10 @@ import type { StorageValue, Storage, Driver } from "unstorage";
 import { nanoid } from "nanoid";
 import { checkErrors } from "./utils/errors";
 import { join } from "pathe";
+import { exists } from "node:fs/promises";
 
 /**
- * DomeDB class.
+ * DomeDB class
  */
 export class DomeDB {
   path = "./data/";
@@ -22,28 +23,48 @@ export class DomeDB {
       driver: ngin.driver,
     });
 
-    // create system collections
-    this.kv.setItem(
-      nanoid(),
-      {
-        collectionName: "__collections",
-        schema: { collectionName: "string" },
-      },
-      {
+    /**
+     * CREATE SYSTEM COLLECTIONS:
+     * __users
+     * __collections
+     */
+    this.kv
+      .hasItem("__users", {
         lmdb_path: join(this.path, "__collections"),
-      }
-    );
+      })
+      .then((exists) => {
+        if (!exists) {
+          this.kv.setItem(
+            "__users",
+            {
+              collectionName: "__users",
+              schema: { collectionName: "string" },
+            },
+            {
+              lmdb_path: join(this.path, "__collections"),
+            }
+          );
+        }
+      });
 
-    this.kv.setItem(
-      nanoid(),
-      {
-        collectionName: "__users",
-        schema: { collectionName: "string" },
-      },
-      {
+    this.kv
+      .hasItem("__collections", {
         lmdb_path: join(this.path, "__collections"),
-      }
-    );
+      })
+      .then((exists) => {
+        if (!exists) {
+          this.kv.setItem(
+            "__collections",
+            {
+              collectionName: "__collections",
+              schema: { collectionName: "string" },
+            },
+            {
+              lmdb_path: join(this.path, "__collections"),
+            }
+          );
+        }
+      });
   }
 
   public async createUser() {
@@ -96,7 +117,7 @@ export class DomeDB {
 
     /* await this.kv.setItem(collectionName, JSON.stringify(schema), {
       path: join(this.path, "__collections"),
-    }); */
+    }); ;;;*/
 
     await this.insert({
       collection: "__collections",
@@ -179,7 +200,7 @@ export class DomeDB {
   }
 
   /*
-   * handle delte documents
+   * handle delte documents.
    */
   public async deleteOne(collectionName: string, query: string | object) {
     //await this.ngin.handleDelete(collectionName, query, true);

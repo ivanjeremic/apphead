@@ -44,20 +44,28 @@ export default defineDriver((opts: LmdbOptions) => {
     options: opts,
     getInstance: () => getDbInstance(),
     async hasItem(key, client_opts) {
-      return getDbInstance(client_opts).doesExist(key);
+      const doesExist = getDbInstance(client_opts).doesExist(key);
+      if (doesExist) {
+        return true;
+      }
+      // Check if the key exists in the database
+      const db = getDbInstance(client_opts);
+      const data = db.get(key);
+      if (data) {
+        // If the key exists, return true
+        return true;
+      }
+      // If the key does not exist, return false
+      return false;
     },
     async getItem(keyd, client_opts) {
       const db = getDbInstance(client_opts);
 
-      const filtered = db
-        .getRange()
-        .asArray.map(({ key, value }) => ({
-          id: key,
-          ...JSON.parse(value),
-        }))
-        .filter((item) => item.collectionName === "__users");
-
-      console.log("filteresd", filtered);
+      const filtered = db.getRange().asArray.map(({ key, value }) => ({
+        id: key,
+        ...JSON.parse(value),
+      }));
+      /*         .filter((item) => item.collectionName === "__users"); */
 
       return filtered;
     },

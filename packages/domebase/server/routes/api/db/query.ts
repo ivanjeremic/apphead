@@ -10,7 +10,5 @@ export default defineEventHandler(async (event) => {
     options: { limit: 10, sort: "asc", fields: ["make", "model"] },
   });
 
-  console.log("data", data);
-
   return data;
 });

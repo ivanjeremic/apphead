@@ -18,15 +18,23 @@ var lmdb_default = defineDriver((opts) => {
     options: opts,
     getInstance: () => getDbInstance(),
     async hasItem(key, client_opts) {
-      return getDbInstance(client_opts).doesExist(key);
+      const doesExist = getDbInstance(client_opts).doesExist(key);
+      if (doesExist) {
+        return true;
+      }
+      const db2 = getDbInstance(client_opts);
+      const data = db2.get(key);
+      if (data) {
+        return true;
+      }
+      return false;
     },
     async getItem(keyd, client_opts) {
       const db2 = getDbInstance(client_opts);
       const filtered = db2.getRange().asArray.map(({ key, value }) => ({
         id: key,
         ...JSON.parse(value)
-      })).filter((item) => item.collectionName === "__users");
-      console.log("filtered", filtered);
+      }));
       return filtered;
     },
     async setItem(key, value, client_opts) {
