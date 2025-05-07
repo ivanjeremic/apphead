@@ -12,12 +12,7 @@ export { validateRequest } from "./validateRequest.js";
 export * from "arctic";
 
 // FutureAuth
-export { Kapiya } from "./v2/FutureAuth";
-
-// remove in future
-export { BetterSqlite3Adapter } from "@lucia-auth/adapter-sqlite";
-import sqlite from "better-sqlite3";
-export { sqlite };
+export { Kapiya } from "./v2/FutureAuth.js";
 
 export type {
   User,
@@ -32,7 +27,7 @@ export type {
   Adapter,
 } from "./database.js";
 
-export { AppheadAdapter } from "./database";
+export { AppheadAdapter } from "./database.js";
 
 export type { PasswordHashingAlgorithm } from "./crypto.js";
 

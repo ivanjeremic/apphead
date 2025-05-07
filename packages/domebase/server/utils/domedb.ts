@@ -1,6 +1,6 @@
-import { DomeDB } from "@domebase/core";
+import { DomeCore } from "@domebase/core";
 
-export const domedb = new DomeDB({
+export const domedb = new DomeCore({
   driver: useStorage("db"),
   path: ".domebase",
 });
