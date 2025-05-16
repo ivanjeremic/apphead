@@ -1,5 +1,5 @@
 {
-  "name": "driver-lmdb",
+  "name": "@domebase/node",
   "version": "1.0.0",
   "main": "./out/lmdb.js",
   "type": "module",

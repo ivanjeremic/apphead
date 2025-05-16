@@ -9,6 +9,11 @@ import { join } from "pathe";
 import { nanoid } from "nanoid";
 import { checkErrors } from "../utils/errors";
 
+/**
+ *
+ * @TODO consider moving createStorage to the drivers
+ */
+
 function initDomeDB(
 	storageOptions: CreateStorageOptions | undefined,
 	options: { path: string },
