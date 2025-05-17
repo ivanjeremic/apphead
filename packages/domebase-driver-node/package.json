@@ -1,17 +1,14 @@
 {
-  "name": "@domebase/node",
-  "version": "1.0.0",
-  "main": "./out/lmdb.js",
-  "type": "module",
-  "scripts": {
-    "build": "bun build ./src/lmdb.ts --outdir ./out --external '*'"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "lmdb": "^3.2.6",
-    "unstorage": "^1.15.0"
-  }
+	"name": "@domebase/driver-node",
+	"version": "1.0.0",
+	"main": "./src/index.ts",
+	"type": "module",
+	"keywords": [],
+	"author": "Ivan Jeremic",
+	"license": "MIT",
+	"description": "",
+	"dependencies": {
+		"lmdb": "^3.2.6",
+		"unstorage": "^1.15.0"
+	}
 }

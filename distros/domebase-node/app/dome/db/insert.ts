@@ -1,4 +1,4 @@
-import { domedb } from "~/utils/domedb";
+/* import { domedb } from "~/utils/domedb";
 
 export default defineEventHandler(async (event) => {
   // Read JSON from the request body
@@ -21,3 +21,4 @@ export default defineEventHandler(async (event) => {
     message: `Collection '${body.collectionName}' created successfully.`,
   };
 });
+ */

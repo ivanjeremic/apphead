@@ -1,26 +1,17 @@
 {
-  "name": "apphead-project",
-  "private": true,
-  "workspaces": [
-    "packages/*",
-    "distros",
-    "docs"
-  ],
-  "scripts": {
-    "apphead:dev": "bun run dev packages/apphead --cwd",
-    "docs:dev": "bun run dev --cwd packages/apphead",
-    "test": "vitest"
-  },
-  "author": "Ivan Jeremic",
-  "license": "MIT",
-  "homepage": "https://apphead.com",
-  "bugs": "https://github.com/apphead/apphead/issues",
-  "dependencies": {
-    "@types/bun": "^1.1.10",
-    "protobufjs": "^7.4.0",
-    "vite": "^5.4.8"
-  },
-  "devDependencies": {
-    "vitest": "^2.1.2"
-  }
+	"name": "domebase-project",
+	"private": true,
+	"workspaces": ["packages/*", "distros/*", "docs"],
+	"scripts": {
+		"domebase:dev": "bun run dev packages/domebase --cwd",
+		"docs:dev": "bun run dev --cwd packages/domebase",
+		"test": "vitest"
+	},
+	"author": "Ivan Jeremic",
+	"license": "MIT",
+	"homepage": "https://domebase.dev",
+	"bugs": "https://github.com/ivanjeremic/domebase/issues",
+	"devDependencies": {
+		"@types/bun": "^1.1.10"
+	}
 }

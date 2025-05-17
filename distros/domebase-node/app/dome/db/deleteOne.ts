@@ -1,8 +1,8 @@
-import { domedb } from "~/utils/domedb";
+/* import { domedb } from "../dome";
 
-export default defineEventHandler(async (event) => {
+export default async function delete_one() {
 	// Read JSON from the request body
-	const body = await readBody(event);
+	const body = {};
 
 	try {
 		await domedb.deleteOne(body.collection, body.id);
@@ -10,15 +10,9 @@ export default defineEventHandler(async (event) => {
 		console.error("Error deleting item:", error);
 	}
 
-	/* if (hasErrors) {
-    return {
-      success: false,
-      message: errorList,
-    };
-  } */
-
 	return {
 		success: true,
 		message: `Deleted '${body.collection}' successfully.`,
 	};
-});
+}
+ */

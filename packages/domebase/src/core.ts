@@ -14,7 +14,7 @@ import { join } from "pathe";
 /**
  * DomeDB class
  */
-export class DomeCore {
+export class Domebase {
 	path = "./data/";
 	kv: Storage<StorageValue>;
 	user: string;
@@ -95,8 +95,8 @@ export class DomeCore {
 		options,
 	}: {
 		collection: string;
-		filter: unknown;
-		options: unknown;
+		filter?: unknown;
+		options?: unknown;
 	}): Promise<unknown> {
 		/* const collectionExists = await this.kv.hasItem(collection, {
       path: join(this.path, "__collections"),

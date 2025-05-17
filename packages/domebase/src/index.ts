@@ -1,2 +1,2 @@
 //
-export { DomeCore } from "./core";
+export { Domebase } from "./core";

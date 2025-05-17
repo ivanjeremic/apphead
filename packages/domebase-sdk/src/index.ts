@@ -1,4 +1,4 @@
-import { DomeCore } from "@domebase/core";
+import { DomeCore } from "domebase";
 import localStorageDriver from "unstorage/drivers/localstorage";
 
 export class DomebaseClient extends DomeCore {

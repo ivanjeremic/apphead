@@ -10,7 +10,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@domebase/core": "workspace:*",
+    "domebase": "workspace:*",
     "assemblyscript": "^0.27.35",
     "unstorage": "^1.15.0"
   }
