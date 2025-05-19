@@ -9,18 +9,21 @@
 		"typecheck": "react-router typegen && tsc -b"
 	},
 	"dependencies": {
+		"@domebase/auth": "workspace:*",
+		"@domebase/driver-node": "workspace:*",
+		"@domebase/server": "workspace:*",
 		"@react-router/express": "^7.5.3",
 		"@react-router/node": "^7.5.3",
-		"@domebase/driver-node": "workspace:*",
-		"@domebase/auth": "workspace:*",
-		"domebase": "workspace:*",
 		"compression": "^1.7.5",
+		"domebase": "workspace:*",
 		"express": "^5.1.0",
+		"hono": "^4.7.10",
 		"isbot": "^5.1.27",
 		"morgan": "^1.10.0",
 		"react": "^19.1.0",
 		"react-dom": "^19.1.0",
-		"react-router": "^7.5.3"
+		"react-router": "^7.5.3",
+		"remix-hono": "^0.0.18"
 	},
 	"devDependencies": {
 		"@react-router/dev": "^7.5.3",

@@ -15,19 +15,23 @@ export const domedb = new Domebase({
 	path: ".domebase",
 });
 
-const colls = await domedb.query({ collection: "__collections" });
-
-console.log("COLLS", colls.data);
-
 export const app = express();
 
+app.use("/api", async (req, res, next) => {
+	const colls = await domedb.query({ collection: "__collections" });
+	res.json(colls);
+});
+//
 app.use(
 	createRequestHandler({
 		build: () => import("virtual:react-router/server-build"),
 		getLoadContext() {
 			return {
-				VALUE_FROM_EXPRESS: "Hello from Express",
+				VALUE_FROM_EXPRESS: "Hello from Expddress",
 			};
 		},
 	}),
 );
+
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// try starting hono app here

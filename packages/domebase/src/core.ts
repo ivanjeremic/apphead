@@ -18,8 +18,16 @@ export class Domebase {
 	path = "./data/";
 	kv: Storage<StorageValue>;
 	user: string;
+	private onBeforeInsert;
 
-	constructor(ngin: { driver: Driver<unknown, unknown>; path?: string }) {
+	constructor(ngin: {
+		driver: Driver<unknown, unknown>;
+		path?: string;
+		plugins?: Array<(db: Domebase) => any>;
+	}) {
+		// hooks
+		this.onBeforeInsert = new Set();
+
 		if (ngin.path) {
 			this.path = ngin.path;
 		}
@@ -30,6 +38,19 @@ export class Domebase {
 			},
 			{ path: this.path },
 		);
+
+		// init plugins
+		if (ngin.plugins) {
+			for (const plugin of ngin.plugins) {
+				const pluginOpts = plugin(this);
+
+				if (pluginOpts) {
+					if (pluginOpts.onBeforeInsert) {
+						this.onBeforeInsert.add(pluginOpts.onBeforeInsert);
+					}
+				}
+			}
+		}
 	}
 
 	public async createUser() {
@@ -67,6 +88,8 @@ export class Domebase {
 		const collectionExists = await this.kv.hasItem(collection, {
 			lmdb_path: join(this.path, "__collections"),
 		});
+
+		// onBeforeInsert
 
 		const { hasErrors, errorList } = checkErrors([
 			{
