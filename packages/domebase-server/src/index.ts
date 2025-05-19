@@ -1,1 +1,1 @@
-export { domebaseServer } from "./api.js";
+export { createDomebaseServer } from "./api.js";

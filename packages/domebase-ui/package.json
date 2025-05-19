@@ -1,0 +1,23 @@
+{
+	"name": "my-app",
+	"type": "module",
+	"scripts": {
+		"dev": "vite",
+		"build": "tsc",
+		"start": "node dist/index.js"
+	},
+	"dependencies": {
+		"@domebase/driver-node": "workspace:*",
+		"@domebase/server": "workspace:*",
+		"@hono/node-server": "^1.14.2",
+		"@hono/vite-build": "^1.6.1",
+		"@hono/vite-dev-server": "^0.19.0",
+		"domebase": "workspace:*",
+		"hono": "^4.7.10"
+	},
+	"devDependencies": {
+		"@types/node": "^20.11.17",
+		"tsx": "^4.7.1",
+		"typescript": "^5.8.3"
+	}
+}
