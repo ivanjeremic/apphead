@@ -1,8 +1,6 @@
-import { hc } from "hono/client";
 import { useState } from "hono/jsx";
 import { render } from "hono/jsx/dom";
-
-const client = hc<any>("/");
+import { client } from "./index.js";
 
 function App() {
 	return (
@@ -46,5 +44,10 @@ const ClockButton = () => {
 	);
 };
 
-const root = document.getElementById("root")!;
+const root = document.getElementById("root");
+
+if (!root) {
+	throw new Error("Root element not found");
+}
+
 render(<App />, root);

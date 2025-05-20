@@ -1,2 +1,2 @@
 //
-export { Domebase } from "./core";
+export { Domebase } from "./core.js";

@@ -7,7 +7,7 @@ import {
 } from "unstorage";
 import { join } from "pathe";
 import { nanoid } from "nanoid";
-import { checkErrors } from "../utils/errors";
+import { checkErrors } from "../utils/errors.js";
 
 /**
  *

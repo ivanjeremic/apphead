@@ -6,10 +6,21 @@ import {
 	type Storage,
 	type StorageValue,
 	type Driver,
-} from "./db/storage";
+} from "./db/storage.js";
 import { nanoid } from "nanoid";
-import { checkErrors } from "./utils/errors";
+import { checkErrors } from "./utils/errors.js";
 import { join } from "pathe";
+
+type PluginFunction<T> = {
+	name: string;
+	instance: (domebase: T) => unknown;
+};
+
+interface DomebaseOptions<T> {
+	driver?: Driver<unknown, unknown>;
+	path?: string;
+	plugins?: PluginFunction<T>[];
+}
 
 /**
  * DomeDB class
@@ -18,15 +29,13 @@ export class Domebase {
 	path = "./data/";
 	kv: Storage<StorageValue>;
 	user: string;
-	private onBeforeInsert;
+	plugin = new Map();
 
-	constructor(ngin: {
-		driver: Driver<unknown, unknown>;
-		path?: string;
-		plugins?: Array<(db: Domebase) => any>;
-	}) {
-		// hooks
-		this.onBeforeInsert = new Set();
+	constructor(ngin: DomebaseOptions<Domebase>) {
+		for (const fn of ngin.plugins ?? []) {
+			const res = fn;
+			this.plugin.set(res.name, res.instance(this));
+		}
 
 		if (ngin.path) {
 			this.path = ngin.path;
@@ -38,19 +47,6 @@ export class Domebase {
 			},
 			{ path: this.path },
 		);
-
-		// init plugins
-		if (ngin.plugins) {
-			for (const plugin of ngin.plugins) {
-				const pluginOpts = plugin(this);
-
-				if (pluginOpts) {
-					if (pluginOpts.onBeforeInsert) {
-						this.onBeforeInsert.add(pluginOpts.onBeforeInsert);
-					}
-				}
-			}
-		}
 	}
 
 	public async createUser() {
