@@ -153,4 +153,13 @@ export class Domebase {
 			console.error("Error deleting item:", error);
 		}
 	}
+
+	// handle plugins
+	public async registerPlugin<T>(name: string, plugin: PluginFunction<T>) {
+		//
+	}
+
+	public async deletePlugin<T>(name: string, plugin: PluginFunction<T>) {
+		//
+	}
 }

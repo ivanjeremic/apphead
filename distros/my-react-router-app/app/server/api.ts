@@ -1,5 +1,5 @@
 import { Domebase } from "domebase";
-import { domebaseServer } from "@domebase/server";
+import { createDomebaseServer } from "@domebase/plugin-backend";
 import driverNode from "@domebase/driver-node";
 
 const API_BASENAME = "/";
@@ -7,8 +7,9 @@ const API_BASENAME = "/";
 export const domebase = new Domebase({
 	driver: driverNode({ path: ".datadome" }),
 	path: ".domebase",
+	plugins: [createDomebaseServer()],
 });
 
-const api = domebaseServer(domebase);
+const { app } = domebase.plugin.get("my-plugin");
 
-export { api, API_BASENAME };
+export { app, API_BASENAME };

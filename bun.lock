@@ -11,7 +11,7 @@
       "name": "my-react-router-app",
       "dependencies": {
         "@domebase/driver-node": "workspace:*",
-        "@domebase/server": "workspace:*",
+        "@domebase/plugin-backend": "workspace:*",
         "@react-router/node": "^7.5.3",
         "@react-router/serve": "^7.5.3",
         "domebase": "workspace:*",
@@ -72,8 +72,8 @@
       "name": "@domebase/auth",
       "version": "1.0.0",
     },
-    "packages/domebase-server": {
-      "name": "@domebase/server",
+    "packages/domebase-plugin-backend": {
+      "name": "@domebase/plugin-backend",
       "version": "0.0.1",
       "dependencies": {
         "@hono/node-server": "^1.14.1",
@@ -89,7 +89,7 @@
       "name": "my-app",
       "dependencies": {
         "@domebase/driver-node": "workspace:*",
-        "@domebase/server": "workspace:*",
+        "@domebase/plugin-backend": "workspace:*",
         "@hono/node-server": "^1.14.2",
         "@hono/vite-build": "^1.6.1",
         "@hono/vite-dev-server": "^0.19.0",
@@ -212,7 +212,7 @@
 
     "@domebase/driver-node": ["@domebase/driver-node@workspace:packages/domebase-driver-node"],
 
-    "@domebase/server": ["@domebase/server@workspace:packages/domebase-server"],
+    "@domebase/plugin-backend": ["@domebase/plugin-backend@workspace:packages/domebase-plugin-backend"],
 
     "@drizzle-team/brocli": ["@drizzle-team/brocli@0.11.0", "", {}, "sha512-hD3pekGiPg0WPCCGAZmusBBJsDqGUR66Y452YgQsZOnkdQ7ViEPKuyP4huUGEZQefp8g34RRodXYmJ2TbCH+tg=="],
 

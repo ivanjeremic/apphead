@@ -7,7 +7,7 @@ import { trimTrailingSlash } from "hono/trailing-slash";
 import { prettyJSON } from "hono/pretty-json";
 import { serveStatic } from "@hono/node-server/serve-static";
 
-export function createDomebaseServer(domebase: any) {
+export function createDomebaseServer() {
 	const app = new Hono();
 
 	app.use("/*", serveStatic({ root: "./static" }));
@@ -38,20 +38,24 @@ export function createDomebaseServer(domebase: any) {
 
 	app.use(prettyJSON());
 
-	/**
-	 * API
-	 */
-	const routes = app
-		.get("/domebase/books", async (c) => {
-			const colls = await domebase.query({ collection: "__collections" });
-			return c.json(colls);
-		})
-		.get("/domebase/v1/query", async (c) => {
-			const colls = await domebase.query({ collection: "__collections" });
-			return c.json(colls);
-		});
+	// Add more routes here as neededdd
 
-	// Add more routes here as needed
-
-	return { app, routes }; // The function returns the Hono instance
+	return {
+		name: "my-plugin",
+		instance(domebase: any) {
+			/**
+			 * API
+			 */
+			const routes = app
+				.get("/domebase/books", async (c) => {
+					const colls = await domebase.query({ collection: "__collections" });
+					return c.json(colls);
+				})
+				.get("/domebase/v1/query", async (c) => {
+					const colls = await domebase.query({ collection: "__collections" });
+					return c.json(colls);
+				});
+			return { app, routes };
+		},
+	};
 }

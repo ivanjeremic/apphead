@@ -1,32 +1,21 @@
 import { Domebase } from "domebase";
-import { createDomebaseServer } from "@domebase/server";
+import { createDomebaseServer } from "@domebase/plugin-backend";
 import driverNode from "@domebase/driver-node";
 import { hc } from "hono/client";
-
-function myPlugin() {
-	return {
-		name: "my-plugin",
-		instance(domebase: Domebase) {
-			console.log("my-plugin", domebase.path);
-		},
-	};
-}
 
 export const domebase = new Domebase({
 	driver: driverNode({ path: ".datadome" }),
 	path: ".domebase",
-	plugins: [myPlugin()],
+	plugins: [createDomebaseServer()],
 });
 
-const { app, routes } = createDomebaseServer(domebase);
-
-domebase.plugin.get("my-plugin");
+const { app, routes } = domebase.plugin.get("my-plugin");
 
 export type AppType = typeof routes;
 
 export const client = hc<AppType>("/");
 
-app.get("/domebase", (c) => {
+app.get("/domebase", (c: any) => {
 	return c.html(
 		<html lang="en">
 			<head>
