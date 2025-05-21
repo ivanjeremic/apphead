@@ -156,7 +156,7 @@ export class Domebase {
 
 	// handle plugins
 	public async registerPlugin<T>(name: string, plugin: PluginFunction<T>) {
-		//
+		// create a js file on the file system or a serverless function if hosted serverless
 	}
 
 	public async deletePlugin<T>(name: string, plugin: PluginFunction<T>) {

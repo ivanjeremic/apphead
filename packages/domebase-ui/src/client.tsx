@@ -1,6 +1,7 @@
 import { useState } from "hono/jsx";
 import { render } from "hono/jsx/dom";
 import { hc } from "hono/client";
+import type { AppType } from "./index.js";
 
 function App() {
 	return (
@@ -24,7 +25,7 @@ function Counter() {
 }
 
 const ClockButton = () => {
-	const client = hc<any>("/");
+	const client = hc<AppType>("/");
 	const [response, setResponse] = useState<string | null>(null);
 
 	const handleClick = async () => {
