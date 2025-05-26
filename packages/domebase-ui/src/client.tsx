@@ -1,30 +1,10 @@
-import { useState } from "hono/jsx";
-import { render } from "hono/jsx/dom";
-import { hc } from "hono/client";
-import type { AppType } from "./index.js";
+import { useState } from "react";
+import ReactDOM from "react-dom/client";
+import { createBrowserRouter, RouterProvider } from "react-router";
+/* import type { AppType } from "./index.js";
+import { hc } from "hono/client"; */
 
-function App() {
-	return (
-		<>
-			<h1>Hello hono/jsx/dom!</h1>
-			<h2>Example of useState()</h2>
-			<Counter />
-			<h2>Example of API fetch()</h2>
-			<ClockButton />
-		</>
-	);
-}
-
-function Counter() {
-	const [count, setCount] = useState(0);
-	return (
-		<button type="button" onClick={() => setCount(count + 1)}>
-			You clicked me {count} times
-		</button>
-	);
-}
-
-const ClockButton = () => {
+/* const ClockButton = () => {
 	const client = hc<AppType>("/");
 	const [response, setResponse] = useState<string | null>(null);
 
@@ -45,6 +25,37 @@ const ClockButton = () => {
 		</div>
 	);
 };
+ */
+
+/* function App() {
+	return (
+		<>
+			<h1>Hello hono/jsx/dom!</h1>
+			<h2>Example of useState()</h2>
+			<Counter />
+			<h2>Example of API fetch()</h2>
+			<ClockButton />
+		</>
+	);
+} */
+
+function Counter() {
+	const [count, setCount] = useState(0);
+	return (
+		<button type="button" onClick={() => setCount(count + 1)}>
+			You clicked me {count} times
+		</button>
+	);
+}
+
+// router
+const router = createBrowserRouter([
+	{
+		index: true,
+		path: "/domebase",
+		Component: Counter,
+	},
+]);
 
 const root = document.getElementById("root");
 
@@ -52,4 +63,4 @@ if (!root) {
 	throw new Error("Root element not found");
 }
 
-render(<App />, root);
+ReactDOM.createRoot(root).render(<RouterProvider router={router} />);

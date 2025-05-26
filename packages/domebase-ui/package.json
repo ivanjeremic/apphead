@@ -3,7 +3,7 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite",
-		"build": "tsc",
+		"build": "vite build --mode client",
 		"start": "node dist/index.js"
 	},
 	"dependencies": {
@@ -13,10 +13,15 @@
 		"@hono/vite-build": "^1.6.1",
 		"@hono/vite-dev-server": "^0.19.0",
 		"domebase": "workspace:*",
-		"hono": "^4.7.10"
+		"hono": "^4.7.10",
+		"react": "^19.1.0",
+		"react-dom": "^19.1.0",
+		"react-router": "^7.6.0"
 	},
 	"devDependencies": {
 		"@types/node": "^20.11.17",
+		"@types/react": "^19.1.5",
+		"@types/react-dom": "^19.1.5",
 		"tsx": "^4.7.1",
 		"typescript": "^5.8.3"
 	}

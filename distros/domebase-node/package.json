@@ -1,0 +1,18 @@
+{
+	"name": "domebase-node",
+	"version": "1.0.0",
+	"main": "main.ts",
+	"type": "module",
+	"scripts": {
+		"dev": "bun run main.ts"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"description": "",
+	"dependencies": {
+		"@domebase/driver-node": "workspace:*",
+		"@domebase/plugin-backend": "workspace:*",
+		"domebase": "workspace:*"
+	}
+}

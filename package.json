@@ -1,7 +1,7 @@
 {
 	"name": "domebase-project",
 	"private": true,
-	"workspaces": ["packages/*", "distros/*", "docs"],
+	"workspaces": ["packages/*", "distro-dev/*", "distros/*", "docs"],
 	"scripts": {
 		"domebase:dev": "bun run dev packages/domebase --cwd",
 		"docs:dev": "bun run dev --cwd packages/domebase",
