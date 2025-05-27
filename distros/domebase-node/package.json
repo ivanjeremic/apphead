@@ -1,18 +1,18 @@
 {
 	"name": "domebase-node",
-	"version": "1.0.0",
-	"main": "main.ts",
 	"type": "module",
 	"scripts": {
-		"dev": "bun run main.ts"
+		"dev": "tsx watch src/index.ts",
+		"build": "tsc",
+		"start": "node dist/index.js"
 	},
-	"keywords": [],
-	"author": "",
-	"license": "ISC",
-	"description": "",
 	"dependencies": {
-		"@domebase/driver-node": "workspace:*",
-		"@domebase/plugin-backend": "workspace:*",
-		"domebase": "workspace:*"
+		"@hono/node-server": "^1.14.3",
+		"hono": "^4.7.10"
+	},
+	"devDependencies": {
+		"@types/node": "^20.11.17",
+		"tsx": "^4.7.1",
+		"typescript": "^5.8.3"
 	}
 }
