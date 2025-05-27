@@ -8,7 +8,7 @@ import {
 	type Driver,
 } from "./storage.js";
 import { nanoid } from "nanoid";
-import { checkErrors } from "./common/errors.js";
+import { checkErrors } from "./utils/errors.js";
 import { join } from "pathe";
 
 type PluginFunction<T> = {
