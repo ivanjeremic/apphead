@@ -8,7 +8,8 @@ import { serve } from "@hono/node-server";
 
 export function createDomebaseServer({
 	basePath = "/",
-}: { basePath?: string } = {}) {
+	port = 8787,
+}: { basePath?: string; port?: number }) {
 	const app = new Hono().basePath(basePath);
 
 	//app.use("/*", serveStatic({ root: "./static" }));
@@ -51,7 +52,7 @@ export function createDomebaseServer({
 					return c.json(colls);
 				});
 
-			serve({ port: 8787, fetch: app.fetch });
+			serve({ port, fetch: app.fetch });
 			return { app, routes };
 		},
 	};
