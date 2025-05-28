@@ -3,16 +3,19 @@ import { secureHeaders } from "hono/secure-headers";
 import { cors } from "hono/cors";
 import { trimTrailingSlash } from "hono/trailing-slash";
 import { prettyJSON } from "hono/pretty-json";
-/* import { serveStatic } from "@hono/node-server/serve-static"; */
+import { serveStatic } from "@hono/node-server/serve-static";
 import { serve } from "@hono/node-server";
+import mydist from "@domebase/ui/dist" with { type: "url" };
+import { resolve, join } from "node:path";
+// Convert the URL to a file path
 
 export function createDomebaseServer({
-	basePath = "/",
-	port = 8787,
-}: { basePath?: string; port?: number }) {
-	const app = new Hono().basePath(basePath);
+	basePath,
+	port,
+}: { basePath?: string; port?: number } = {}) {
+	const app = new Hono().basePath(basePath || "/");
 
-	//app.use("/*", serveStatic({ root: "./static" }));
+	console.log(`Path to static assets (dist): ${mydist}`);
 
 	app.use(secureHeaders());
 
@@ -35,6 +38,19 @@ export function createDomebaseServer({
 	return {
 		name: "my-plugin",
 		instance(domebase: any) {
+			const root = resolve(".");
+			const jo = join(".", "web");
+			console.log(`Root directory: ${root}`);
+			console.log(`JOIN directory: ${jo}`);
+
+			app.use(
+				"/web/*",
+				serveStatic({
+					root: "./web",
+					rewriteRequestPath: (path) => path.replace(/^\/web/, ""),
+				}),
+			);
+
 			/**
 			 * API
 			 */
@@ -52,7 +68,7 @@ export function createDomebaseServer({
 					return c.json(colls);
 				});
 
-			serve({ port, fetch: app.fetch });
+			serve({ port: port || 8787, fetch: app.fetch });
 			return { app, routes };
 		},
 	};

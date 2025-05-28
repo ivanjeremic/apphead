@@ -33,8 +33,7 @@ export default defineConfig(({ mode }) => {
 
 						getPort({ port: 8787 }).then((port) => {
 							new Domebase({
-								driver: driverNode({ path: ".datadome" }),
-								path: ".domebase",
+								driver: driverNode(),
 								plugins: [
 									createDomebaseServer({
 										basePath: isDev ? "/" : "/api",

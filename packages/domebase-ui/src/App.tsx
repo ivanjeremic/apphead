@@ -14,6 +14,15 @@ import {
 	SidebarTrigger,
 } from "@/components/ui/sidebar";
 
+/**
+ 
+export async function loader({ context }: Route.LoaderArgs) {
+	const colls = await domebase.query({ collection: "__collections" });
+
+	return colls;
+}
+ */
+
 export function App() {
 	return (
 		<SidebarProvider>

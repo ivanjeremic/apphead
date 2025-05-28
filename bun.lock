@@ -19,7 +19,10 @@
     "distros/domebase-node": {
       "name": "domebase-node",
       "dependencies": {
+        "@domebase/driver-node": "workspace:*",
+        "@domebase/plugin-backend": "workspace:*",
         "@hono/node-server": "^1.14.3",
+        "domebase": "workspace:*",
         "hono": "^4.7.10",
       },
       "devDependencies": {
@@ -72,14 +75,11 @@
         "unstorage": "^1.15.0",
       },
     },
-    "packages/domebase-plugin-auth": {
-      "name": "@domebase/auth",
-      "version": "1.0.0",
-    },
     "packages/domebase-plugin-backend": {
       "name": "@domebase/plugin-backend",
       "version": "0.0.1",
       "dependencies": {
+        "@domebase/ui": "workspace:*",
         "@hono/node-server": "^1.14.1",
         "hono": "^4.7.10",
         "iovalkey": "^0.3.1",
@@ -232,8 +232,6 @@
     "@cspotcode/source-map-support": ["@cspotcode/source-map-support@0.8.1", "", { "dependencies": { "@jridgewell/trace-mapping": "0.3.9" } }, "sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw=="],
 
     "@ctrl/tinycolor": ["@ctrl/tinycolor@4.1.0", "", {}, "sha512-WyOx8cJQ+FQus4Mm4uPIZA64gbk3Wxh0so5Lcii0aJifqwoVOlfFtorjLE0Hen4OYyHZMXDWqMmaQemBhgxFRQ=="],
-
-    "@domebase/auth": ["@domebase/auth@workspace:packages/domebase-plugin-auth"],
 
     "@domebase/driver-node": ["@domebase/driver-node@workspace:packages/domebase-driver-node"],
 

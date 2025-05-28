@@ -18,7 +18,6 @@ type PluginFunction<T> = {
 
 interface DomebaseOptions<T> {
 	driver?: Driver<unknown, unknown>;
-	path?: string;
 	plugins?: PluginFunction<T>[];
 }
 
@@ -26,7 +25,7 @@ interface DomebaseOptions<T> {
  * DomeDB class
  */
 export class Domebase {
-	path = "./data/";
+	path = ".domebase";
 	kv: Storage<StorageValue>;
 	user: string;
 	plugin = new Map();
@@ -35,10 +34,6 @@ export class Domebase {
 		for (const fn of ngin.plugins ?? []) {
 			const res = fn;
 			this.plugin.set(res.name, res.instance(this));
-		}
-
-		if (ngin.path) {
-			this.path = ngin.path;
 		}
 
 		this.kv = initDomeDB(

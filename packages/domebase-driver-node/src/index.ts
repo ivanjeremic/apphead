@@ -2,21 +2,13 @@ import { defineDriver } from "unstorage";
 import { open } from "lmdb";
 import type { Database } from "lmdb";
 
-export interface LmdbOptions {
-	/**
-	 * The file path for the LMDB database.
-	 * @default "./data"
-	 */
-	path?: string;
-}
-
 interface CLIENT_OPTS {
 	lmdb_path?: string;
 }
 
 const DRIVER_NAME = "lmdb";
 
-export default defineDriver((opts: LmdbOptions) => {
+export default defineDriver((opts?: { path: string }) => {
 	// Lazy initialization of LMDB instance
 	/* const getDbInstance = (client_opts?: RootDatabaseOptionsWithPath) => {
     if (!db) {
@@ -29,7 +21,9 @@ export default defineDriver((opts: LmdbOptions) => {
 	let currentPath: string | null = null;
 
 	const getDbInstance = (client_opts?: CLIENT_OPTS): Database => {
-		const newPath = client_opts ? client_opts.lmdb_path : opts.path;
+		const newPath = client_opts
+			? client_opts.lmdb_path
+			: opts?.path || "./data";
 
 		if (!db || currentPath !== newPath) {
 			db = open({ path: newPath || "./data" });

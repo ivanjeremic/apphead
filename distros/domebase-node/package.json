@@ -4,11 +4,14 @@
 	"scripts": {
 		"dev": "tsx watch src/index.ts",
 		"build": "tsc",
-		"start": "node dist/index.js"
+		"start": "bun run src/index.ts"
 	},
 	"dependencies": {
 		"@hono/node-server": "^1.14.3",
-		"hono": "^4.7.10"
+		"hono": "^4.7.10",
+		"domebase": "workspace:*",
+		"@domebase/driver-node": "workspace:*",
+		"@domebase/plugin-backend": "workspace:*",
 	},
 	"devDependencies": {
 		"@types/node": "^20.11.17",
