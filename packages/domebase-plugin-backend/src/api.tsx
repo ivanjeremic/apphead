@@ -6,8 +6,10 @@ import { prettyJSON } from "hono/pretty-json";
 /* import { serveStatic } from "@hono/node-server/serve-static"; */
 import { serve } from "@hono/node-server";
 
-export function createDomebaseServer() {
-	const app = new Hono();
+export function createDomebaseServer({
+	basePath = "/",
+}: { basePath?: string } = {}) {
+	const app = new Hono().basePath(basePath);
 
 	//app.use("/*", serveStatic({ root: "./static" }));
 

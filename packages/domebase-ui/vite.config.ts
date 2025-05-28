@@ -6,28 +6,36 @@ import { createDomebaseServer } from "@domebase/plugin-backend";
 import driverNode from "@domebase/driver-node";
 
 // https://vite.dev/config/
-export default defineConfig({
-	plugins: [
-		react(),
-		{
-			name: "my-back",
-			configureServer(server) {
-				server.httpServer?.once("listening", () => {
-					const address = server.httpServer?.address();
-					const clientPort = typeof address === "object" && address?.port;
+export default defineConfig(({ mode }) => {
+	const isDev = mode === "development";
+	return {
+		plugins: [
+			react(),
+			{
+				name: "my-back",
+				configureServer(server) {
+					server.httpServer?.once("listening", () => {
+						const address = server.httpServer?.address();
+						const clientPort = typeof address === "object" && address?.port;
 
-					new Domebase({
-						driver: driverNode({ path: ".datadome" }),
-						path: ".domebase",
-						plugins: [createDomebaseServer()],
+						new Domebase({
+							driver: driverNode({ path: ".datadome" }),
+							path: ".domebase",
+							plugins: [
+								createDomebaseServer({ basePath: isDev ? "/" : "/api" }),
+							],
+						});
+
+						createDevServer({
+							apiPort: 8787,
+							frontendPort: Number(clientPort),
+						});
+
+						console.log(`Vite is running on port: ${clientPort}`);
+						console.log(`Server is running on port: ${8787}`);
 					});
-
-					createDevServer({ apiPort: 8787, frontendPort: Number(clientPort) });
-
-					console.log(`Vite is running on port: ${clientPort}`);
-					console.log(`Server is running on port: ${8787}`);
-				});
+				},
 			},
-		},
-	],
+		],
+	};
 });
