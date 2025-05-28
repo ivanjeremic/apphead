@@ -4,10 +4,13 @@
 	"type": "module",
 	"main": "src/index.ts",
 	"author": "Ivan Jeremic",
+	"license": "MIT",
+	"description": "Domebase backend plugin for Node.js",
+	"exports": {
+		".": "./dist/index.js"
+	},
 	"scripts": {
-		"dev": "tsx watch src/index.tsx",
-		"build": "tsc",
-		"start": "node dist/index.js"
+		"build": "bun build src/index.ts --outdir dist --target node"
 	},
 	"dependencies": {
 		"@hono/node-server": "^1.14.1",

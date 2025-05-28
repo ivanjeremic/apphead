@@ -1,10 +1,9 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import { createDevServer } from "caddy-dev-server";
-import { Hono } from "hono";
-import { serve } from "@hono/node-server";
-
-// Utility to convert Web ReadableStream to Node.js Readable
+import { Domebase } from "domebase";
+import { createDomebaseServer } from "@domebase/plugin-backend";
+import driverNode from "@domebase/driver-node";
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -17,16 +16,10 @@ export default defineConfig({
 					const address = server.httpServer?.address();
 					const clientPort = typeof address === "object" && address?.port;
 
-					// APP
-					const app = new Hono();
-
-					app.get("/", (c) => {
-						return c.text("Hello from Hono!");
-					});
-
-					serve({
-						fetch: app.fetch,
-						port: 8787,
+					new Domebase({
+						driver: driverNode({ path: ".datadome" }),
+						path: ".domebase",
+						plugins: [createDomebaseServer()],
 					});
 
 					createDevServer({ apiPort: 8787, frontendPort: Number(clientPort) });

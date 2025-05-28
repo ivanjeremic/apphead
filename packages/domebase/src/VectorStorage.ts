@@ -1,10 +1,13 @@
-import type { ICreateEmbeddingResponse } from "./utils/ICreateEmbeddingResponse";
+import type { ICreateEmbeddingResponse } from "./utils/ICreateEmbeddingResponse.js";
 import { type IDBPDatabase, openDB } from "idb";
-import type { IVSDocument, IVSSimilaritySearchItem } from "./utils/IVSDocument";
-import type { IVSOptions } from "./utils/IVSOptions";
-import type { IVSSimilaritySearchParams } from "./utils/IVSSimilaritySearchParams";
-import { constants } from "./utils/constants";
-import { filterDocuments, getObjectSizeInMB } from "./utils/helpers";
+import type {
+	IVSDocument,
+	IVSSimilaritySearchItem,
+} from "./utils/IVSDocument.js";
+import type { IVSOptions } from "./utils/IVSOptions.js";
+import type { IVSSimilaritySearchParams } from "./utils/IVSSimilaritySearchParams.js";
+import { constants } from "./utils/constants.js";
+import { filterDocuments, getObjectSizeInMB } from "./utils/helpers.js";
 
 export class VectorStorage<T> {
 	private db!: IDBPDatabase<any>;

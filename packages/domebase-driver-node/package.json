@@ -5,6 +5,12 @@
 	"type": "module",
 	"keywords": [],
 	"author": "Ivan Jeremic",
+	"exports": {
+		".": "./dist/index.js"
+	},
+	"scripts": {
+		"build": "bun build src/index.ts --outdir dist --target node --external lmdb"
+	},
 	"license": "MIT",
 	"description": "",
 	"dependencies": {

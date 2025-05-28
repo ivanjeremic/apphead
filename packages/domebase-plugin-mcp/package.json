@@ -1,5 +1,5 @@
 {
-	"name": "@domebase/plugin-ecommerce",
+	"name": "@domebase/plugin-mcp",
 	"version": "1.0.0",
 	"main": "index.js",
 	"scripts": {
@@ -8,5 +8,8 @@
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
-	"description": ""
+	"description": "",
+	"dependencies": {
+		"@modelcontextprotocol/sdk": "^1.12.0"
+	}
 }

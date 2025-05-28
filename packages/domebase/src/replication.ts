@@ -1,5 +1,5 @@
 // write local browser compatible code
-export async function replicate(op, key, buffer, type = "Car") {
+export async function replicate(_op, _key, _buffer, _type = "Car") {
 	/* await redis.xadd(
 		"replication_stream",
 		"*",

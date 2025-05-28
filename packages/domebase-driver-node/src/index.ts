@@ -1,6 +1,6 @@
 import { defineDriver } from "unstorage";
 import { open } from "lmdb";
-import type { Database, RootDatabaseOptionsWithPath } from "lmdb";
+import type { Database } from "lmdb";
 
 export interface LmdbOptions {
 	/**
