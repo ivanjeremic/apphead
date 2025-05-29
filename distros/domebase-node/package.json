@@ -11,7 +11,7 @@
 		"hono": "^4.7.10",
 		"domebase": "workspace:*",
 		"@domebase/driver-node": "workspace:*",
-		"@domebase/plugin-backend": "workspace:*",
+		"@domebase/plugin-backend": "workspace:*"
 	},
 	"devDependencies": {
 		"@types/node": "^20.11.17",

@@ -6,7 +6,7 @@ import { App } from "./App";
 
 const router = createBrowserRouter([
 	{
-		path: "/",
+		path: "/domebase",
 		element: <App />,
 	},
 ]);

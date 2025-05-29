@@ -1,0 +1,6 @@
+packages:
+  - packages/*
+  - distros/*
+  - docs
+overrides:
+  caddy-dev-server: link:../.local/share/pnpm/global/5/node_modules/caddy-dev-server

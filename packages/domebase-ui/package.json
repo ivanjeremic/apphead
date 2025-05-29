@@ -3,10 +3,11 @@
 	"version": "0.0.0",
 	"type": "module",
 	"exports": {
-		"./dist/": "./dist/",
-		"./getDistPath": "./get-dist-path.ts"
+		"./dist/": "./dist/"
 	},
-	"files": ["dist", "get-dist-path.ts"],
+	"files": [
+		"dist"
+	],
 	"scripts": {
 		"dev": "vite",
 		"build": "tsc -b && vite build",
@@ -26,7 +27,6 @@
 		"@radix-ui/react-tooltip": "^1.2.7",
 		"@tailwindcss/vite": "^4.1.8",
 		"@types/bun": "^1.2.14",
-		"caddy-dev-server": "link:caddy-dev-server",
 		"class-variance-authority": "^0.7.1",
 		"clsx": "^2.1.1",
 		"domebase": "workspace:*",

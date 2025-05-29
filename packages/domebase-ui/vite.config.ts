@@ -14,7 +14,9 @@ import path from "node:path";
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
 	const isDev = mode === "development";
+	console.log("__dirname__dirname", __dirname);
 	return {
+		base: "/domebase/",
 		logLevel: "silent",
 		resolve: {
 			alias: {
@@ -42,9 +44,32 @@ export default defineConfig(({ mode }) => {
 								],
 							});
 
-							createDevServer({
-								apiPort: port,
-								frontendPort: Number(clientPort),
+							getPort().then((adminPort) => {
+								createDevServer({
+									caddyfile: `
+	{
+		admin localhost:${adminPort}
+	}
+	
+	:3002 {
+		redir /domebase /domebase/
+		redir /domebase/api /domebase/api/
+	
+		handle_path /domebase/api/* {
+		reverse_proxy localhost:${port} {
+    		header_up Host {host}
+    }
+	}
+
+	 @frontend not path /domebase/api/*
+		handle /domebase* {
+			reverse_proxy localhost:${clientPort} {
+    		header_up Host {host}
+    }
+	}
+	}
+	`,
+								});
 							});
 						});
 					});

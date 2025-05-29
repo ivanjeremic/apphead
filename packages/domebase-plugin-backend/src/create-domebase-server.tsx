@@ -5,7 +5,7 @@ import { trimTrailingSlash } from "hono/trailing-slash";
 import { prettyJSON } from "hono/pretty-json";
 import { serveStatic } from "@hono/node-server/serve-static";
 import { serve } from "@hono/node-server";
-import mydist from "@domebase/ui/dist" with { type: "url" };
+/* import ui from "@domebase/ui" with { type: "url" }; */
 import { resolve, join } from "node:path";
 // Convert the URL to a file path
 
@@ -15,7 +15,7 @@ export function createDomebaseServer({
 }: { basePath?: string; port?: number } = {}) {
 	const app = new Hono().basePath(basePath || "/");
 
-	console.log(`Path to static assets (dist): ${mydist}`);
+	/* console.log(`Path to static assets (dist): ${ui}`); */
 
 	app.use(secureHeaders());
 
@@ -38,16 +38,16 @@ export function createDomebaseServer({
 	return {
 		name: "my-plugin",
 		instance(domebase: any) {
-			const root = resolve(".");
+			const root = resolve(".", "web");
 			const jo = join(".", "web");
 			console.log(`Root directory: ${root}`);
 			console.log(`JOIN directory: ${jo}`);
 
 			app.use(
-				"/web/*",
+				"/dist/*",
 				serveStatic({
-					root: "./web",
-					rewriteRequestPath: (path) => path.replace(/^\/web/, ""),
+					root: "./dist",
+					rewriteRequestPath: (path) => path.replace(/^\/dist/, ""),
 				}),
 			);
 
