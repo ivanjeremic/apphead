@@ -38,7 +38,7 @@ export default defineConfig(({ mode }) => {
 								driver: driverNode(),
 								plugins: [
 									createDomebaseServer({
-										basePath: isDev ? "/" : "/api",
+										/* basePath: isDev ? "/" : "/api", */
 										port,
 									}),
 								],

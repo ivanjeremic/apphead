@@ -6,8 +6,6 @@ import { prettyJSON } from "hono/pretty-json";
 import { serveStatic } from "@hono/node-server/serve-static";
 import { serve } from "@hono/node-server";
 /* import ui from "@domebase/ui" with { type: "url" }; */
-import { resolve, join } from "node:path";
-// Convert the URL to a file path
 
 export function createDomebaseServer({
 	basePath,
@@ -20,7 +18,7 @@ export function createDomebaseServer({
 	app.use(secureHeaders());
 
 	app.use(
-		"/api/*",
+		"/domebase/*",
 		cors({
 			origin: ["https://example.com", "https://example.org"],
 			allowHeaders: ["X-Custom-Header", "Upgrade-Insecure-Requests"],
@@ -38,11 +36,6 @@ export function createDomebaseServer({
 	return {
 		name: "my-plugin",
 		instance(domebase: any) {
-			const root = resolve(".", "web");
-			const jo = join(".", "web");
-			console.log(`Root directory: ${root}`);
-			console.log(`JOIN directory: ${jo}`);
-
 			app.use(
 				"/dist/*",
 				serveStatic({
