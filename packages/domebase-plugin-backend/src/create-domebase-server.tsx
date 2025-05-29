@@ -38,7 +38,7 @@ export function createDomebaseServer({
 		name: "my-plugin",
 		instance(domebase: any) {
 			/**
-			 * API
+			 * Domebase-API
 			 */
 			const routes = app
 				.get("/books", async (c) => {
@@ -63,14 +63,23 @@ export function createDomebaseServer({
 				}),
 			);
 
-			// serve webapp with proxy if it is a fullstack app
+			// serve website if it is static and not a fullstack app
 			app.all("*", async (c) => {
+				const serveStaticThisRequest = false;
+
+				if (serveStaticThisRequest) {
+					return serveStatic({ root: "./statics", index: "index.html" })(
+						c,
+						async () => {},
+					);
+				}
+
+				// if it is a fullstack app, proxy the request to the backend server
 				const url = new URL(c.req.url);
 				const targetUrl = `http://localhost:3000${url.pathname}${url.search}`;
 				return await proxy(targetUrl, c.req.raw);
 			});
 
-			// else serve website if it is static and not a fullstack app
 			//@TODO: check if it is a fullstack app
 
 			serve({ port: port || 8787, fetch: app.fetch });
