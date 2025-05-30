@@ -6,19 +6,18 @@ import { prettyJSON } from "hono/pretty-json";
 import { serveStatic } from "@hono/node-server/serve-static";
 import { serve } from "@hono/node-server";
 import { proxy } from "hono/proxy";
-/* import ui from "@domebase/ui" with { type: "url" }; */
 
 export function createDomebaseServer({
-	basePath,
+	uiPath,
 	port,
-}: { basePath?: string; port?: number } = {}) {
-	const app = new Hono().basePath(basePath || "/");
+}: { uiPath?: string; port?: number } = {}) {
+	const app = new Hono();
 
-	/* console.log(`Path to static assets (dist): ${ui}`); */
+	console.log("uiPath", uiPath);
 
 	app.use(secureHeaders());
 
-	app.use(
+	/* app.use(
 		"/domebase/*",
 		cors({
 			origin: ["https://example.com", "https://example.org"],
@@ -28,11 +27,19 @@ export function createDomebaseServer({
 			maxAge: 600,
 			credentials: true,
 		}),
-	);
+	); */
 
 	app.use(trimTrailingSlash());
 
 	app.use(prettyJSON());
+
+	// serve domebase-ui
+	app.get(
+		"/dome/*",
+		serveStatic({
+			root: "./ui",
+		}),
+	);
 
 	return {
 		name: "my-plugin",
@@ -40,32 +47,18 @@ export function createDomebaseServer({
 			/**
 			 * Domebase-API
 			 */
-			const routes = app
-				.get("/books", async (c) => {
-					const colls = await domebase.query({ collection: "__collections" });
-					return c.json(colls);
-				})
-				.get("/v1/query", async (c) => {
-					const colls = await domebase.query({ collection: "__collections" });
-					return c.json(colls);
-				});
+			app.get("/api/books", async (c) => {
+				const colls = await domebase.query({ collection: "__collections" });
+				return c.json(colls);
+			});
 
 			/**
 			 * Handle Websites & Webapps
 			 */
 
-			// serve domebase-ui
-			app.use(
-				"/dist/*",
-				serveStatic({
-					root: "./dist",
-					rewriteRequestPath: (path) => path.replace(/^\/dist/, ""),
-				}),
-			);
-
 			// serve website if it is static and not a fullstack app
-			app.all("*", async (c) => {
-				const serveStaticThisRequest = false;
+			app.all("/", async (c) => {
+				const serveStaticThisRequest = true;
 
 				if (serveStaticThisRequest) {
 					return serveStatic({ root: "./statics", index: "index.html" })(
@@ -83,7 +76,6 @@ export function createDomebaseServer({
 			//@TODO: check if it is a fullstack app
 
 			serve({ port: port || 8787, fetch: app.fetch });
-			return { app, routes };
 		},
 	};
 }

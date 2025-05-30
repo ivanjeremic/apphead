@@ -54,19 +54,19 @@ export default defineConfig(({ mode }) => {
 	:3002 {
 		redir /domebase /domebase/
 		redir /domebase/api /domebase/api/
-	
-		handle_path /domebase/api/* {
+
+		handle /domebase/api/* {
 		reverse_proxy localhost:${port} {
     		header_up Host {host}
     }
 	}
 
 	 @frontend not path /domebase/api/*
-		handle /domebase* {
-			reverse_proxy localhost:${clientPort} {
-    		header_up Host {host}
-    }
-	}
+	 handle /domebase* {
+		 reverse_proxy localhost:${clientPort} {
+			 header_up Host {host}
+			}
+		}
 	}
 	`,
 								});
