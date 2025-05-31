@@ -12,9 +12,7 @@ import getPort from "get-port";
 import path from "node:path";
 
 // https://vite.dev/config/
-export default defineConfig(({ mode }) => {
-	const isDev = mode === "development";
-	console.log("__dirname__dirname", __dirname);
+export default defineConfig(() => {
 	return {
 		base: "/domebase/",
 		logLevel: "silent",

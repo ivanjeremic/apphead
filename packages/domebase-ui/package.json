@@ -24,18 +24,19 @@
 		"@radix-ui/react-slot": "^1.2.3",
 		"@radix-ui/react-tooltip": "^1.2.7",
 		"@tailwindcss/vite": "^4.1.8",
-		"@types/bun": "^1.2.14",
+		"caddy-dev-server": "link:caddy-dev-server",
 		"class-variance-authority": "^0.7.1",
 		"clsx": "^2.1.1",
-		"caddy-dev-server": "link:caddy-dev-server",
 		"domebase": "workspace:*",
 		"hono": "^4.7.10",
+		"idb-keyval": "^6.2.2",
 		"lucide-react": "^0.511.0",
 		"react": "^19.1.0",
 		"react-dom": "^19.1.0",
 		"react-router": "^7.6.1",
 		"tailwind-merge": "^3.3.0",
-		"tailwindcss": "^4.1.8"
+		"tailwindcss": "^4.1.8",
+		"unstorage": "^1.16.0"
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.25.0",

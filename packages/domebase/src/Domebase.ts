@@ -7,7 +7,7 @@ import {
 	type StorageValue,
 	type Driver,
 } from "./storage.js";
-import { nanoid } from "nanoid";
+import { nanoid } from "nanoid/non-secure";
 import { checkErrors } from "./utils/errors.js";
 import { join } from "pathe";
 
@@ -112,6 +112,7 @@ export class Domebase {
 		filter?: unknown;
 		options?: unknown;
 	}): Promise<unknown> {
+		const driverWebStorage = false;
 		/* const collectionExists = await this.kv.hasItem(collection, {
       path: join(this.path, "__collections"),
     });
@@ -126,6 +127,16 @@ export class Domebase {
     if (hasErrors) {
       return { hasErrors, errorList };
     } */
+
+		if (driverWebStorage) {
+			const res = await fetch("/domebase/api/books");
+
+			const data = await res.json();
+
+			console.log("data", data);
+			return data;
+		}
+
 		const cleanPath = collection.startsWith("__")
 			? collection
 			: `${this.user}/${collection}`;
