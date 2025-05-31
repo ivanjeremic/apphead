@@ -5,9 +5,7 @@
 	"exports": {
 		"./dist/": "./dist/"
 	},
-	"files": [
-		"dist"
-	],
+	"files": ["dist"],
 	"scripts": {
 		"dev": "vite",
 		"build": "tsc -b && vite build",
@@ -29,6 +27,7 @@
 		"@types/bun": "^1.2.14",
 		"class-variance-authority": "^0.7.1",
 		"clsx": "^2.1.1",
+		"caddy-dev-server": "link:caddy-dev-server",
 		"domebase": "workspace:*",
 		"hono": "^4.7.10",
 		"lucide-react": "^0.511.0",

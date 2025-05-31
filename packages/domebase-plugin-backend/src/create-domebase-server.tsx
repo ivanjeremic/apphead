@@ -17,7 +17,7 @@ export function createDomebaseServer({
 
 	app.use(secureHeaders());
 
-	/* app.use(
+	app.use(
 		"/domebase/*",
 		cors({
 			origin: ["https://example.com", "https://example.org"],
@@ -27,7 +27,7 @@ export function createDomebaseServer({
 			maxAge: 600,
 			credentials: true,
 		}),
-	); */
+	);
 
 	app.use(trimTrailingSlash());
 
@@ -49,7 +49,7 @@ export function createDomebaseServer({
 			/**
 			 * Domebase-API
 			 */
-			app.get("/api/books", async (c) => {
+			app.get("/domebase/api/books", async (c) => {
 				const colls = await domebase.query({ collection: "__collections" });
 				return c.json(colls);
 			});
