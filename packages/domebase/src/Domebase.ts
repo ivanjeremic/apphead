@@ -17,6 +17,7 @@ type PluginFunction<T> = {
 };
 
 interface DomebaseOptions<T> {
+	baseURL?: string;
 	driver?: Driver<unknown, unknown>;
 	plugins?: PluginFunction<T>[];
 }
@@ -29,8 +30,13 @@ export class Domebase {
 	kv: Storage<StorageValue>;
 	user: string;
 	plugin = new Map();
+	baseURL: string;
 
 	constructor(ngin: DomebaseOptions<Domebase>) {
+		if (ngin.baseURL) {
+			this.baseURL = ngin.baseURL;
+		}
+
 		for (const fn of ngin.plugins ?? []) {
 			const res = fn;
 			this.plugin.set(res.name, res.instance(this));
@@ -112,7 +118,6 @@ export class Domebase {
 		filter?: unknown;
 		options?: unknown;
 	}): Promise<unknown> {
-		const driverWebStorage = false;
 		/* const collectionExists = await this.kv.hasItem(collection, {
       path: join(this.path, "__collections"),
     });
@@ -128,12 +133,11 @@ export class Domebase {
       return { hasErrors, errorList };
     } */
 
-		if (driverWebStorage) {
+		if (this.baseURL === "/") {
 			const res = await fetch("/domebase/api/books");
 
 			const data = await res.json();
 
-			console.log("data", data);
 			return data;
 		}
 

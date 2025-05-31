@@ -8,6 +8,7 @@ import indexedDbDriver from "unstorage/drivers/indexedb";
 import "./index.css";
 
 export const domebase = new Domebase({
+	baseURL: "/",
 	driver: indexedDbDriver({ base: ".domebase" }),
 });
 
@@ -23,14 +24,14 @@ const router = createBrowserRouter([
 			{
 				path: "collections",
 				loader: async () => {
-					//const colls = await domebase.query({ collection: "__collections" });
+					const data = await domebase.query({ collection: "__collections" });
 
 					// Fetching collections from the API
-					const res = await fetch("http://localhost:3002/domebase/api/books");
+					/* const res = await fetch("/domebase/api/books");
 
 					const data = await res.json();
 
-					console.log("data", data);
+					console.log("data", data); */
 					return data;
 				},
 				Component: CollectionsPage,
