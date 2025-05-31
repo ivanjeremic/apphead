@@ -33,11 +33,13 @@ export function createDomebaseServer({
 
 	app.use(prettyJSON());
 
-	// serve domebase-ui
+	// serve domebase ui
+	// @TODO do this only in PROD else serve the ui from the vite dev server
 	app.get(
-		"/dome/*",
+		"/domebase/*",
 		serveStatic({
-			root: "./ui",
+			root: "./",
+			rewriteRequestPath: (path) => path.replace(/^\/domebase/, "/ui"),
 		}),
 	);
 
