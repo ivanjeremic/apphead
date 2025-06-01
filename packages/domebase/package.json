@@ -10,15 +10,22 @@
 	"exports": {
 		".": "./dist/index.js"
 	},
+	"types": "./dist/index.d.ts",
 	"scripts": {
-		"build": "bun build src/index.ts --outdir dist --target node"
+		"build": "bun build src/index.ts --outdir dist --target browser --minify && bun run build:types",
+		"build:types": "bun tsc --project tsconfig.json"
 	},
 	"dependencies": {
 		"nanoid": "^5.1.3",
 		"pathe": "^2.0.3",
+		"protobufjs": "^7.5.3",
 		"seroval": "^1.1.1",
 		"sift": "^17.1.3",
 		"unstorage": "^1.10.2",
 		"zod": "^3.23.8"
+	},
+	"devDependencies": {
+		"@types/bun": "latest",
+		"typescript": "^5.8.3"
 	}
 }

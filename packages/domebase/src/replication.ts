@@ -1,5 +1,10 @@
 // write local browser compatible code
-export async function replicate(_op, _key, _buffer, _type = "Car") {
+export async function replicate(
+	_op: any,
+	_key: any,
+	_buffer: any,
+	_type = "Car",
+) {
 	/* await redis.xadd(
 		"replication_stream",
 		"*",
@@ -43,8 +48,8 @@ export async function consumeStream(/* fromId = "0-0", schemaMap */) {
 	} */
 }
 
-function parseStreamFields(arr) {
-	const obj = {};
+function parseStreamFields(arr: string | any[]) {
+	const obj: { [key: string]: any } = {};
 	for (let i = 0; i < arr.length; i += 2) {
 		obj[arr[i]] = arr[i + 1];
 	}

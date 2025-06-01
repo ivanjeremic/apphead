@@ -6,12 +6,12 @@ import protobuf from "protobufjs";
  * @param {Array} fields - The schema definition array.
  * @returns {protobuf.Type} - The generated Protobuf Type.
  */
-export function createSchema(name, fields) {
-  const messageType = new protobuf.Type(name);
+export function createSchema(name: any, fields: any[]) {
+	const messageType = new protobuf.Type(name);
 
-  fields.forEach((field) => {
-    messageType.add(new protobuf.Field(field.field, field.index, field.type));
-  });
+	for (const field of fields) {
+		messageType.add(new protobuf.Field(field.field, field.index, field.type));
+	}
 
-  return messageType;
+	return messageType;
 }

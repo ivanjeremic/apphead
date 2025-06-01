@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist",          // Should match your bun build --outdir
+    "declaration": true,         // Crucial: Enables generation of .d.ts files
+    "declarationDir": "./dist",  // Optional: Specify where to put the .d.ts files
+    "emitDeclarationOnly": false, // Optional: Set to true if you only want types and not JS
+    "module": "NodeNext",          // Or your preferred module system (commonjs, etc.)
+    "target": "ESNext",          // Or your preferred target
+    "strict": true,              // Recommended for better type safety
+    "skipLibCheck": true
+  },
+  "include": [
+    "src/**/*.ts"                // Include your source files
+  ],
+}

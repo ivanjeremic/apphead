@@ -7,7 +7,7 @@ import {
 	type StorageValue,
 	type Driver,
 } from "./storage.js";
-import { nanoid } from "nanoid/non-secure";
+import { nanoid } from "nanoid";
 import { checkErrors } from "./utils/errors.js";
 import { join } from "pathe";
 
@@ -28,9 +28,9 @@ interface DomebaseOptions<T> {
 export class Domebase {
 	path = ".domebase";
 	kv: Storage<StorageValue>;
-	user: string;
+	user = "";
 	plugin = new Map();
-	baseURL: string;
+	baseURL = "";
 
 	constructor(ngin: DomebaseOptions<Domebase>) {
 		if (ngin.baseURL) {

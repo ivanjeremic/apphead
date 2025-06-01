@@ -6,7 +6,7 @@ import {
 	type CreateStorageOptions,
 } from "unstorage";
 import { join } from "pathe";
-import { nanoid } from "nanoid/non-secure";
+import { nanoid } from "nanoid";
 import { checkErrors } from "./utils/errors.js";
 
 /**
