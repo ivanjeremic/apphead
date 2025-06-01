@@ -61,7 +61,7 @@ export function createDomebaseServer({
 				const serveStaticThisRequest = true;
 
 				if (serveStaticThisRequest) {
-					return serveStatic({ root: "./statics", index: "index.html" })(
+					return serveStatic({ root: "./templates", index: "index.html" })(
 						c,
 						async () => {},
 					);
