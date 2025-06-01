@@ -27,7 +27,7 @@ export function NavMain({
 }) {
 	return (
 		<SidebarGroup>
-			<SidebarGroupLabel>Platform</SidebarGroupLabel>
+			<SidebarGroupLabel>Domebase</SidebarGroupLabel>
 			<SidebarMenu>
 				{items.map((item) => (
 					<SidebarMenuItem key={item.title}>

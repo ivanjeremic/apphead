@@ -82,17 +82,17 @@ const data = {
 	],
 	projects: [
 		{
-			name: "Design Engineering",
+			name: "Plugin Marketplace",
 			url: "#",
 			icon: Frame,
 		},
 		{
-			name: "Sales & Marketing",
+			name: "Theme Marketplace",
 			url: "#",
 			icon: PieChart,
 		},
 		{
-			name: "Travel",
+			name: "Documentation",
 			url: "#",
 			icon: MapIcon,
 		},
