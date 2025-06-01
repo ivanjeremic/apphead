@@ -26,12 +26,6 @@ const router = createBrowserRouter([
 				loader: async () => {
 					const data = await domebase.query({ collection: "__collections" });
 
-					// Fetching collections from the API
-					/* const res = await fetch("/domebase/api/books");
-
-					const data = await res.json();
-
-					console.log("data", data); */
 					return data;
 				},
 				Component: CollectionsPage,
