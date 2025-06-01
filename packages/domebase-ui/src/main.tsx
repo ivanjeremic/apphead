@@ -6,33 +6,64 @@ import { CollectionsPage } from "./pages/CollectionsPage";
 import { Domebase } from "domebase";
 import indexedDbDriver from "unstorage/drivers/indexedb";
 import "./index.css";
+import { HomePage } from "./pages/HomePage";
+import { FunctionsPage } from "./pages/FunctionsPage";
+import { ThemeEditorPage } from "./pages/ThemeEditorPage";
+import { UsersPage } from "./pages/UsersPage";
 
 export const domebase = new Domebase({
 	baseURL: "/",
 	driver: indexedDbDriver({ base: ".domebase" }),
 });
 
-const router = createBrowserRouter([
-	{
-		path: "/domebase",
-		Component: HomeLayout,
-		children: [
-			{
-				index: true,
-				element: <h1>Home</h1>,
-			},
-			{
-				path: "collections",
-				loader: async () => {
-					const data = await domebase.query({ collection: "__collections" });
-
-					return data;
+const router = createBrowserRouter(
+	[
+		{
+			Component: HomeLayout,
+			children: [
+				{
+					index: true,
+					Component: HomePage,
 				},
-				Component: CollectionsPage,
-			},
-		],
+				{
+					path: "collections",
+					loader: async () => {
+						const data = await domebase.query({ collection: "__collections" });
+
+						return data;
+					},
+					Component: CollectionsPage,
+				},
+				{
+					path: "users",
+					loader: async () => {
+						/* const data = await domebase.query({ collection: "__collections" });
+
+						return data; */
+					},
+					Component: UsersPage,
+				},
+				{
+					path: "functions",
+					loader: async () => {
+						// Placeholder for future page loader
+					},
+					Component: FunctionsPage,
+				},
+				{
+					path: "website",
+					loader: async () => {
+						// Placeholder for future page loader
+					},
+					Component: ThemeEditorPage,
+				},
+			],
+		},
+	],
+	{
+		basename: "/domebase",
 	},
-]);
+);
 
 // biome-ignore lint/style/noNonNullAssertion: <explanation>
 createRoot(document.getElementById("root")!).render(

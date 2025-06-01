@@ -1,6 +1,6 @@
 import {
-	BookOpen,
-	Bot,
+	ChevronsLeftRightEllipsisIcon,
+	LayoutDashboard,
 	Command,
 	Frame,
 	LifeBuoy,
@@ -8,7 +8,13 @@ import {
 	PieChart,
 	Send,
 	Settings2,
-	SquareTerminal,
+	/* 	SquareTerminal, */
+	AppWindow,
+	ImagePlayIcon,
+	PlugIcon,
+	FunctionSquareIcon,
+	UsersRoundIcon,
+	DatabaseIcon,
 } from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
@@ -29,19 +35,44 @@ const data = {
 	navMain: [
 		{
 			title: "Dashboard",
-			url: "/domebase",
-			icon: SquareTerminal,
+			url: "/",
+			icon: LayoutDashboard,
 			isActive: true,
 		},
 		{
 			title: "Collections",
-			url: "/domebase/collections",
-			icon: Bot,
+			url: "/collections",
+			icon: DatabaseIcon,
+		},
+		{
+			title: "Users",
+			url: "/users",
+			icon: UsersRoundIcon,
+		},
+		{
+			title: "Media",
+			url: "#",
+			icon: ImagePlayIcon,
+		},
+		{
+			title: "Website",
+			url: "/website",
+			icon: AppWindow,
+		},
+		{
+			title: "Plugins",
+			url: "#",
+			icon: PlugIcon,
 		},
 		{
 			title: "Functions",
+			url: "/functions",
+			icon: FunctionSquareIcon,
+		},
+		{
+			title: "MCP",
 			url: "#",
-			icon: BookOpen,
+			icon: ChevronsLeftRightEllipsisIcon,
 		},
 		{
 			title: "Settings",

@@ -13,5 +13,8 @@
 	"bugs": "https://github.com/ivanjeremic/domebase/issues",
 	"devDependencies": {
 		"@types/bun": "^1.1.10"
+	},
+	"dependencies": {
+		"unstorage": "^1.16.0"
 	}
 }

@@ -53,7 +53,13 @@ export default defineConfig(() => {
 		redir /domebase /domebase/
 		redir /domebase/api /domebase/api/
 
-		handle /domebase/api/* {
+	handle / {
+		reverse_proxy localhost:${port} {
+    		header_up Host {host}
+    }
+	}
+	
+	handle /domebase/api/* {
 		reverse_proxy localhost:${port} {
     		header_up Host {host}
     }
