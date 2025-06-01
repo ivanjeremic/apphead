@@ -13,8 +13,6 @@ export function createDomebaseServer({
 }: { uiPath?: string; port?: number } = {}) {
 	const app = new Hono();
 
-	console.log("uiPath", uiPath);
-
 	app.use(secureHeaders());
 
 	app.use(
