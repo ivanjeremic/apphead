@@ -10,6 +10,7 @@ import { HomePage } from "./pages/HomePage";
 import { FunctionsPage } from "./pages/FunctionsPage";
 import { ThemeEditorPage } from "./pages/ThemeEditorPage";
 import { UsersPage } from "./pages/UsersPage";
+import { LoginPage } from "./pages/LoginPage";
 
 export const domebase = new Domebase({
 	baseURL: "/",
@@ -18,6 +19,10 @@ export const domebase = new Domebase({
 
 const router = createBrowserRouter(
 	[
+		{
+			path: "/login",
+			Component: LoginPage,
+		},
 		{
 			Component: HomeLayout,
 			children: [

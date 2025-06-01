@@ -96,6 +96,11 @@ const data = {
 			url: "#",
 			icon: MapIcon,
 		},
+		{
+			name: "Discord",
+			url: "#",
+			icon: MapIcon,
+		},
 	],
 	navSecondary: [
 		{
