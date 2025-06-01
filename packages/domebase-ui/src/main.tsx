@@ -11,6 +11,7 @@ import { FunctionsPage } from "./pages/FunctionsPage";
 import { ThemeEditorPage } from "./pages/ThemeEditorPage";
 import { UsersPage } from "./pages/UsersPage";
 import { LoginPage } from "./pages/LoginPage";
+import { PluginMarketplace } from "./pages/plugin-marketplace";
 
 export const domebase = new Domebase({
 	baseURL: "/",
@@ -61,6 +62,13 @@ const router = createBrowserRouter(
 						// Placeholder for future page loader
 					},
 					Component: ThemeEditorPage,
+				},
+				{
+					path: "plugin-marketplace",
+					loader: async () => {
+						// Placeholder for future page loader
+					},
+					Component: PluginMarketplace,
 				},
 			],
 		},

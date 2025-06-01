@@ -83,7 +83,7 @@ const data = {
 	projects: [
 		{
 			name: "Plugin Marketplace",
-			url: "#",
+			url: "plugin-marketplace",
 			icon: Frame,
 		},
 		{
