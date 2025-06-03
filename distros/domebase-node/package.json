@@ -2,16 +2,17 @@
 	"name": "domebase-node",
 	"type": "module",
 	"scripts": {
-		"dev": "tsx watch src/index.ts",
+		"dev": "cross-env NODE_ENV=production tsx watch src/index.ts",
 		"build": "tsc",
-		"start": "bun run src/index.ts"
+		"start": "cross-env NODE_ENV=production bun run src/index.ts"
 	},
 	"dependencies": {
-		"@hono/node-server": "^1.14.3",
-		"hono": "^4.7.10",
-		"domebase": "workspace:*",
 		"@domebase/driver-node": "workspace:*",
-		"@domebase/plugin-backend": "workspace:*"
+		"@domebase/plugin-backend": "workspace:*",
+		"@hono/node-server": "^1.14.3",
+		"cross-env": "^7.0.3",
+		"domebase": "workspace:*",
+		"hono": "^4.7.10"
 	},
 	"devDependencies": {
 		"@types/node": "^20.11.17",

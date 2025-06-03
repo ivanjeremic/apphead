@@ -1,5 +1,5 @@
-import { columns, type Payment } from "@/components/data-table/columns";
-import { DataTable } from "@/components/data-table/data-table";
+import { columns, type Payment } from "@/components/common/data-table/columns";
+import { DataTable } from "@/components/common/data-table/data-table";
 
 function getData(): Payment[] {
 	// Fetch data from your API here.

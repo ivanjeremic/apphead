@@ -1,17 +1,18 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router";
-import { HomeLayout } from "./layouts/HomeLayout";
 import { CollectionsPage } from "./pages/CollectionsPage";
 import { Domebase } from "domebase";
 import indexedDbDriver from "unstorage/drivers/indexedb";
-import "./index.css";
 import { HomePage } from "./pages/HomePage";
 import { FunctionsPage } from "./pages/FunctionsPage";
 import { ThemeEditorPage } from "./pages/ThemeEditorPage";
 import { UsersPage } from "./pages/UsersPage";
 import { LoginPage } from "./pages/LoginPage";
 import { PluginMarketplace } from "./pages/plugin-marketplace";
+import { HomeLayout } from "./components/home-layout";
+import { LoginLayout } from "./components/login-layout";
+import "./index.css";
 
 export const domebase = new Domebase({
 	baseURL: "/",
@@ -22,7 +23,13 @@ const router = createBrowserRouter(
 	[
 		{
 			path: "/login",
-			Component: LoginPage,
+			Component: LoginLayout,
+			children: [
+				{
+					index: true,
+					Component: LoginPage,
+				},
+			],
 		},
 		{
 			Component: HomeLayout,

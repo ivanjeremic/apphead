@@ -17,10 +17,10 @@ import {
 	DatabaseIcon,
 } from "lucide-react";
 
-import { NavMain } from "@/components/nav-main";
-import { NavProjects } from "@/components/nav-projects";
-import { NavSecondary } from "@/components/nav-secondary";
-import { NavUser } from "@/components/nav-user";
+import { NavMain } from "@/components/home-layout/nav-main";
+import { NavProjects } from "@/components/home-layout/nav-projects";
+import { NavSecondary } from "@/components/home-layout/nav-secondary";
+import { NavUser } from "@/components/home-layout/nav-user";
 import {
 	Sidebar,
 	SidebarContent,

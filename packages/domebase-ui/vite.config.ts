@@ -2,7 +2,6 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import tailwindcss from "@tailwindcss/vite";
 import { createDevServer } from "caddy-dev-server";
-//@ts-ignore
 import { Domebase } from "domebase";
 //@ts-ignore
 import { createDomebaseServer } from "@domebase/plugin-backend";

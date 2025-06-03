@@ -11,6 +11,9 @@ export function CollectionsPage() {
 
 	return (
 		<div>
+			<h1 style={{ textDecoration: "underline", fontWeight: "bolder" }}>
+				Collections
+			</h1>
 			<ul>
 				{loader.data.map((collection: Collection) => (
 					<li key={collection.id}>{collection.collectionName}</li>

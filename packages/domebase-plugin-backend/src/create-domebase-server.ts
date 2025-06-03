@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { secureHeaders } from "hono/secure-headers";
-import { cors } from "hono/cors";
+/* import { cors } from "hono/cors"; */
 import { trimTrailingSlash } from "hono/trailing-slash";
 import { prettyJSON } from "hono/pretty-json";
 import { serveStatic } from "@hono/node-server/serve-static";
@@ -15,7 +15,7 @@ export function createDomebaseServer({
 
 	app.use(secureHeaders());
 
-	app.use(
+	/* app.use(
 		"/domebase/*",
 		cors({
 			origin: ["https://example.com", "https://example.org"],
@@ -25,32 +25,33 @@ export function createDomebaseServer({
 			maxAge: 600,
 			credentials: true,
 		}),
-	);
+	); */
 
 	app.use(trimTrailingSlash());
 
 	app.use(prettyJSON());
 
-	// serve domebase ui
-	// @TODO do this only in PROD else serve the ui from the vite dev server
-	app.get(
-		"/domebase/*",
-		serveStatic({
-			root: "./",
-			rewriteRequestPath: (path) => path.replace(/^\/domebase/, "/ui"),
-		}),
-	);
-
 	return {
 		name: "my-plugin",
 		instance(domebase: any) {
-			/**
-			 * Domebase-API
-			 */
+			// API
 			app.get("/domebase/api/books", async (c) => {
 				const colls = await domebase.query({ collection: "__collections" });
 				return c.json(colls);
 			});
+
+			// serve domebase ui
+			// @TODO do this only in PROD else serve the ui from the vite dev server
+			/**
+			 * Domebase-API
+			 */
+			app.get(
+				"/domebase/*",
+				serveStatic({
+					root: "./",
+					rewriteRequestPath: (path) => path.replace(/^\/domebase/, "/ui"),
+				}),
+			);
 
 			/**
 			 * Handle Websites & Webapps
