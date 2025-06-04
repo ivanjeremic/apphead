@@ -25,12 +25,12 @@ function App() {
 
 	return (
 		<div>
-			<h1>Collsee</h1>
-			{/* <ul>
+			<h1>Collection</h1>
+			<ul>
 				{loader.data.map((collection: Collection) => (
 					<li key={collection.id}>{collection.collectionName}</li>
 				))}
-			</ul> */}
+			</ul>
 		</div>
 	);
 }

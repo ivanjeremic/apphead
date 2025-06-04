@@ -8,9 +8,9 @@ import { serve } from "@hono/node-server";
 import { proxy } from "hono/proxy";
 
 export function createDomebaseServer({
-	uiPath,
+	mode,
 	port,
-}: { uiPath?: string; port?: number } = {}) {
+}: { mode?: string; port?: number } = {}) {
 	const app = new Hono();
 
 	app.use(secureHeaders());
@@ -34,24 +34,26 @@ export function createDomebaseServer({
 	return {
 		name: "my-plugin",
 		instance(domebase: any) {
-			// API
+			/**
+			 * domebase api
+			 */
 			app.get("/domebase/api/books", async (c) => {
 				const colls = await domebase.query({ collection: "__collections" });
 				return c.json(colls);
 			});
 
-			// serve domebase ui
-			// @TODO do this only in PROD else serve the ui from the vite dev server
 			/**
-			 * Domebase-API
+			 * serve domebase production ui
 			 */
-			app.get(
-				"/domebase/*",
-				serveStatic({
-					root: "./",
-					rewriteRequestPath: (path) => path.replace(/^\/domebase/, "/ui"),
-				}),
-			);
+			if(mode === "production") {
+				app.get(
+					"/domebase/*",
+					serveStatic({
+						root: "./",
+						rewriteRequestPath: (path) => path.replace(/^\/domebase/, "/ui"),
+					}),
+				);
+			}
 
 			/**
 			 * Handle Websites & Webapps

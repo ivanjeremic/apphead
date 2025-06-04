@@ -6,5 +6,5 @@ import driverNode from "@domebase/driver-node";
 
 new Domebase({
 	driver: driverNode(),
-	plugins: [createDomebaseServer()],
+	plugins: [createDomebaseServer({ mode: "production" })],
 });
