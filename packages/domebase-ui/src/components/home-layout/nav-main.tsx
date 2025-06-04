@@ -1,5 +1,3 @@
-"use client";
-
 import { ChevronRight, type LucideIcon } from "lucide-react";
 
 import {
@@ -13,6 +11,7 @@ import { Link } from "react-router";
 
 export function NavMain({
 	items,
+	handleNavNext
 }: {
 	items: {
 		title: string;
@@ -24,23 +23,35 @@ export function NavMain({
 			url: string;
 		}[];
 	}[];
+	handleNavNext: any
 }) {
 	return (
+
 		<SidebarGroup>
 			<SidebarGroupLabel>Domebase</SidebarGroupLabel>
 			<SidebarMenu>
 				{items.map((item) => (
 					<SidebarMenuItem key={item.title}>
-						<SidebarMenuButton asChild tooltip={item.title} className="flex">
-							<Link to={item.url}>
-								<item.icon />
-								<span>{item.title}</span>
-								<ChevronRight className="ml-auto" />
-							</Link>
+						<SidebarMenuButton onClick={handleNavNext} asChild tooltip={item.title} className="flex">
+							{item.items ? (
+								<Link to={item.url}>
+									<item.icon />
+									<span>{item.title}</span>
+									<ChevronRight className="ml-auto" />
+								</Link>
+
+							) : (
+								<Link to={item.url}>
+									<item.icon />
+									<span>{item.title}</span>
+								</Link>
+							)}
 						</SidebarMenuButton>
 					</SidebarMenuItem>
 				))}
 			</SidebarMenu>
 		</SidebarGroup>
+
+
 	);
 }

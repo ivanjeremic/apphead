@@ -30,6 +30,13 @@ import {
 	SidebarMenuButton,
 	SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import {
+	Carousel,
+	CarouselContent,
+	CarouselItem,
+	type CarouselApi,
+} from "@/components/ui/carousel"
+import { useState } from "react";
 
 const data = {
 	navMain: [
@@ -43,6 +50,11 @@ const data = {
 			title: "Collections",
 			url: "/collections",
 			icon: DatabaseIcon,
+			items: [{
+				title: "Posts",
+				url: "/foo",
+				icon: UsersRoundIcon,
+			}]
 		},
 		{
 			title: "Users",
@@ -122,34 +134,56 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+	const [api, setApi] = useState<CarouselApi>();
+
+	// Handle menu item click
+	const handleNavNext = () => {
+		api?.scrollNext();
+	};
+
+	// Handle back navigation
+	const handlNavePrev = () => {
+		api?.scrollPrev();
+	};
+
 	return (
-		<Sidebar variant="inset" {...props}>
-			<SidebarHeader>
-				<SidebarMenu>
-					<SidebarMenuItem>
-						<SidebarMenuButton size="lg" asChild>
-							{/* biome-ignore lint/a11y/useValidAnchor: <explanation> */}
-							<a href="#">
-								<div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-									<Command className="size-4" />
-								</div>
-								<div className="grid flex-1 text-left text-sm leading-tight">
-									<span className="truncate font-medium">Acme Inc</span>
-									<span className="truncate text-xs">Enterprise</span>
-								</div>
-							</a>
-						</SidebarMenuButton>
-					</SidebarMenuItem>
-				</SidebarMenu>
-			</SidebarHeader>
-			<SidebarContent>
-				<NavMain items={data.navMain} />
-				<NavProjects projects={data.projects} />
-				<NavSecondary items={data.navSecondary} className="mt-auto" />
-			</SidebarContent>
-			<SidebarFooter>
-				<NavUser user={data.user} />
-			</SidebarFooter>
-		</Sidebar>
+		<Carousel setApi={setApi} opts={{
+			watchDrag: false,
+			duration: 10,
+		}}>
+			<Sidebar variant="inset" {...props}>
+				<SidebarHeader>
+					<SidebarMenu>
+						<SidebarMenuItem>
+							<SidebarMenuButton size="lg" asChild>
+								{/* biome-ignore lint/a11y/useValidAnchor: <explanation> */}
+								<a href="#">
+									<div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+										<Command className="size-4" />
+									</div>
+									<div className="grid flex-1 text-left text-sm leading-tight">
+										<span className="truncate font-medium">Acme Inc</span>
+										<span className="truncate text-xs">Enterprise</span>
+									</div>
+								</a>
+							</SidebarMenuButton>
+						</SidebarMenuItem>
+					</SidebarMenu>
+				</SidebarHeader>
+				<SidebarContent>
+					<CarouselContent>
+						<CarouselItem>
+							<NavMain items={data.navMain} handleNavNext={handleNavNext} />
+							<NavProjects projects={data.projects} />
+							<NavSecondary items={data.navSecondary} className="mt-auto" />
+						</CarouselItem>
+						<CarouselItem>...</CarouselItem>
+					</CarouselContent>
+				</SidebarContent>
+				<SidebarFooter>
+					<NavUser user={data.user} />
+				</SidebarFooter>
+			</Sidebar>
+		</Carousel>
 	);
 }

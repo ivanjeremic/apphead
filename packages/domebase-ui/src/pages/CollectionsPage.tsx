@@ -12,7 +12,7 @@ export function CollectionsPage() {
 	return (
 		<div>
 			<h1 style={{ textDecoration: "underline", fontWeight: "bolder" }}>
-				Collections ::
+				Collections
 			</h1>
 			<ul>
 				{loader.data.map((collection: Collection) => (
