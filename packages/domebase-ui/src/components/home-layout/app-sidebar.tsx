@@ -37,7 +37,8 @@ import {
 	CarouselItem,
 	type CarouselApi,
 } from "@/components/ui/carousel"
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router";
 
 const data = {
 	navMain: [
@@ -136,16 +137,27 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const [api, setApi] = useState<CarouselApi>();
+	const [canScroll, setCanScroll] = useState(true);
+	const location = useLocation()
 
 	// Handle menu item click
 	const handleNavNext = () => {
+		setCanScroll(false)
 		api?.scrollNext();
+		setCanScroll(true)
 	};
 
 	// Handle back navigation
 	const handlNavePrev = () => {
 		api?.scrollPrev();
 	};
+
+	useEffect(() => {
+		// disable on manual handle Pre/Next this means user clicked back/forward button
+		if (canScroll && location.pathname === "/") {
+			api?.scrollTo(0);
+		}
+	}, [location])
 
 	return (
 		<Sidebar variant="inset" {...props}>
