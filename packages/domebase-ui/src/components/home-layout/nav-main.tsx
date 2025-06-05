@@ -23,7 +23,7 @@ export function NavMain({
 			url: string;
 		}[];
 	}[];
-	handleNavNext: any
+	handleNavNext: () => unknown
 }) {
 	return (
 
@@ -32,26 +32,18 @@ export function NavMain({
 			<SidebarMenu>
 				{items.map((item) => (
 					<SidebarMenuItem key={item.title}>
-						<SidebarMenuButton onClick={handleNavNext} asChild tooltip={item.title} className="flex">
-							{item.items ? (
-								<Link to={item.url}>
-									<item.icon />
-									<span>{item.title}</span>
+						<SidebarMenuButton onClick={item.items ? handleNavNext : undefined} asChild tooltip={item.title} className="flex">
+							<Link to={item.url}>
+								<item.icon />
+								<span>{item.title}</span>
+								{item.items && (
 									<ChevronRight className="ml-auto" />
-								</Link>
-
-							) : (
-								<Link to={item.url}>
-									<item.icon />
-									<span>{item.title}</span>
-								</Link>
-							)}
+								)}
+							</Link>
 						</SidebarMenuButton>
 					</SidebarMenuItem>
 				))}
 			</SidebarMenu>
 		</SidebarGroup>
-
-
 	);
 }

@@ -25,6 +25,7 @@ import {
 	Sidebar,
 	SidebarContent,
 	SidebarFooter,
+	SidebarGroup,
 	SidebarHeader,
 	SidebarMenu,
 	SidebarMenuButton,
@@ -147,30 +148,31 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	};
 
 	return (
-		<Carousel setApi={setApi} opts={{
-			watchDrag: false,
-			duration: 10,
-		}}>
-			<Sidebar variant="inset" {...props}>
-				<SidebarHeader>
-					<SidebarMenu>
-						<SidebarMenuItem>
-							<SidebarMenuButton size="lg" asChild>
-								{/* biome-ignore lint/a11y/useValidAnchor: <explanation> */}
-								<a href="#">
-									<div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-										<Command className="size-4" />
-									</div>
-									<div className="grid flex-1 text-left text-sm leading-tight">
-										<span className="truncate font-medium">Acme Inc</span>
-										<span className="truncate text-xs">Enterprise</span>
-									</div>
-								</a>
-							</SidebarMenuButton>
-						</SidebarMenuItem>
-					</SidebarMenu>
-				</SidebarHeader>
-				<SidebarContent>
+		<Sidebar variant="inset" {...props}>
+			<SidebarHeader>
+				<SidebarMenu>
+					<SidebarMenuItem>
+						<SidebarMenuButton size="lg" asChild>
+							{/* biome-ignore lint/a11y/useValidAnchor: <explanation> */}
+							<a href="#">
+								<div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+									<Command className="size-4" />
+								</div>
+								<div className="grid flex-1 text-left text-sm leading-tight">
+									<span className="truncate font-medium">Acme Inc</span>
+									<span className="truncate text-xs">Enterprise</span>
+								</div>
+							</a>
+						</SidebarMenuButton>
+					</SidebarMenuItem>
+				</SidebarMenu>
+			</SidebarHeader>
+			<SidebarContent>
+
+				<Carousel className="h-full" setApi={setApi} opts={{
+					watchDrag: false,
+					duration: 10,
+				}}>
 					<CarouselContent>
 						<CarouselItem>
 							<NavMain items={data.navMain} handleNavNext={handleNavNext} />
@@ -179,11 +181,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 						</CarouselItem>
 						<CarouselItem>...</CarouselItem>
 					</CarouselContent>
-				</SidebarContent>
-				<SidebarFooter>
-					<NavUser user={data.user} />
-				</SidebarFooter>
-			</Sidebar>
-		</Carousel>
+				</Carousel>
+
+			</SidebarContent>
+			<SidebarFooter>
+				<NavUser user={data.user} />
+			</SidebarFooter>
+		</Sidebar >
 	);
 }
