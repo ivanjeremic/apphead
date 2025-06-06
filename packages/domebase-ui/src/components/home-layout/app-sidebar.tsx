@@ -15,6 +15,7 @@ import {
 	FunctionSquareIcon,
 	UsersRoundIcon,
 	DatabaseIcon,
+	ChevronsLeftRightEllipsis,
 } from "lucide-react";
 
 import { NavMain } from "@/components/home-layout/nav-main";
@@ -37,8 +38,8 @@ import {
 	CarouselItem,
 	type CarouselApi,
 } from "@/components/ui/carousel"
-import { useEffect, useState } from "react";
-import { useLocation } from "react-router";
+import { useEffect, useLayoutEffect, useState } from "react";
+import { useLoaderData, useLocation } from "react-router";
 
 const data = {
 	navMain: [
@@ -139,7 +140,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const [api, setApi] = useState<CarouselApi>();
 	const [canScroll, setCanScroll] = useState(true);
 	const location = useLocation()
-
+	const loader = useLoaderData();
 	// Handle menu item click
 	const handleNavNext = () => {
 		setCanScroll(false)
@@ -152,12 +153,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 		api?.scrollPrev();
 	};
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		// disable on manual handle Pre/Next this means user clicked back/forward button
 		if (canScroll && location.pathname === "/") {
 			api?.scrollTo(0);
 		}
-	}, [location])
+
+		if (canScroll && location.pathname === "/collections") {
+			api?.scrollTo(1);
+		}
+	}, [api, canScroll, location])
 
 	return (
 		<Sidebar variant="inset" {...props}>
@@ -191,7 +196,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 							<NavProjects projects={data.projects} />
 							<NavSecondary items={data.navSecondary} className="mt-auto" />
 						</CarouselItem>
-						<CarouselItem>...</CarouselItem>
+						<CarouselItem>
+							<NavMain items={loader?.data.map(i => ({
+								title: i.collectionName,
+								url: i.collectionName,
+								icon: ChevronsLeftRightEllipsis
+							}))} handleNavNext={handleNavNext} />
+
+						</CarouselItem>
 					</CarouselContent>
 				</Carousel>
 

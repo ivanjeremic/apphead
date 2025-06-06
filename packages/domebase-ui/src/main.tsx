@@ -33,6 +33,11 @@ const router = createBrowserRouter(
 		},
 		{
 			Component: HomeLayout,
+			loader: async () => {
+				const data = await domebase.query({ collection: "__collections" });
+
+				return data;
+			},
 			children: [
 				{
 					index: true,
