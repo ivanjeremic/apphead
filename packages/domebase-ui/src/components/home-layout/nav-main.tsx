@@ -7,7 +7,8 @@ import {
 	SidebarMenuButton,
 	SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
+import { useMemo } from "react";
 
 export function NavMain({
 	items,
@@ -25,6 +26,8 @@ export function NavMain({
 	}[];
 	handleNavNext: () => unknown
 }) {
+	const location = useLocation()
+
 	return (
 
 		<SidebarGroup>
@@ -32,7 +35,7 @@ export function NavMain({
 			<SidebarMenu>
 				{items.map((item) => (
 					<SidebarMenuItem key={item.title}>
-						<SidebarMenuButton onClick={item.items ? handleNavNext : undefined} asChild tooltip={item.title} className="flex">
+						<SidebarMenuButton isActive={item.url === location.pathname} onClick={item.items ? handleNavNext : undefined} asChild tooltip={item.title} className="flex">
 							<Link to={item.url}>
 								<item.icon />
 								<span>{item.title}</span>

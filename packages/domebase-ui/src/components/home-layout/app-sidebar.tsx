@@ -16,6 +16,7 @@ import {
 	UsersRoundIcon,
 	DatabaseIcon,
 	ChevronsLeftRightEllipsis,
+	ChevronLeft,
 } from "lucide-react";
 
 import { NavMain } from "@/components/home-layout/nav-main";
@@ -26,7 +27,7 @@ import {
 	Sidebar,
 	SidebarContent,
 	SidebarFooter,
-	SidebarGroup,
+	/* SidebarGroup, */
 	SidebarHeader,
 	SidebarMenu,
 	SidebarMenuButton,
@@ -38,8 +39,8 @@ import {
 	CarouselItem,
 	type CarouselApi,
 } from "@/components/ui/carousel"
-import { useEffect, useLayoutEffect, useState } from "react";
-import { useLoaderData, useLocation } from "react-router";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from "react";
+import { useLoaderData, useLocation, useNavigate } from "react-router";
 
 const data = {
 	navMain: [
@@ -139,8 +140,11 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const [api, setApi] = useState<CarouselApi>();
 	const [canScroll, setCanScroll] = useState(true);
+	const [canScrollPrev, setCanScrollPrev] = useState(false);
 	const location = useLocation()
 	const loader = useLoaderData();
+	const navigate = useNavigate();
+
 	// Handle menu item click
 	const handleNavNext = () => {
 		setCanScroll(false)
@@ -151,9 +155,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	// Handle back navigation
 	const handlNavePrev = () => {
 		api?.scrollPrev();
+		navigate(-1)
 	};
 
-	useLayoutEffect(() => {
+	useEffect(() => {
 		// disable on manual handle Pre/Next this means user clicked back/forward button
 		if (canScroll && location.pathname === "/") {
 			api?.scrollTo(0);
@@ -162,10 +167,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 		if (canScroll && location.pathname === "/collections") {
 			api?.scrollTo(1);
 		}
+
+		setCanScrollPrev(api?.canScrollPrev() ?? false)
 	}, [api, canScroll, location])
 
 	return (
-		<Sidebar variant="inset" {...props}>
+		<Sidebar variant="floating" {...props}>
 			<SidebarHeader>
 				<SidebarMenu>
 					<SidebarMenuItem>
@@ -182,19 +189,26 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 							</a>
 						</SidebarMenuButton>
 					</SidebarMenuItem>
+					<SidebarMenuItem>
+						{canScrollPrev && (
+							<SidebarMenuButton size="lg" onClick={handlNavePrev} tooltip={"Back"} className="flex justify-start items-center px-2">
+								<div>
+									<ChevronLeft className="h-6 w-6" />
+								</div>
+							</SidebarMenuButton>
+						)}
+					</SidebarMenuItem>
 				</SidebarMenu>
 			</SidebarHeader>
 			<SidebarContent>
-
 				<Carousel className="h-full" setApi={setApi} opts={{
 					watchDrag: false,
-					duration: 10,
+					duration: 20,
 				}}>
 					<CarouselContent>
 						<CarouselItem>
 							<NavMain items={data.navMain} handleNavNext={handleNavNext} />
 							<NavProjects projects={data.projects} />
-							<NavSecondary items={data.navSecondary} className="mt-auto" />
 						</CarouselItem>
 						<CarouselItem>
 							<NavMain items={loader?.data.map(i => ({
@@ -206,9 +220,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 						</CarouselItem>
 					</CarouselContent>
 				</Carousel>
-
 			</SidebarContent>
 			<SidebarFooter>
+				<NavSecondary items={data.navSecondary} />
 				<NavUser user={data.user} />
 			</SidebarFooter>
 		</Sidebar >
