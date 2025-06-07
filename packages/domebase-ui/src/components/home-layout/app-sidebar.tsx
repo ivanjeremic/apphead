@@ -39,7 +39,7 @@ import {
 	CarouselItem,
 	type CarouselApi,
 } from "@/components/ui/carousel"
-import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLoaderData, useLocation, useNavigate } from "react-router";
 
 const data = {
