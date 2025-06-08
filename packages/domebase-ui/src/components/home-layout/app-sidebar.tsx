@@ -17,6 +17,8 @@ import {
 	DatabaseIcon,
 	ChevronsLeftRightEllipsis,
 	ChevronLeft,
+	PlusIcon,
+	Search,
 } from "lucide-react";
 
 import { NavMain } from "@/components/home-layout/nav-main";
@@ -27,6 +29,7 @@ import {
 	Sidebar,
 	SidebarContent,
 	SidebarFooter,
+	SidebarGroupLabel,
 	/* SidebarGroup, */
 	SidebarHeader,
 	SidebarMenu,
@@ -41,6 +44,8 @@ import {
 } from "@/components/ui/carousel"
 import { useEffect, useState } from "react";
 import { useLoaderData, useLocation, useNavigate } from "react-router";
+import { NavSearchForm } from "./nav-search-form";
+import { Separator } from "../ui/separator";
 
 const data = {
 	navMain: [
@@ -84,6 +89,7 @@ const data = {
 			title: "Functions",
 			url: "/functions",
 			icon: FunctionSquareIcon,
+			items: []
 		},
 		{
 			title: "MCP",
@@ -92,8 +98,9 @@ const data = {
 		},
 		{
 			title: "Settings",
-			url: "#",
+			url: "/settings",
 			icon: Settings2,
+			items: []
 		},
 	],
 	projects: [
@@ -141,6 +148,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const [api, setApi] = useState<CarouselApi>();
 	const [canScroll, setCanScroll] = useState(true);
 	const [canScrollPrev, setCanScrollPrev] = useState(false);
+	const [showSearch, setShowSearch] = useState(false);
 	const location = useLocation()
 	const loader = useLoaderData();
 	const navigate = useNavigate();
@@ -189,16 +197,31 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 							</a>
 						</SidebarMenuButton>
 					</SidebarMenuItem>
-					<SidebarMenuItem>
+					<SidebarMenuItem className="flex gap-1.5">
 						{canScrollPrev && (
-							<SidebarMenuButton size="lg" onClick={handlNavePrev} tooltip={"Back"} className="flex justify-start items-center px-2">
-								<div>
-									<ChevronLeft className="h-6 w-6" />
-								</div>
-							</SidebarMenuButton>
+							<>
+								<SidebarMenuButton size="lg" onClick={handlNavePrev} tooltip={"Back"} className="flex justify-start items-center px-2">
+									<div className="flex">
+										<ChevronLeft />
+									</div>
+								</SidebarMenuButton>
+								<SidebarMenuButton variant="outline" size="lg" onClick={() => setShowSearch(p => !p)} tooltip={"Back"} className="justify-center">
+									<Search />
+								</SidebarMenuButton>
+								<SidebarMenuButton variant="outline" size="lg" onClick={handlNavePrev} tooltip={"Back"} className="justify-center">
+									<PlusIcon />
+								</SidebarMenuButton>
+							</>
 						)}
 					</SidebarMenuItem>
+					{showSearch && (
+						<SidebarMenuItem>
+							<SidebarGroupLabel>Search</SidebarGroupLabel>
+							<NavSearchForm />
+						</SidebarMenuItem>
+					)}
 				</SidebarMenu>
+				{/** NAV SEARCH */}
 			</SidebarHeader>
 			<SidebarContent>
 				<Carousel className="h-full" setApi={setApi} opts={{
@@ -207,16 +230,23 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				}}>
 					<CarouselContent>
 						<CarouselItem>
-							<NavMain items={data.navMain} handleNavNext={handleNavNext} />
+							<NavMain
+								items={data.navMain}
+								label="Domebase"
+								handleNavNext={handleNavNext}
+							/>
 							<NavProjects projects={data.projects} />
 						</CarouselItem>
 						<CarouselItem>
-							<NavMain items={loader?.data.map(i => ({
-								title: i.collectionName,
-								url: i.collectionName,
-								icon: ChevronsLeftRightEllipsis
-							}))} handleNavNext={handleNavNext} />
-
+							<NavMain
+								items={loader?.data.map(i => ({
+									title: i.collectionName,
+									url: i.collectionName,
+									icon: ChevronsLeftRightEllipsis
+								}))}
+								label="Collections"
+								handleNavNext={handleNavNext}
+							/>
 						</CarouselItem>
 					</CarouselContent>
 				</Carousel>

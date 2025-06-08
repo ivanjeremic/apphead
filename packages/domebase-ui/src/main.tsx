@@ -13,6 +13,7 @@ import { PluginMarketplace } from "./pages/plugin-marketplace";
 import { HomeLayout } from "./components/home-layout";
 import { LoginLayout } from "./components/login-layout";
 import "./index.css";
+import { SettingsPage } from "./pages/SettingsPage";
 
 export const domebase = new Domebase({
 	baseURL: "/",
@@ -81,6 +82,13 @@ const router = createBrowserRouter(
 						// Placeholder for future page loader
 					},
 					Component: PluginMarketplace,
+				},
+				{
+					path: "settings",
+					loader: async () => {
+						// Placeholder for future page loader
+					},
+					Component: SettingsPage,
 				},
 			],
 		},

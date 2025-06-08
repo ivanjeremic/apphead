@@ -8,10 +8,10 @@ import {
 	SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { Link, useLocation } from "react-router";
-import { useMemo } from "react";
 
 export function NavMain({
 	items,
+	label,
 	handleNavNext
 }: {
 	items: {
@@ -24,6 +24,7 @@ export function NavMain({
 			url: string;
 		}[];
 	}[];
+	label: string,
 	handleNavNext: () => unknown
 }) {
 	const location = useLocation()
@@ -31,7 +32,7 @@ export function NavMain({
 	return (
 
 		<SidebarGroup>
-			<SidebarGroupLabel>Domebase</SidebarGroupLabel>
+			<SidebarGroupLabel>{label}</SidebarGroupLabel>
 			<SidebarMenu>
 				{items.map((item) => (
 					<SidebarMenuItem key={item.title}>
