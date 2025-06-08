@@ -180,8 +180,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	}, [api, canScroll, location])
 
 	return (
-		<Sidebar variant="floating" {...props}>
-			<SidebarHeader>
+		<Sidebar variant="sidebar" {...props}>
+			<SidebarHeader /* className="p-0" */>
 				<SidebarMenu>
 					<SidebarMenuItem>
 						<SidebarMenuButton size="lg" asChild>
