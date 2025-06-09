@@ -42,10 +42,15 @@ export function createDomebaseServer({
 				return c.json(colls);
 			});
 
+			app.post("/domebase/api/insert", async (c) => {
+				const colls = await domebase.insert({ collection: "__collections" });
+				return c.json(colls);
+			});
+
 			/**
 			 * serve domebase production ui
 			 */
-			if(mode === "production") {
+			if (mode === "production") {
 				app.get(
 					"/domebase/*",
 					serveStatic({
@@ -66,7 +71,7 @@ export function createDomebaseServer({
 				if (serveStaticThisRequest) {
 					return serveStatic({ root: "./templates", index: "index.html" })(
 						c,
-						async () => {},
+						async () => { },
 					);
 				}
 

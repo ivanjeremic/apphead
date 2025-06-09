@@ -14,17 +14,6 @@ import {
 	SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Outlet } from "react-router";
-import { Button } from "../ui/button";
-import { Star } from "lucide-react";
-
-/**
- 
-export async function loader({ context }: Route.LoaderArgs) {
-	const colls = await domebase.query({ collection: "__collections" });
-
-	return colls;
-}
- */
 
 export function HomeLayout() {
 	return (

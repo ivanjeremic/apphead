@@ -45,7 +45,7 @@ import {
 import { useEffect, useState } from "react";
 import { useLoaderData, useLocation, useNavigate } from "react-router";
 import { NavSearchForm } from "./nav-search-form";
-import { Separator } from "../ui/separator";
+import { Button } from "../ui/button";
 
 const data = {
 	navMain: [
@@ -162,7 +162,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
 	// Handle back navigation
 	const handlNavePrev = () => {
-		api?.scrollPrev();
+		if (location.pathname !== "/collections/add") {
+			api?.scrollPrev();
+		}
 		navigate(-1)
 	};
 
@@ -172,7 +174,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			api?.scrollTo(0);
 		}
 
-		if (canScroll && location.pathname === "/collections") {
+		if (canScroll && location.pathname === "/collections" || location.pathname.includes("/collections")) {
 			api?.scrollTo(1);
 		}
 
@@ -197,7 +199,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 							</a>
 						</SidebarMenuButton>
 					</SidebarMenuItem>
-					<SidebarMenuItem className="flex gap-1.5">
+					<SidebarMenuItem className="flex items-center gap-1.5">
 						{canScrollPrev && (
 							<>
 								<SidebarMenuButton size="lg" onClick={handlNavePrev} tooltip={"Back"} className="flex justify-start items-center px-2">
@@ -205,12 +207,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 										<ChevronLeft />
 									</div>
 								</SidebarMenuButton>
-								<SidebarMenuButton variant="outline" size="lg" onClick={() => setShowSearch(p => !p)} tooltip={"Back"} className="justify-center">
+								<Button variant="outline" size="lg" onClick={() => setShowSearch(p => !p)} className="justify-center">
 									<Search />
-								</SidebarMenuButton>
-								<SidebarMenuButton variant="outline" size="lg" onClick={handlNavePrev} tooltip={"Back"} className="justify-center">
+								</Button>
+								<Button onClick={() => navigate("/collections/add")} variant="outline" size="lg" className="justify-center">
 									<PlusIcon />
-								</SidebarMenuButton>
+								</Button>
 							</>
 						)}
 					</SidebarMenuItem>
@@ -239,7 +241,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 						</CarouselItem>
 						<CarouselItem>
 							<NavMain
-								items={loader?.data.map(i => ({
+								items={loader?.data.map((i: { collectionName: string; }) => ({
 									title: i.collectionName,
 									url: i.collectionName,
 									icon: ChevronsLeftRightEllipsis

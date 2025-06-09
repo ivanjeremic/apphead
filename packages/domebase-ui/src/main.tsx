@@ -2,8 +2,6 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import { CollectionsPage } from "./pages/CollectionsPage";
-import { Domebase } from "domebase";
-import indexedDbDriver from "unstorage/drivers/indexedb";
 import { HomePage } from "./pages/HomePage";
 import { FunctionsPage } from "./pages/FunctionsPage";
 import { ThemeEditorPage } from "./pages/ThemeEditorPage";
@@ -14,11 +12,9 @@ import { HomeLayout } from "./components/home-layout";
 import { LoginLayout } from "./components/login-layout";
 import "./index.css";
 import { SettingsPage } from "./pages/SettingsPage";
+import { AddCollectionPage } from "./pages/AddCollectionPage";
+import { domebase } from "./lib/domebase";
 
-export const domebase = new Domebase({
-	baseURL: "/",
-	driver: indexedDbDriver({ base: ".domebase" }),
-});
 
 const router = createBrowserRouter(
 	[
@@ -46,12 +42,21 @@ const router = createBrowserRouter(
 				},
 				{
 					path: "collections",
-					loader: async () => {
-						const data = await domebase.query({ collection: "__collections" });
+					children: [
+						{
+							index: true,
+							loader: async () => {
+								const data = await domebase.query({ collection: "__collections" });
 
-						return data;
-					},
-					Component: CollectionsPage,
+								return data;
+							},
+							Component: CollectionsPage,
+						},
+						{
+							path: "add",
+							Component: AddCollectionPage
+						}
+					]
 				},
 				{
 					path: "users",
