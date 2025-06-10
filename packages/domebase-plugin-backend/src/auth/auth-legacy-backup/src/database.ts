@@ -6,7 +6,7 @@ import type {
 
 export interface Adapter {
   getSessionAndUser(
-    sessionId: string
+    sessionId: string,
   ): Promise<[session: DatabaseSession | null, user: DatabaseUser | null]>;
   getUserSessions(userId: UserId): Promise<DatabaseSession[]>;
   setSession(session: DatabaseSession): Promise<void>;
@@ -74,7 +74,7 @@ export class AppheadAdapter implements Adapter {
   }
 
   public async getSessionAndUser(
-    sessionId: string
+    sessionId: string,
   ): Promise<[session: DatabaseSession | null, user: DatabaseUser | null]> {
     // await necessary for mongoose
     const cursor = await this.Session.aggregate([
@@ -113,7 +113,7 @@ export class AppheadAdapter implements Adapter {
           __v: 0,
           _doc: 0,
         },
-      }
+      },
     ).toArray();
 
     return sessions.map((val) => transformIntoDatabaseSession(val));
@@ -132,11 +132,11 @@ export class AppheadAdapter implements Adapter {
 
   public async updateSessionExpiration(
     sessionId: string,
-    expiresAt: Date
+    expiresAt: Date,
   ): Promise<void> {
     await this.Session.findOneAndUpdate(
       { _id: sessionId },
-      { $set: { expires_at: expiresAt } }
+      { $set: { expires_at: expiresAt } },
     );
   }
 

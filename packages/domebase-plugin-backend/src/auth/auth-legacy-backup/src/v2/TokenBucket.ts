@@ -21,7 +21,7 @@ export class TokenBucket<_Key> {
       return true;
     }
     const refill = Math.floor(
-      (now - bucket.refilledAt) / (this.refillIntervalSeconds * 1000)
+      (now - bucket.refilledAt) / (this.refillIntervalSeconds * 1000),
     );
     bucket.count = Math.min(bucket.count + refill, this.max);
     bucket.refilledAt = now;

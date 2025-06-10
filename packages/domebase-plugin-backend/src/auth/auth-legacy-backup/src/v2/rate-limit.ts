@@ -16,7 +16,7 @@ export class RefillingTokenBucket<_Key> {
     }
     const now = Date.now();
     const refill = Math.floor(
-      (now - bucket.refilledAt) / (this.refillIntervalSeconds * 1000)
+      (now - bucket.refilledAt) / (this.refillIntervalSeconds * 1000),
     );
     if (refill > 0) {
       return Math.min(bucket.count + refill, this.max) >= cost;
@@ -36,7 +36,7 @@ export class RefillingTokenBucket<_Key> {
       return true;
     }
     const refill = Math.floor(
-      (now - bucket.refilledAt) / (this.refillIntervalSeconds * 1000)
+      (now - bucket.refilledAt) / (this.refillIntervalSeconds * 1000),
     );
     bucket.count = Math.min(bucket.count + refill, this.max);
     bucket.refilledAt = now;
@@ -77,7 +77,7 @@ export class Throttler<_Key> {
     counter.updatedAt = now;
     counter.timeout = Math.min(
       counter.timeout + 1,
-      this.timeoutSeconds.length - 1
+      this.timeoutSeconds.length - 1,
     );
     this.storage.set(key, counter);
     return true;

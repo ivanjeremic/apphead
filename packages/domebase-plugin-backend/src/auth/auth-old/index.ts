@@ -29,7 +29,7 @@ export interface MemoryStorageOptions {
 export function MemoryStorage(input?: MemoryStorageOptions): StorageAdapter {
   const store = [] as [
     string,
-    { value: Record<string, any>; expiry?: number }
+    { value: Record<string, any>; expiry?: number },
   ][];
 
   if (input?.persist) {
@@ -129,7 +129,7 @@ export default issuer({
         sendCode: async (email, code) => {
           console.log(email, code);
         },
-      })
+      }),
     ),
   },
   success: async (ctx, value) => {

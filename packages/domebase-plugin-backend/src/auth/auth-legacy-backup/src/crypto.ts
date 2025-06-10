@@ -12,7 +12,7 @@ import type { RandomReader } from "@oslojs/crypto/random";
 async function generateScryptKey(
   data: string,
   salt: string,
-  blockSize = 16
+  blockSize = 16,
 ): Promise<Uint8Array> {
   const encodedData = new TextEncoder().encode(data);
   const encodedSalt = new TextEncoder().encode(salt);
@@ -70,7 +70,7 @@ export class LegacyScrypt implements PasswordHashingAlgorithm {
       const targetKey = await generateScryptKey(
         password.normalize("NFKC"),
         salt,
-        8
+        8,
       );
       const result = constantTimeEqual(targetKey, decodeHex(key));
       return result;
@@ -80,7 +80,7 @@ export class LegacyScrypt implements PasswordHashingAlgorithm {
     if (version === "s2") {
       const targetKey = await generateScryptKey(
         password.normalize("NFKC"),
-        salt
+        salt,
       );
       return constantTimeEqual(targetKey, decodeHex(key));
     }

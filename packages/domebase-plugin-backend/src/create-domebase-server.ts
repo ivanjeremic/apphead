@@ -6,6 +6,7 @@ import { prettyJSON } from "hono/pretty-json";
 import { serveStatic } from "@hono/node-server/serve-static";
 import { serve } from "@hono/node-server";
 import { proxy } from "hono/proxy";
+import { Domebase } from "domebase";
 
 export function createDomebaseServer({
 	mode,
@@ -15,7 +16,7 @@ export function createDomebaseServer({
 
 	app.use(secureHeaders());
 
-	/* app.use(
+	/* app.use( 
 		"/domebase/*",
 		cors({
 			origin: ["https://example.com", "https://example.org"],
@@ -33,18 +34,27 @@ export function createDomebaseServer({
 
 	return {
 		name: "my-plugin",
-		instance(domebase: any) {
+		instance(domebase: Domebase) {
 			/**
 			 * domebase api
 			 */
 			app.get("/domebase/api/books", async (c) => {
 				const colls = await domebase.query({ collection: "__collections" });
-				return c.json(colls);
+				return c.json(colls as Record<string, unknown>);
 			});
 
-			app.post("/domebase/api/insert", async (c) => {
-				const colls = await domebase.insert({ collection: "__collections" });
-				return c.json(colls);
+			app.post("/domebase/api/v1/insert", async (c) => {
+				const data = await c.req.json();
+
+				await domebase.insert({
+					collectionName: data.collectionName,
+					data: {
+						collectionName: data.data.collectionName,
+						schema: data.data.schema,
+					},
+				});
+
+				return c.json(data);
 			});
 
 			/**

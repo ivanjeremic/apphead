@@ -1,18 +1,18 @@
-import { Search } from "lucide-react"
+import { Search } from "lucide-react";
 
-import { Label } from "@/components/ui/label"
+import { Label } from "@/components/ui/label";
 import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarInput,
-} from "@/components/ui/sidebar"
-import { useLocation } from "react-router"
+} from "@/components/ui/sidebar";
+import { useLocation } from "react-router";
 
 export function NavSearchForm({ ...props }: React.ComponentProps<"form">) {
-  const location = useLocation()
+  const location = useLocation();
 
   if (location.pathname !== "/collections") {
-    return null
+    return null;
   }
 
   return (
@@ -31,5 +31,5 @@ export function NavSearchForm({ ...props }: React.ComponentProps<"form">) {
         </SidebarGroupContent>
       </SidebarGroup>
     </form>
-  )
+  );
 }

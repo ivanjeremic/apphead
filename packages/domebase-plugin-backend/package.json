@@ -1,27 +1,28 @@
 {
-	"name": "@domebase/plugin-backend",
-	"version": "0.0.1",
-	"type": "module",
-	"main": "src/index.ts",
-	"author": "Ivan Jeremic",
-	"license": "MIT",
-	"description": "Domebase backend plugin for Node.js",
-	"exports": {
-		".": "./dist/index.js"
-	},
-	"scripts": {
-		"build": "bun build src/index.ts --outdir dist --target node"
-	},
-	"dependencies": {
-		"@hono/node-server": "^1.14.1",
-		"@domebase/ui": "workspace:*",
-		"hono": "^4.7.10",
-		"iovalkey": "^0.3.1",
-		"sharp": "^0.34.2"
-	},
-	"devDependencies": {
-		"@types/node": "^22.15.21",
-		"tsx": "^4.7.1",
-		"typescript": "^5.8.3"
-	}
+  "name": "@domebase/plugin-backend",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "src/index.ts",
+  "author": "Ivan Jeremic",
+  "license": "MIT",
+  "description": "Domebase backend plugin for Node.js",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "bun build src/index.ts --outdir dist --target node"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.14.1",
+    "@domebase/ui": "workspace:*",
+    "domebase": "workspace:*",
+    "hono": "^4.7.10",
+    "iovalkey": "^0.3.1",
+    "sharp": "^0.34.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.21",
+    "tsx": "^4.7.1",
+    "typescript": "^5.8.3"
+  }
 }

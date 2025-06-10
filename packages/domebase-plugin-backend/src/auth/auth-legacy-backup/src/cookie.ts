@@ -13,7 +13,7 @@ export interface CookieAttributes {
 export function serializeCookie(
   name: string,
   value: string,
-  attributes: CookieAttributes
+  attributes: CookieAttributes,
 ): string {
   const keyValueEntries: Array<[string, string] | [string]> = [];
   keyValueEntries.push([encodeURIComponent(name), encodeURIComponent(value)]);
@@ -66,7 +66,7 @@ export class CookieController {
     baseCookieAttributes: CookieAttributes,
     cookieOptions?: {
       expiresIn?: TimeSpan;
-    }
+    },
   ) {
     this.cookieName = cookieName;
     this.cookieExpiresIn = cookieOptions?.expiresIn ?? null;

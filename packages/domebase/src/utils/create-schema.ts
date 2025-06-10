@@ -7,11 +7,11 @@ import protobuf from "protobufjs";
  * @returns {protobuf.Type} - The generated Protobuf Type.
  */
 export function createSchema(name: any, fields: any[]) {
-	const messageType = new protobuf.Type(name);
+  const messageType = new protobuf.Type(name);
 
-	for (const field of fields) {
-		messageType.add(new protobuf.Field(field.field, field.index, field.type));
-	}
+  for (const field of fields) {
+    messageType.add(new protobuf.Field(field.field, field.index, field.type));
+  }
 
-	return messageType;
+  return messageType;
 }

@@ -1,11 +1,11 @@
 // write local browser compatible code
 export async function replicate(
-	_op: any,
-	_key: any,
-	_buffer: any,
-	_type = "Car",
+  _op: any,
+  _key: any,
+  _buffer: any,
+  _type = "Car",
 ) {
-	/* await redis.xadd(
+  /* await redis.xadd(
 		"replication_stream",
 		"*",
 		"op",
@@ -23,7 +23,7 @@ export async function replicate(
 
 // write local browser compatible code
 export async function consumeStream(/* fromId = "0-0", schemaMap */) {
-	/* while (true) {
+  /* while (true) {
 		const res = await redis.xread(
 			"BLOCK",
 			1000,
@@ -49,9 +49,9 @@ export async function consumeStream(/* fromId = "0-0", schemaMap */) {
 }
 
 function parseStreamFields(arr: string | any[]) {
-	const obj: { [key: string]: any } = {};
-	for (let i = 0; i < arr.length; i += 2) {
-		obj[arr[i]] = arr[i + 1];
-	}
-	return obj;
+  const obj: { [key: string]: any } = {};
+  for (let i = 0; i < arr.length; i += 2) {
+    obj[arr[i]] = arr[i + 1];
+  }
+  return obj;
 }

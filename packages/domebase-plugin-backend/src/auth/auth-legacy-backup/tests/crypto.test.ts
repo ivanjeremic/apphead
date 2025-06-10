@@ -19,7 +19,7 @@ test("scrypt() output matches crypto", async () => {
       r: 16,
       p: 1,
       dkLen: 64,
-    }
+    },
   );
   const cryptoHash = new Uint8Array(
     nodeScrypt(password, salt, 64, {
@@ -27,33 +27,33 @@ test("scrypt() output matches crypto", async () => {
       p: 1,
       r: 16,
       maxmem: 128 * 16384 * 16 * 2,
-    }).buffer
+    }).buffer,
   );
   expect(cryptoHash).toStrictEqual(scryptHash);
 });
 
 test("validateScryptHash() validates hashes generated with generateScryptHash()", async () => {
   const password = encodeHexLowerCase(
-    crypto.getRandomValues(new Uint8Array(32))
+    crypto.getRandomValues(new Uint8Array(32)),
   );
   const scrypt = new Scrypt();
   const hash = await scrypt.hash(password);
   await expect(scrypt.verify(hash, password)).resolves.toBe(true);
   const falsePassword = encodeHexLowerCase(
-    crypto.getRandomValues(new Uint8Array(32))
+    crypto.getRandomValues(new Uint8Array(32)),
   );
   await expect(scrypt.verify(hash, falsePassword)).resolves.toBe(false);
 });
 
 test("LegacyScrypt", async () => {
   const password = encodeHexLowerCase(
-    crypto.getRandomValues(new Uint8Array(32))
+    crypto.getRandomValues(new Uint8Array(32)),
   );
   const scrypt = new LegacyScrypt();
   const hash = await scrypt.hash(password);
   await expect(scrypt.verify(hash, password)).resolves.toBe(true);
   const falsePassword = encodeHexLowerCase(
-    crypto.getRandomValues(new Uint8Array(32))
+    crypto.getRandomValues(new Uint8Array(32)),
   );
   await expect(scrypt.verify(hash, falsePassword)).resolves.toBe(false);
 });

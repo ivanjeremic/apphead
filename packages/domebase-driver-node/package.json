@@ -1,20 +1,20 @@
 {
-	"name": "@domebase/driver-node",
-	"version": "1.0.0",
-	"main": "./src/index.ts",
-	"type": "module",
-	"keywords": [],
-	"author": "Ivan Jeremic",
-	"exports": {
-		".": "./dist/index.js"
-	},
-	"scripts": {
-		"build": "bun build src/index.ts --outdir dist --target node --external lmdb"
-	},
-	"license": "MIT",
-	"description": "",
-	"dependencies": {
-		"lmdb": "^3.2.6",
-		"unstorage": "^1.15.0"
-	}
+  "name": "@domebase/driver-node",
+  "version": "1.0.0",
+  "main": "./src/index.ts",
+  "type": "module",
+  "keywords": [],
+  "author": "Ivan Jeremic",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "bun build src/index.ts --outdir dist --target node --external lmdb"
+  },
+  "license": "MIT",
+  "description": "",
+  "dependencies": {
+    "lmdb": "^3.2.6",
+    "unstorage": "^1.15.0"
+  }
 }

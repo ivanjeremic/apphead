@@ -31,7 +31,7 @@ export async function scrypt(
     p: number;
     dkLen?: number;
     maxmem?: number;
-  }
+  },
 ): Promise<Uint8Array> {
   const { N, r, p } = options;
   const dkLen = options.dkLen ?? 32;
@@ -45,23 +45,23 @@ export async function scrypt(
     N > 2 ** 32
   ) {
     throw new Error(
-      "Scrypt: N must be larger than 1, a power of 2, less than 2^(128 * r / 8) and less than 2^32"
+      "Scrypt: N must be larger than 1, a power of 2, less than 2^(128 * r / 8) and less than 2^32",
     );
   }
   if (p < 0 || p > ((2 ** 32 - 1) * 32) / blockSize) {
     throw new Error(
-      "Scrypt: p must be a positive integer less than or equal to ((2^32 - 1) * 32) / (128 * r)"
+      "Scrypt: p must be a positive integer less than or equal to ((2^32 - 1) * 32) / (128 * r)",
     );
   }
   if (dkLen < 0 || dkLen > (2 ** 32 - 1) * 32) {
     throw new Error(
-      "Scrypt: dkLen should be positive integer less than or equal to (2^32 - 1) * 32"
+      "Scrypt: dkLen should be positive integer less than or equal to (2^32 - 1) * 32",
     );
   }
   const memUsed = blockSize * (N + p);
   if (memUsed > maxmem) {
     throw new Error(
-      `Scrypt: parameters too large, ${memUsed} (128 * r * (N + p)) > ${maxmem} (maxmem)`
+      `Scrypt: parameters too large, ${memUsed} (128 * r * (N + p)) > ${maxmem} (maxmem)`,
     );
   }
   const B = await pbkdf2(password, salt, { c: 1, dkLen: blockSize * p });
@@ -104,7 +104,7 @@ function XorAndSalsa(
   input: Uint32Array,
   ii: number,
   out: Uint32Array,
-  oi: number
+  oi: number,
 ): void {
   const y00 = prev[pi++] ^ input[ii++],
     y01 = prev[pi++] ^ input[ii++];
@@ -196,14 +196,14 @@ async function pbkdf2(
   options: {
     c: number;
     dkLen: number;
-  }
+  },
 ): Promise<Uint8Array> {
   const pwKey = await crypto.subtle.importKey(
     "raw",
     password,
     "PBKDF2",
     false,
-    ["deriveBits"]
+    ["deriveBits"],
   );
   const keyBuffer = await crypto.subtle.deriveBits(
     {
@@ -213,7 +213,7 @@ async function pbkdf2(
       iterations: options.c,
     },
     pwKey,
-    options.dkLen * 8
+    options.dkLen * 8,
   );
   return new Uint8Array(keyBuffer);
 }
@@ -223,7 +223,7 @@ function BlockMix(
   ii: number,
   out: Uint32Array,
   oi: number,
-  r: number
+  r: number,
 ): void {
   let head = oi + 0;
   let tail = oi + 16 * r;
@@ -239,6 +239,6 @@ function u32(arr: Uint8Array): Uint32Array {
   return new Uint32Array(
     arr.buffer,
     arr.byteOffset,
-    Math.floor(arr.byteLength / 4)
+    Math.floor(arr.byteLength / 4),
   );
 }

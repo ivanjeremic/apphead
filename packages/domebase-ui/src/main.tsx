@@ -15,97 +15,98 @@ import { SettingsPage } from "./pages/SettingsPage";
 import { AddCollectionPage } from "./pages/AddCollectionPage";
 import { domebase } from "./lib/domebase";
 
-
 const router = createBrowserRouter(
-	[
-		{
-			path: "/login",
-			Component: LoginLayout,
-			children: [
-				{
-					index: true,
-					Component: LoginPage,
-				},
-			],
-		},
-		{
-			Component: HomeLayout,
-			loader: async () => {
-				const data = await domebase.query({ collection: "__collections" });
+  [
+    {
+      path: "/login",
+      Component: LoginLayout,
+      children: [
+        {
+          index: true,
+          Component: LoginPage,
+        },
+      ],
+    },
+    {
+      Component: HomeLayout,
+      loader: async () => {
+        const data = await domebase.query({ collection: "__collections" });
 
-				return data;
-			},
-			children: [
-				{
-					index: true,
-					Component: HomePage,
-				},
-				{
-					path: "collections",
-					children: [
-						{
-							index: true,
-							loader: async () => {
-								const data = await domebase.query({ collection: "__collections" });
+        return data;
+      },
+      children: [
+        {
+          index: true,
+          Component: HomePage,
+        },
+        {
+          path: "collections",
+          children: [
+            {
+              index: true,
+              loader: async () => {
+                const data = await domebase.query({
+                  collection: "__collections",
+                });
 
-								return data;
-							},
-							Component: CollectionsPage,
-						},
-						{
-							path: "add",
-							Component: AddCollectionPage
-						}
-					]
-				},
-				{
-					path: "users",
-					loader: async () => {
-						/* const data = await domebase.query({ collection: "__collections" });
+                return data;
+              },
+              Component: CollectionsPage,
+            },
+            {
+              path: "add",
+              Component: AddCollectionPage,
+            },
+          ],
+        },
+        {
+          path: "users",
+          loader: async () => {
+            /* const data = await domebase.query({ collection: "__collections" });
 
 						return data; */
-					},
-					Component: UsersPage,
-				},
-				{
-					path: "functions",
-					loader: async () => {
-						// Placeholder for future page loader
-					},
-					Component: FunctionsPage,
-				},
-				{
-					path: "website",
-					loader: async () => {
-						// Placeholder for future page loader
-					},
-					Component: ThemeEditorPage,
-				},
-				{
-					path: "plugin-marketplace",
-					loader: async () => {
-						// Placeholder for future page loader
-					},
-					Component: PluginMarketplace,
-				},
-				{
-					path: "settings",
-					loader: async () => {
-						// Placeholder for future page loader
-					},
-					Component: SettingsPage,
-				},
-			],
-		},
-	],
-	{
-		basename: "/domebase",
-	},
+          },
+          Component: UsersPage,
+        },
+        {
+          path: "functions",
+          loader: async () => {
+            // Placeholder for future page loader
+          },
+          Component: FunctionsPage,
+        },
+        {
+          path: "website",
+          loader: async () => {
+            // Placeholder for future page loader
+          },
+          Component: ThemeEditorPage,
+        },
+        {
+          path: "plugin-marketplace",
+          loader: async () => {
+            // Placeholder for future page loader
+          },
+          Component: PluginMarketplace,
+        },
+        {
+          path: "settings",
+          loader: async () => {
+            // Placeholder for future page loader
+          },
+          Component: SettingsPage,
+        },
+      ],
+    },
+  ],
+  {
+    basename: "/domebase",
+  },
 );
 
 // biome-ignore lint/style/noNonNullAssertion: <explanation>
 createRoot(document.getElementById("root")!).render(
-	<StrictMode>
-		<RouterProvider router={router} />
-	</StrictMode>,
+  <StrictMode>
+    <RouterProvider router={router} />
+  </StrictMode>,
 );

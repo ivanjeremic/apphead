@@ -5,6 +5,6 @@ import { createDomebaseServer } from "@domebase/plugin-backend";
 import driverNode from "@domebase/driver-node";
 
 new Domebase({
-	driver: driverNode(),
-	plugins: [createDomebaseServer({ mode: "production" })],
+  driver: driverNode(),
+  plugins: [createDomebaseServer({ mode: "production" })],
 });

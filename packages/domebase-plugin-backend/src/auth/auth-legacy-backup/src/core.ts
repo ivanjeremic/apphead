@@ -11,19 +11,15 @@ import type {
 } from "./index.js";
 import type { Cookie, CookieAttributes } from "./cookie.js";
 
-type SessionAttributes = RegisteredLucia extends AuthClient<
-  infer _SessionAttributes,
-  any
->
-  ? _SessionAttributes
-  : {};
+type SessionAttributes =
+  RegisteredLucia extends AuthClient<infer _SessionAttributes, any>
+    ? _SessionAttributes
+    : {};
 
-type UserAttributes = RegisteredLucia extends AuthClient<
-  any,
-  infer _UserAttributes
->
-  ? _UserAttributes
-  : {};
+type UserAttributes =
+  RegisteredLucia extends AuthClient<any, infer _UserAttributes>
+    ? _UserAttributes
+    : {};
 
 export interface Session extends SessionAttributes {
   id: string;
@@ -38,18 +34,18 @@ export interface User extends UserAttributes {
 
 export class AuthClient<
   _SessionAttributes extends {} = Record<never, never>,
-  _UserAttributes extends {} = Record<never, never>
+  _UserAttributes extends {} = Record<never, never>,
 > {
   private adapter: Adapter;
   private sessionExpiresIn: TimeSpan;
   private sessionCookieController: CookieController;
 
   private getSessionAttributes: (
-    databaseSessionAttributes: RegisteredDatabaseSessionAttributes
+    databaseSessionAttributes: RegisteredDatabaseSessionAttributes,
   ) => _SessionAttributes;
 
   private getUserAttributes: (
-    databaseUserAttributes: RegisteredDatabaseUserAttributes
+    databaseUserAttributes: RegisteredDatabaseUserAttributes,
   ) => _UserAttributes;
 
   public readonly sessionCookieName: string;
@@ -60,12 +56,12 @@ export class AuthClient<
       sessionExpiresIn?: TimeSpan;
       sessionCookie?: SessionCookieOptions;
       getSessionAttributes?: (
-        databaseSessionAttributes: RegisteredDatabaseSessionAttributes
+        databaseSessionAttributes: RegisteredDatabaseSessionAttributes,
       ) => _SessionAttributes;
       getUserAttributes?: (
-        databaseUserAttributes: RegisteredDatabaseUserAttributes
+        databaseUserAttributes: RegisteredDatabaseUserAttributes,
       ) => _UserAttributes;
-    }
+    },
   ) {
     this.adapter = adapter;
 
@@ -100,7 +96,7 @@ export class AuthClient<
       baseSessionCookieAttributes,
       {
         expiresIn: sessionCookieExpiresIn,
-      }
+      },
     );
   }
 
@@ -123,7 +119,7 @@ export class AuthClient<
   }
 
   public async validateSession(
-    sessionId: string
+    sessionId: string,
   ): Promise<{ user: User; session: Session } | { user: null; session: null }> {
     const [databaseSession, databaseUser] =
       await this.adapter.getSessionAndUser(sessionId);
@@ -140,7 +136,7 @@ export class AuthClient<
     }
     const activePeriodExpirationDate = new Date(
       databaseSession.expiresAt.getTime() -
-        this.sessionExpiresIn.milliseconds() / 2
+        this.sessionExpiresIn.milliseconds() / 2,
     );
     const session: Session = {
       ...this.getSessionAttributes(databaseSession.attributes),
@@ -154,7 +150,7 @@ export class AuthClient<
       session.expiresAt = createDate(this.sessionExpiresIn);
       await this.adapter.updateSessionExpiration(
         databaseSession.id,
-        session.expiresAt
+        session.expiresAt,
       );
     }
     const user: User = {
@@ -169,7 +165,7 @@ export class AuthClient<
     attributes: RegisteredDatabaseSessionAttributes,
     options?: {
       sessionId?: string;
-    }
+    },
   ): Promise<Session> {
     const sessionId = options?.sessionId ?? generateIdFromEntropySize(25);
     const sessionExpiresAt = createDate(this.sessionExpiresIn);
@@ -209,7 +205,7 @@ export class AuthClient<
   public readBearerToken(authorizationHeader: string): string | null {
     const [authScheme, token] = authorizationHeader.split(" ") as [
       string,
-      string | undefined
+      string | undefined,
     ];
     if (authScheme !== "Bearer") {
       return null;

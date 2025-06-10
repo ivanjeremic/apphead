@@ -8,7 +8,7 @@ export async function validateRequest(
     validateSession: (arg0: string) => any;
     createSessionCookie: (arg0: any) => any;
     createBlankSessionCookie: () => any;
-  }
+  },
 ): Promise<{ user: User; session: Session } | { user: null; session: null }> {
   const sessionId = getCookie(event, lucia.sessionCookieName) ?? null;
   if (!sessionId) {
@@ -27,7 +27,7 @@ export async function validateRequest(
         event,
         sessionCookie.name,
         sessionCookie.value,
-        sessionCookie.attributes
+        sessionCookie.attributes,
       );
     }
     if (!result.session) {
@@ -36,7 +36,7 @@ export async function validateRequest(
         event,
         sessionCookie.name,
         sessionCookie.value,
-        sessionCookie.attributes
+        sessionCookie.attributes,
       );
     }
   } catch {}

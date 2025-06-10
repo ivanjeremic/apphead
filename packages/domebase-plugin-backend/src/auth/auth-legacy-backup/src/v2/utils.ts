@@ -5,7 +5,7 @@ import { encodeBase32LowerCase } from "@oslojs/encoding";
 // - `allowedDomains` only accepts domains instead of URLs
 export function verifyRequestOrigin(
   origin: string,
-  allowedDomains: string[]
+  allowedDomains: string[],
 ): boolean {
   if (allowedDomains.length === 0) {
     return false;

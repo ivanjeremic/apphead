@@ -1,6 +1,6 @@
 export function verifyRequestOrigin(
   origin: string,
-  allowedDomains: string[]
+  allowedDomains: string[],
 ): boolean {
   if (!origin || allowedDomains.length === 0) {
     return false;

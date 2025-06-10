@@ -1,8 +1,8 @@
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -11,15 +11,15 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { domebase } from "@/lib/domebase"
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { domebase } from "@/lib/domebase";
 
 const formSchema = z.object({
   username: z.string().min(2, {
     message: "Username must be at least 2 characters.",
   }),
-})
+});
 
 export function AddCollectionForm() {
   // 1. Define your form.
@@ -28,15 +28,18 @@ export function AddCollectionForm() {
     defaultValues: {
       username: "",
     },
-  })
+  });
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    console.log(values)
+    console.log(values);
 
-    await domebase.insert({ collection: "__collections", data: { collectionName: values.username } });
+    await domebase.insert({
+      collectionName: "__collections",
+      data: { collectionName: values.username, schema: {} },
+    });
   }
 
   return (
@@ -61,5 +64,5 @@ export function AddCollectionForm() {
         <Button type="submit">Submit</Button>
       </form>
     </Form>
-  )
+  );
 }

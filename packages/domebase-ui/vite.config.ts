@@ -12,38 +12,38 @@ import path from "node:path";
 
 // https://vite.dev/config/
 export default defineConfig(() => {
-	return {
-		base: "/domebase/",
-		logLevel: "silent",
-		resolve: {
-			alias: {
-				"@": path.resolve(__dirname, "./src"),
-			},
-		},
-		plugins: [
-			react(),
-			tailwindcss(),
-			{
-				name: "my-back",
-				configureServer(server) {
-					server.httpServer?.once("listening", () => {
-						const address = server.httpServer?.address();
-						const clientPort = typeof address === "object" && address?.port;
+  return {
+    base: "/domebase/",
+    logLevel: "silent",
+    resolve: {
+      alias: {
+        "@": path.resolve(__dirname, "./src"),
+      },
+    },
+    plugins: [
+      react(),
+      tailwindcss(),
+      {
+        name: "my-back",
+        configureServer(server) {
+          server.httpServer?.once("listening", () => {
+            const address = server.httpServer?.address();
+            const clientPort = typeof address === "object" && address?.port;
 
-						getPort({ port: 8787 }).then((port) => {
-							new Domebase({
-								driver: driverNode(),
-								plugins: [
-									createDomebaseServer({
-										/* basePath: isDev ? "/" : "/api", */
-										port,
-									}),
-								],
-							});
+            getPort({ port: 8787 }).then((port) => {
+              new Domebase({
+                driver: driverNode(),
+                plugins: [
+                  createDomebaseServer({
+                    /* basePath: isDev ? "/" : "/api", */
+                    port,
+                  }),
+                ],
+              });
 
-							getPort().then((adminPort) => {
-								createDevServer({
-									caddyfile: `
+              getPort().then((adminPort) => {
+                createDevServer({
+                  caddyfile: `
 	{
 		admin localhost:${adminPort}
 	}
@@ -72,12 +72,12 @@ export default defineConfig(() => {
 		}
 	}
 	`,
-								});
-							});
-						});
-					});
-				},
-			},
-		],
-	};
+                });
+              });
+            });
+          });
+        },
+      },
+    ],
+  };
 });

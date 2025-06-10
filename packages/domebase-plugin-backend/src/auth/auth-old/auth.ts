@@ -9,7 +9,7 @@ export const client = createClient({
 export async function setTokens(
   event: H3Event<EventHandlerRequest>,
   access: string,
-  refresh: string
+  refresh: string,
 ) {
   setCookie(event, "access_token", access, {
     httpOnly: true,

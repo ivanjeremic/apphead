@@ -1,124 +1,127 @@
 import {
-	initDomeDB,
-	createUserHandler,
-	createCollectionHandler,
-	deleteOneHandler,
-	type Storage,
-	type StorageValue,
-	type Driver,
+  initDomeDB,
+  createUserHandler,
+  createCollectionHandler,
+  deleteOneHandler,
+  type Storage,
+  type StorageValue,
+  type Driver,
 } from "./storage.js";
 import { nanoid } from "nanoid";
 import { checkErrors } from "./utils/errors.js";
 import { join } from "pathe";
 
 type PluginFunction<T> = {
-	name: string;
-	instance: (domebase: T) => unknown;
+  name: string;
+  instance: (domebase: T) => unknown;
 };
 
 interface DomebaseOptions<T> {
-	baseURL?: string;
-	driver?: Driver<unknown, unknown>;
-	plugins?: PluginFunction<T>[];
+  baseURL?: string;
+  driver?: Driver<unknown, unknown>;
+  plugins?: PluginFunction<T>[];
 }
 
 /**
  * DomeDB class
  */
 export class Domebase {
-	path = ".domebase";
-	kv: Storage<StorageValue>;
-	user = "";
-	plugin = new Map();
-	baseURL = "";
+  path = ".domebase";
+  kv: Storage<StorageValue>;
+  user = "";
+  plugin = new Map();
+  baseURL = "";
 
-	constructor(ngin: DomebaseOptions<Domebase>) {
-		if (ngin.baseURL) {
-			this.baseURL = ngin.baseURL;
-		}
+  constructor(ngin: DomebaseOptions<Domebase>) {
+    if (ngin.baseURL) {
+      this.baseURL = ngin.baseURL;
+    }
 
-		for (const fn of ngin.plugins ?? []) {
-			const res = fn;
-			this.plugin.set(res.name, res.instance(this));
-		}
+    for (const fn of ngin.plugins ?? []) {
+      const res = fn;
+      this.plugin.set(res.name, res.instance(this));
+    }
 
-		this.kv = initDomeDB(
-			{
-				driver: ngin.driver,
-			},
-			{ path: this.path },
-		);
-	}
+    this.kv = initDomeDB(
+      {
+        driver: ngin.driver,
+      },
+      { path: this.path },
+    );
+  }
 
-	public async createUser() {
-		const res = await createUserHandler(this.kv, this.path);
+  public async createUser() {
+    const res = await createUserHandler(this.kv, this.path);
 
-		return res;
-	}
+    return res;
+  }
 
-	/*
-	 * handle collections
-	 */
-	public async createCollection(collectionName: string, schema?: unknown) {
-		const res = await createCollectionHandler(
-			this.kv,
-			this.path,
-			this.insert.bind(this),
-			collectionName,
-			schema,
-		);
+  /**
+   *
+   * @param collectionName
+   * @param data
+   *
+   * @TODO THE ID NEEDS TO BE CHANGES TO BE creatorId:fields.
+   */
+  public async insert({
+    collectionName,
+    data,
+  }: {
+    collectionName: string;
+    data: unknown;
+  }) {
+    if (this.baseURL === "/") {
+      await fetch("/domebase/api/v1/insert", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          collectionName,
+          data,
+        }),
+      });
 
-		return res;
-	}
+      return;
+    }
 
-	/**
-	 *
-	 * @param collectionName
-	 * @param data
-	 *
-	 * @TODO THE ID NEEDS TO BE CHANGES TO BE creatorId:fields.
-	 */
-	public async insert({
-		collection,
-		data,
-	}: { collection: string; data: unknown }) {
-		const collectionExists = await this.kv.hasItem(collection, {
-			lmdb_path: join(this.path, "__collections"),
-		});
+    const collectionExists = await this.kv.hasItem(collectionName, {
+      lmdb_path: join(this.path, "__collections"),
+    });
 
-		// onBeforeInsert
+    // onBeforeInsert
 
-		const { hasErrors, errorList } = checkErrors([
-			{
-				condition: !collectionExists,
-				msg: (errors) => errors.shared.collectionDoesNotExist(collection),
-			},
-		]);
+    const { hasErrors, errorList } = checkErrors([
+      {
+        condition: !collectionExists,
+        msg: (errors) => errors.shared.collectionDoesNotExist(collectionName),
+      },
+    ]);
 
-		if (hasErrors) {
-			return { hasErrors, errorList };
-		}
+    if (hasErrors) {
+      return { hasErrors, errorList };
+    }
 
-		await this.kv.setItem(nanoid(), JSON.stringify(data), {
-			lmdb_path: join(this.path, this.user, collection),
-		});
-	}
+    await this.kv.setItem(nanoid(), JSON.stringify(data), {
+      lmdb_path: join(this.path, this.user, collectionName),
+    });
+  }
 
-	/**
-	 *
-	 * @param param0
-	 * @returns {Promise<unknown>}
-	 */
-	public async query({
-		collection,
-		filter,
-		options,
-	}: {
-		collection: string;
-		filter?: unknown;
-		options?: unknown;
-	}): Promise<unknown> {
-		/* const collectionExists = await this.kv.hasItem(collection, {
+  /**
+   *
+   * @param param0
+   * @returns {Promise<unknown>}
+   */
+  public async query({
+    collection,
+    filter,
+    options,
+  }: {
+    collection: string;
+    filter?: unknown;
+    options?: unknown;
+  }): Promise<unknown> {
+    /* const collectionExists = await this.kv.hasItem(collection, {
       path: join(this.path, "__collections"),
     });
 
@@ -133,43 +136,43 @@ export class Domebase {
       return { hasErrors, errorList };
     } */
 
-		if (this.baseURL === "/") {
-			const res = await fetch("/domebase/api/books");
+    if (this.baseURL === "/") {
+      const res = await fetch("/domebase/api/books");
 
-			const data = await res.json();
+      const data = await res.json();
 
-			return data;
-		}
+      return data;
+    }
 
-		const cleanPath = collection.startsWith("__")
-			? collection
-			: `${this.user}/${collection}`;
+    const cleanPath = collection.startsWith("__")
+      ? collection
+      : `${this.user}/${collection}`;
 
-		const values = await this.kv.getItem(join(this.path, cleanPath), {
-			lmdb_path: join(this.path, cleanPath),
-		});
+    const values = await this.kv.getItem(join(this.path, cleanPath), {
+      lmdb_path: join(this.path, cleanPath),
+    });
 
-		return { data: values };
-	}
+    return { data: values };
+  }
 
-	/**
-	 *
-	 * @param collection
-	 */
-	public async deleteOne(collection: string, id: string) {
-		try {
-			await deleteOneHandler(this.kv, this.path, collection, id);
-		} catch (error) {
-			console.error("Error deleting item:", error);
-		}
-	}
+  /**
+   *
+   * @param collection
+   */
+  public async deleteOne(collection: string, id: string) {
+    try {
+      await deleteOneHandler(this.kv, this.path, collection, id);
+    } catch (error) {
+      console.error("Error deleting item:", error);
+    }
+  }
 
-	// handle plugins
-	public async registerPlugin<T>(name: string, plugin: PluginFunction<T>) {
-		// create a js file on the file system or a serverless function if hosted serverless
-	}
+  // handle plugins
+  public async registerPlugin<T>(name: string, plugin: PluginFunction<T>) {
+    // create a js file on the file system or a serverless function if hosted serverless
+  }
 
-	public async deletePlugin<T>(name: string, plugin: PluginFunction<T>) {
-		//
-	}
+  public async deletePlugin<T>(name: string, plugin: PluginFunction<T>) {
+    //
+  }
 }

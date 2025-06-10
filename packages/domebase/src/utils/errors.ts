@@ -1,6 +1,6 @@
 function defineErrorMessages<T>(definedErrors: T) {
   const checkErrors = (
-    errorsToCheck: { condition: boolean; msg: (errors: T) => string }[]
+    errorsToCheck: { condition: boolean; msg: (errors: T) => string }[],
   ) => {
     const errorList = [];
     for (const { condition, msg } of errorsToCheck) {
