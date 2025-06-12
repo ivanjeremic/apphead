@@ -44,28 +44,25 @@ const router = createBrowserRouter(
           children: [
             {
               index: true,
-              loader: async () => {
-                const data = await domebase.query({
-                  collection: "__collections",
-                });
-
-                return data;
-              },
               Component: CollectionsPage,
             },
             {
               path: "add",
               Component: AddCollectionPage,
+              action: async ({ request }) => {
+                let formData = await request.formData();
+                let username = formData.get("username");
+                await domebase.insert({
+                  collectionName: "__collections",
+                  data: { collectionName: username, schema: {} },
+                });
+                return true;
+              },
             },
           ],
         },
         {
           path: "users",
-          loader: async () => {
-            /* const data = await domebase.query({ collection: "__collections" });
-
-						return data; */
-          },
           Component: UsersPage,
         },
         {

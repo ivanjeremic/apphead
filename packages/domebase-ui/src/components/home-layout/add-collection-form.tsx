@@ -4,7 +4,7 @@ import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import {
-  Form,
+  Form as ShadForm,
   FormControl,
   FormDescription,
   FormField,
@@ -13,7 +13,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { domebase } from "@/lib/domebase";
+import { Form } from "react-router";
 
 const formSchema = z.object({
   username: z.string().min(2, {
@@ -30,21 +30,11 @@ export function AddCollectionForm() {
     },
   });
 
-  // 2. Define a submit handler.
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
 
-    await domebase.insert({
-      collectionName: "__collections",
-      data: { collectionName: values.username, schema: {} },
-    });
-  }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+    <ShadForm {...form}>
+      <Form action="/collections/add" method="POST" className="space-y-8">
         <FormField
           control={form.control}
           name="username"
@@ -62,7 +52,7 @@ export function AddCollectionForm() {
           )}
         />
         <Button type="submit">Submit</Button>
-      </form>
-    </Form>
+      </Form>
+    </ShadForm>
   );
 }
