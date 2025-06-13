@@ -253,7 +253,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         {/** NAV SEARCH */}
       </SidebarHeader>
       <SidebarContent>
-
         <Swiper
           allowTouchMove={false}
           className="w-full"
@@ -272,7 +271,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <NavMain
               items={loader?.data.map((i: { collectionName: string }) => ({
                 title: i.collectionName,
-                url: i.collectionName,
+                url: "/collections/" + i.collectionName,
                 icon: ChevronsLeftRightEllipsis,
               }))}
               label="Collections"
@@ -280,7 +279,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             />
           </SwiperSlide>
         </Swiper>
-
       </SidebarContent>
       <SidebarFooter>
         <NavSecondary items={data.navSecondary} />

@@ -62,6 +62,10 @@ const router = createBrowserRouter(
                 return true;
               },
             },
+            {
+              path: ":id",
+              element: <p>Collection Details Page</p>
+            }
           ],
         },
         {
