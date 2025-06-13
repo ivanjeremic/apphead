@@ -11,7 +11,7 @@ import { useLocation } from "react-router";
 export function NavSearchForm({ ...props }: React.ComponentProps<"form">) {
   const location = useLocation();
 
-  if (location.pathname !== "/collections") {
+  if (location.pathname.includes("/collections)")) {
     return null;
   }
 

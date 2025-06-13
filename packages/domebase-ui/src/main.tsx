@@ -10,10 +10,13 @@ import { LoginPage } from "./pages/LoginPage";
 import { PluginMarketplace } from "./pages/plugin-marketplace";
 import { HomeLayout } from "./components/home-layout";
 import { LoginLayout } from "./components/login-layout";
-import "./index.css";
 import { SettingsPage } from "./pages/SettingsPage";
 import { AddCollectionPage } from "./pages/AddCollectionPage";
 import { domebase } from "./lib/domebase";
+
+import "./index.css";
+// Import Swiper styles
+import 'swiper/css';
 
 const router = createBrowserRouter(
   [

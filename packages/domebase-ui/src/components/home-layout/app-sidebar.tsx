@@ -36,16 +36,12 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  type CarouselApi,
-} from "@/components/ui/carousel";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState, type SetStateAction } from "react";
 import { useLoaderData, useLocation, useNavigate } from "react-router";
 import { NavSearchForm } from "./nav-search-form";
 import { Button } from "../ui/button";
+import { Swiper, SwiperSlide } from 'swiper/react';
+import type SwiperCore from "swiper";
 
 const data = {
   navMain: [
@@ -121,11 +117,6 @@ const data = {
       url: "#",
       icon: MapIcon,
     },
-    {
-      name: "Discord",
-      url: "#",
-      icon: MapIcon,
-    },
   ],
   navSecondary: [
     {
@@ -147,44 +138,59 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const [api, setApi] = useState<CarouselApi>();
   const [canScroll, setCanScroll] = useState(true);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const location = useLocation();
-  const loader = useLoaderData();
   const navigate = useNavigate();
+  const loader = useLoaderData();
+  const [swiperInstance, setSwiperInstance] = useState<SwiperCore | null>(null);
+
+  // Callback to get the Swiper instance when it's ready
+  const handleSwiper = useCallback((swiper: SetStateAction<SwiperCore | null>) => {
+    setSwiperInstance(swiper);
+  }, []);
 
   // Handle menu item click
   const handleNavNext = () => {
     setCanScroll(false);
-    api?.scrollNext();
+    if (swiperInstance) {
+      swiperInstance.slideNext();
+    }
     setCanScroll(true);
   };
 
+
+
   // Handle back navigation
   const handlNavePrev = () => {
-    if (location.pathname !== "/collections/add") {
-      api?.scrollPrev();
+    if (swiperInstance && location.pathname !== "/collections/add") {
+      swiperInstance.slidePrev();
     }
     navigate(-1);
   };
 
+
+
   useEffect(() => {
     // disable on manual handle Pre/Next this means user clicked back/forward button
-    if (canScroll && location.pathname === "/") {
-      api?.scrollTo(0);
+    if (swiperInstance && canScroll && location.pathname === "/") {
+      swiperInstance.slideTo(0);
     }
 
     if (
       (canScroll && location.pathname === "/collections") ||
       location.pathname.includes("/collections")
     ) {
-      api?.scrollTo(1);
+      if (swiperInstance) {
+        swiperInstance.slideTo(1);
+      }
     }
 
-    setCanScrollPrev(api?.canScrollPrev() ?? false);
-  }, [api, canScroll, location]);
+    if (swiperInstance) {
+      setCanScrollPrev(!swiperInstance.isBeginning);
+    }
+  }, [swiperInstance, canScroll, location]);
 
   return (
     <Sidebar variant="sidebar" {...props}>
@@ -226,6 +232,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <Search />
                 </Button>
                 <Button
+                  disabled={location.pathname === "/collections/add"}
                   onClick={() => navigate("/collections/add")}
                   variant="outline"
                   size="lg"
@@ -246,36 +253,34 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         {/** NAV SEARCH */}
       </SidebarHeader>
       <SidebarContent>
-        <Carousel
-          className="h-full"
-          setApi={setApi}
-          opts={{
-            watchDrag: false,
-            duration: 20,
-          }}
+
+        <Swiper
+          allowTouchMove={false}
+          className="w-full"
+          onSwiper={handleSwiper}
+          watchOverflow={false}
         >
-          <CarouselContent>
-            <CarouselItem>
-              <NavMain
-                items={data.navMain}
-                label="Domebase"
-                handleNavNext={handleNavNext}
-              />
-              <NavProjects projects={data.projects} />
-            </CarouselItem>
-            <CarouselItem>
-              <NavMain
-                items={loader?.data.map((i: { collectionName: string }) => ({
-                  title: i.collectionName,
-                  url: i.collectionName,
-                  icon: ChevronsLeftRightEllipsis,
-                }))}
-                label="Collections"
-                handleNavNext={handleNavNext}
-              />
-            </CarouselItem>
-          </CarouselContent>
-        </Carousel>
+          <SwiperSlide className="overflow-auto">
+            <NavMain
+              items={data.navMain}
+              label="Domebase"
+              handleNavNext={handleNavNext}
+            />
+            <NavProjects projects={data.projects} />
+          </SwiperSlide>
+          <SwiperSlide className="overflow-auto">
+            <NavMain
+              items={loader?.data.map((i: { collectionName: string }) => ({
+                title: i.collectionName,
+                url: i.collectionName,
+                icon: ChevronsLeftRightEllipsis,
+              }))}
+              label="Collections"
+              handleNavNext={handleNavNext}
+            />
+          </SwiperSlide>
+        </Swiper>
+
       </SidebarContent>
       <SidebarFooter>
         <NavSecondary items={data.navSecondary} />
