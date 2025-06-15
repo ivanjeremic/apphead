@@ -35,19 +35,21 @@ export function NavMain({
       <SidebarMenu>
         {items.map((item) => (
           <SidebarMenuItem key={item.title}>
-            <SidebarMenuButton
-              isActive={item.url === location.pathname}
-              onClick={item.items ? handleNavNext : undefined}
-              asChild
-              tooltip={item.title}
-              className="flex"
-            >
-              <Link to={item.url}>
-                <item.icon />
-                <span>{item.title}</span>
-                {item.items && <ChevronRight className="ml-auto" />}
-              </Link>
-            </SidebarMenuButton>
+            <Link to={item.url}>
+              <SidebarMenuButton
+                isActive={item.url === location.pathname}
+                onClick={item.items ? handleNavNext : undefined}
+                asChild
+                tooltip={item.title}
+                className="flex"
+              >
+                <span>
+                  <item.icon />
+                  <span>{item.title}</span>
+                  {item.items && <ChevronRight className="ml-auto" />}
+                </span>
+              </SidebarMenuButton>
+            </Link>
           </SidebarMenuItem>
         ))}
       </SidebarMenu>
