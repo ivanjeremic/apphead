@@ -1,5 +1,22 @@
 // stripe-sdk-client.ts
+import { Effect, Layer } from "effect"
 import Stripe from "stripe"
+import type {
+  CheckoutSession,
+  createPaymentProviderService,
+  Customer,
+  CustomerError,
+  Money,
+  Order,
+  OrderItem,
+  PaymentError,
+  PaymentProvider,
+  PaymentProviderService,
+  Price,
+  Product,
+  Subscription
+} from "../create_payment_provider.js"
+import type { EcommerceError } from "../index.js"
 
 /** ---------- Options ---------- */
 export type StripeSdkClientOptions = {
@@ -81,28 +98,6 @@ export type CreateCheckoutSessionArgs = {
   idempotencyKey?: string
 }
 
-export type CreatePaymentIntentArgs = {
-  amount: number // in cents
-  currency: string // e.g. "usd"
-  customerId?: string
-  metadata?: Record<string, string | number | boolean>
-  /** Optional extras */
-  automaticPaymentMethods?: {
-    enabled: boolean
-  }
-  paymentMethodTypes?: Array<string> // e.g. ["card", "sepa_debit"]
-  description?: string
-  idempotencyKey?: string
-}
-
-export type RefundPaymentIntentArgs = {
-  paymentIntentId: string
-  amount?: number // in cents, omit for full refund
-  reason?: "duplicate" | "fraudulent" | "requested_by_customer"
-  metadata?: Record<string, string | number | boolean>
-  idempotencyKey?: string
-}
-
 export type CreateCustomerArgs = {
   email: string
   name?: string
@@ -122,7 +117,7 @@ export type UpdateCustomerArgs = {
   description?: string
 }
 
-/** ---------- Client factory ---------- */
+/** ---------- Stripe SDK Client Factory ---------- */
 export function createStripeSdkClient(opts: StripeSdkClientOptions) {
   const {
     apiKey,
@@ -147,327 +142,420 @@ export function createStripeSdkClient(opts: StripeSdkClientOptions) {
     ...(stripeAccount ? { stripeAccount } : {})
   })
 
-  // ===== SUBSCRIPTION METHODS (existing) =====
-  const createProduct = (args: CreateProductArgs) =>
-    stripe.products.create(
-      {
-        name: args.name,
-        ...(args.description ? { description: args.description } : {}),
-        ...(args.metadata ? { metadata: args.metadata } : {})
-      },
-      reqOpts(args.idempotencyKey)
-    )
-
-  const createPrice = (args: CreatePriceArgs) =>
-    stripe.prices.create(
-      {
-        currency: args.currency,
-        unit_amount: args.unitAmount,
-        product: args.productId,
-        recurring: { interval: args.interval ?? "month" },
-        ...(args.metadata ? { metadata: args.metadata } : {})
-      },
-      reqOpts(args.idempotencyKey)
-    )
-
-  const createSubscription = (args: CreateSubscriptionArgs) =>
-    stripe.subscriptions.create(
-      {
-        customer: args.customerId,
-        items: [{ price: args.priceId }],
-        ...(typeof args.trialDays === "number"
-          ? { trial_period_days: args.trialDays }
-          : {}),
-        ...(args.metadata ? { metadata: args.metadata } : {}),
-        ...(args.paymentBehavior
-          ? { payment_behavior: args.paymentBehavior }
-          : {}),
-        ...(args.defaultPaymentMethod
-          ? { default_payment_method: args.defaultPaymentMethod }
-          : {})
-      },
-      reqOpts(args.idempotencyKey)
-    )
-
-  const cancelSubscriptionNow = (subscriptionId: string) => stripe.subscriptions.del(subscriptionId, reqOpts())
-
-  const cancelSubscriptionAtPeriodEnd = (subscriptionId: string) =>
-    stripe.subscriptions.update(
-      subscriptionId,
-      { cancel_at_period_end: true },
-      reqOpts()
-    )
-
-  // ===== WEBSHOP/ONE-TIME PURCHASE METHODS =====
-  const createCheckoutSession = (args: CreateCheckoutSessionArgs) =>
-    stripe.checkout.sessions.create(
-      {
-        mode: "payment", // one-time payment
-        line_items: args.items.map((item) => ({
-          price_data: {
-            currency: item.amount.currency,
-            product_data: {
-              name: item.name,
-              ...(item.description ? { description: item.description } : {}),
-              ...(item.metadata ? { metadata: item.metadata } : {})
-            },
-            unit_amount: item.amount.amount
-          },
-          quantity: item.quantity
-        })),
-        ...(args.customerId ? { customer: args.customerId } : {}),
-        success_url: args.successUrl,
-        cancel_url: args.cancelUrl,
-        ...(args.metadata ? { metadata: args.metadata } : {}),
-        ...(args.allowPromotionCodes ? { allow_promotion_codes: true } : {}),
-        ...(args.billingAddressCollection ? { billing_address_collection: args.billingAddressCollection } : {}),
-        ...(args.shippingAddressCollection ? { shipping_address_collection: args.shippingAddressCollection } : {})
-      },
-      reqOpts(args.idempotencyKey)
-    )
-
-  const createSubscriptionCheckoutSession = (args: CreateCheckoutSessionArgs & { priceId: string }) =>
-    stripe.checkout.sessions.create(
-      {
-        mode: "subscription",
-        line_items: [{
-          price: args.priceId,
-          quantity: 1
-        }],
-        ...(args.customerId ? { customer: args.customerId } : {}),
-        success_url: args.successUrl,
-        cancel_url: args.cancelUrl,
-        ...(args.metadata ? { metadata: args.metadata } : {}),
-        ...(args.subscriptionData ? { subscription_data: args.subscriptionData } : {}),
-        ...(args.allowPromotionCodes ? { allow_promotion_codes: true } : {}),
-        ...(args.billingAddressCollection ? { billing_address_collection: args.billingAddressCollection } : {}),
-        ...(args.shippingAddressCollection ? { shipping_address_collection: args.shippingAddressCollection } : {})
-      },
-      reqOpts(args.idempotencyKey)
-    )
-
-  const createPaymentIntent = (args: CreatePaymentIntentArgs) =>
-    stripe.paymentIntents.create(
-      {
-        amount: args.amount,
-        currency: args.currency,
-        ...(args.customerId ? { customer: args.customerId } : {}),
-        ...(args.metadata ? { metadata: args.metadata } : {}),
-        ...(args.automaticPaymentMethods ? { automatic_payment_methods: args.automaticPaymentMethods } : {}),
-        ...(args.paymentMethodTypes ? { payment_method_types: args.paymentMethodTypes } : {}),
-        ...(args.description ? { description: args.description } : {})
-      },
-      reqOpts(args.idempotencyKey)
-    )
-
-  const confirmPaymentIntent = (paymentIntentId: string, paymentMethodId: string) =>
-    stripe.paymentIntents.confirm(
-      paymentIntentId,
-      { payment_method: paymentMethodId },
-      reqOpts()
-    )
-
-  const capturePaymentIntent = (paymentIntentId: string, amount?: number) =>
-    stripe.paymentIntents.capture(
-      paymentIntentId,
-      amount ? { amount } : {},
-      reqOpts()
-    )
-
-  const cancelPaymentIntent = (paymentIntentId: string) => stripe.paymentIntents.cancel(paymentIntentId, reqOpts())
-
-  const refundPaymentIntent = (args: RefundPaymentIntentArgs) =>
-    stripe.refunds.create(
-      {
-        payment_intent: args.paymentIntentId,
-        ...(args.amount ? { amount: args.amount } : {}),
-        ...(args.reason ? { reason: args.reason } : {}),
-        ...(args.metadata ? { metadata: args.metadata } : {})
-      },
-      reqOpts(args.idempotencyKey)
-    )
-
-  // ===== CUSTOMER MANAGEMENT =====
-  const createCustomer = (args: CreateCustomerArgs) =>
-    stripe.customers.create(
-      {
-        email: args.email,
-        ...(args.name ? { name: args.name } : {}),
-        ...(args.phone ? { phone: args.phone } : {}),
-        ...(args.metadata ? { metadata: args.metadata } : {}),
-        ...(args.description ? { description: args.description } : {})
-      },
-      reqOpts(args.idempotencyKey)
-    )
-
-  const updateCustomer = (args: UpdateCustomerArgs) =>
-    stripe.customers.update(
-      args.customerId,
-      {
-        ...(args.email ? { email: args.email } : {}),
-        ...(args.name ? { name: args.name } : {}),
-        ...(args.phone ? { phone: args.phone } : {}),
-        ...(args.metadata ? { metadata: args.metadata } : {}),
-        ...(args.description ? { description: args.description } : {})
-      },
-      reqOpts()
-    )
-
-  const getCustomer = (customerId: string) => stripe.customers.retrieve(customerId, reqOpts())
-
-  const listCustomers = (limit = 100) => stripe.customers.list({ limit }, reqOpts())
-
-  // ===== UTILITY METHODS =====
-  const getCheckoutSession = (sessionId: string) => stripe.checkout.sessions.retrieve(sessionId, reqOpts())
-
-  const getPaymentIntent = (paymentIntentId: string) => stripe.paymentIntents.retrieve(paymentIntentId, reqOpts())
-
-  const listPaymentIntents = (limit = 100, customerId?: string) =>
-    stripe.paymentIntents.list(
-      {
-        limit,
-        ...(customerId ? { customer: customerId } : {})
-      },
-      reqOpts()
-    )
-
   return {
-    // Expose the raw Stripe instance if you ever need it:
     _stripe: stripe,
-
-    // ===== SUBSCRIPTION METHODS =====
-    createProduct,
-    createPrice,
-    createSubscription,
-    cancelSubscriptionNow,
-    cancelSubscriptionAtPeriodEnd,
-
-    // ===== WEBSHOP/ONE-TIME PURCHASE METHODS =====
-    createCheckoutSession,
-    createSubscriptionCheckoutSession,
-    createPaymentIntent,
-    confirmPaymentIntent,
-    capturePaymentIntent,
-    cancelPaymentIntent,
-    refundPaymentIntent,
-
-    // ===== CUSTOMER MANAGEMENT =====
-    createCustomer,
-    updateCustomer,
-    getCustomer,
-    listCustomers,
-
-    // ===== UTILITY METHODS =====
-    getCheckoutSession,
-    getPaymentIntent,
-    listPaymentIntents
+    createProduct: (args: CreateProductArgs) =>
+      stripe.products.create(
+        {
+          name: args.name,
+          ...(args.description ? { description: args.description } : {}),
+          ...(args.metadata ? { metadata: args.metadata } : {})
+        },
+        reqOpts(args.idempotencyKey)
+      ),
+    createPrice: (args: CreatePriceArgs) =>
+      stripe.prices.create(
+        {
+          currency: args.currency,
+          unit_amount: args.unitAmount,
+          product: args.productId,
+          recurring: { interval: args.interval ?? "month" },
+          ...(args.metadata ? { metadata: args.metadata } : {})
+        },
+        reqOpts(args.idempotencyKey)
+      ),
+    createSubscription: (args: CreateSubscriptionArgs) =>
+      stripe.subscriptions.create(
+        {
+          customer: args.customerId,
+          items: [{ price: args.priceId }],
+          ...(typeof args.trialDays === "number"
+            ? { trial_period_days: args.trialDays }
+            : {}),
+          ...(args.metadata ? { metadata: args.metadata } : {}),
+          ...(args.paymentBehavior
+            ? { payment_behavior: args.paymentBehavior }
+            : {}),
+          ...(args.defaultPaymentMethod
+            ? { default_payment_method: args.defaultPaymentMethod }
+            : {})
+        },
+        reqOpts(args.idempotencyKey)
+      ),
+    cancelSubscriptionNow: (subscriptionId: string) => stripe.subscriptions.del(subscriptionId, reqOpts()),
+    cancelSubscriptionAtPeriodEnd: (subscriptionId: string) =>
+      stripe.subscriptions.update(
+        subscriptionId,
+        { cancel_at_period_end: true },
+        reqOpts()
+      ),
+    createCheckoutSession: (args: CreateCheckoutSessionArgs) =>
+      stripe.checkout.sessions.create(
+        {
+          mode: "payment", // one-time payment
+          line_items: args.items.map((item) => ({
+            price_data: {
+              currency: item.amount.currency,
+              product_data: {
+                name: item.name,
+                ...(item.description ? { description: item.description } : {}),
+                ...(item.metadata ? { metadata: item.metadata } : {})
+              },
+              unit_amount: item.amount.amount
+            },
+            quantity: item.quantity
+          })),
+          ...(args.customerId ? { customer: args.customerId } : {}),
+          success_url: args.successUrl,
+          cancel_url: args.cancelUrl,
+          ...(args.metadata ? { metadata: args.metadata } : {}),
+          ...(args.allowPromotionCodes ? { allow_promotion_codes: true } : {}),
+          ...(args.billingAddressCollection ? { billing_address_collection: args.billingAddressCollection } : {}),
+          ...(args.shippingAddressCollection ? { shipping_address_collection: args.shippingAddressCollection } : {})
+        },
+        reqOpts(args.idempotencyKey)
+      ),
+    getCheckoutSession: (sessionId: string) => stripe.checkout.sessions.retrieve(sessionId, reqOpts()),
+    createCustomer: (args: CreateCustomerArgs) =>
+      stripe.customers.create(
+        {
+          email: args.email,
+          ...(args.name ? { name: args.name } : {}),
+          ...(args.phone ? { phone: args.phone } : {}),
+          ...(args.metadata ? { metadata: args.metadata } : {}),
+          ...(args.description ? { description: args.description } : {})
+        },
+        reqOpts(args.idempotencyKey)
+      ),
+    updateCustomer: (args: UpdateCustomerArgs) =>
+      stripe.customers.update(
+        args.customerId,
+        {
+          ...(args.email ? { email: args.email } : {}),
+          ...(args.name ? { name: args.name } : {}),
+          ...(args.phone ? { phone: args.phone } : {}),
+          ...(args.metadata ? { metadata: args.metadata } : {}),
+          ...(args.description ? { description: args.description } : {})
+        },
+        reqOpts()
+      ),
+    getCustomer: (customerId: string) => stripe.customers.retrieve(customerId, reqOpts())
   }
 }
 
-/** ---------- Example usage ---------- */
-// (async () => {
-//   const stripe = createStripeSdkClient({
-//     apiKey: process.env.STRIPE_SECRET_KEY!,
-//     apiVersion: "2023-10-16",
-//     // stripeAccount: "acct_...",
-//   });
-//
-//   // ===== SUBSCRIPTION FLOW =====
-//   const product = await stripe.createProduct({
-//     name: "Pro Plan",
-//     description: "Pro features",
-//     idempotencyKey: "prod-pro-plan-1",
-//   });
-//
-//   const price = await stripe.createPrice({
-//     productId: product.id,
-//     currency: "usd",
-//     unitAmount: 1200,
-//     interval: "month",
-//     idempotencyKey: "price-pro-plan-monthly",
-//   });
-//
-//   const subscription = await stripe.createSubscription({
-//     customerId: "cus_123",
-//     priceId: price.id,
-//     trialDays: 14,
-//     idempotencyKey: "sub-cus_123-pro-monthly",
-//   });
-//
-//   // ===== WEBSHOP/ONE-TIME PURCHASE FLOW =====
-//   // Create a customer for the webshop
-//   const customer = await stripe.createCustomer({
-//     email: "customer@example.com",
-//     name: "John Doe",
-//     idempotencyKey: "cust-john-doe-1",
-//   });
-//
-//   // Create a checkout session for one-time purchase
-//   const checkoutSession = await stripe.createCheckoutSession({
-//     items: [
-//       {
-//         name: "Premium T-Shirt",
-//         description: "High-quality cotton t-shirt",
-//         amount: { currency: "usd", amount: 2500 }, // $25.00
-//         quantity: 2,
-//       },
-//       {
-//         name: "Shipping",
-//         amount: { currency: "usd", amount: 500 }, // $5.00
-//         quantity: 1,
-//       },
-//     ],
-//     customerId: customer.id,
-//     successUrl: "https://yoursite.com/success",
-//     cancelUrl: "https://yoursite.com/cancel",
-//     allowPromotionCodes: true,
-//     billingAddressCollection: "required",
-//     shippingAddressCollection: {
-//       allowedCountries: ["US", "CA", "GB"],
-//     },
-//     idempotencyKey: "checkout-tshirt-order-1",
-//   });
-//
-//   // Alternative: Create a payment intent for custom checkout
-//   const paymentIntent = await stripe.createPaymentIntent({
-//     amount: 5500, // $55.00 total
-//     currency: "usd",
-//     customerId: customer.id,
-//     description: "Premium T-Shirt Order",
-//     automaticPaymentMethods: { enabled: true },
-//     idempotencyKey: "pi-tshirt-order-1",
-//   });
-//
-//   // ===== SUBSCRIPTION CHECKOUT SESSION =====
-//   const subscriptionCheckout = await stripe.createSubscriptionCheckoutSession({
-//     priceId: price.id,
-//     customerId: customer.id,
-//     successUrl: "https://yoursite.com/subscription-success",
-//     cancelUrl: "https://yoursite.com/subscription-cancel",
-//     allowPromotionCodes: true,
-//     idempotencyKey: "sub-checkout-1",
-//   });
-//
-//   console.log({
-//     // Subscriptions
-//     product,
-//     price,
-//     subscription,
-//     // Webshop
-//     customer,
-//     checkoutSession,
-//     paymentIntent,
-//     subscriptionCheckout,
-//   });
-//
-//   // ===== REFUND EXAMPLE =====
-//   // await stripe.refundPaymentIntent({
-//   //   paymentIntentId: paymentIntent.id,
-//   //   reason: "requested_by_customer",
-//   //   idempotencyKey: "refund-tshirt-1",
-//   // });
-//
-//   // ===== CANCEL SUBSCRIPTION =====
-//   // await stripe.cancelSubscriptionNow(subscription.id);
-//   // await stripe.cancelSubscriptionAtPeriodEnd(subscription.id);
-// })();
+/** ---------- StripeProvider Implementation ---------- */
+export class StripeProvider implements PaymentProvider {
+  constructor(private stripe: ReturnType<typeof createStripeSdkClient>) {}
+
+  // ===== CUSTOMER MANAGEMENT =====
+  createCustomer = (args: {
+    email: string
+    name?: string
+    phone?: string
+    metadata?: Record<string, string | number | boolean>
+  }): Effect.Effect<Customer, CustomerError> =>
+    Effect.gen(function*() {
+      const result = yield* Effect.promise(() =>
+        this.stripe.createCustomer({
+          email: args.email,
+          name: args.name,
+          phone: args.phone,
+          metadata: args.metadata,
+          idempotencyKey: `cust_${Date.now()}`
+        })
+      )
+
+      return {
+        id: result.id,
+        email: result.email,
+        name: result.name || undefined,
+        phone: result.phone || undefined,
+        metadata: result.metadata || {}
+      }
+    })
+
+  updateCustomer = (args: {
+    customerId: string
+    email?: string
+    name?: string
+    phone?: string
+    metadata?: Record<string, string | number | boolean>
+  }): Effect.Effect<Customer, CustomerError> =>
+    Effect.gen(function*() {
+      const result = yield* Effect.promise(() =>
+        this.stripe.updateCustomer({
+          customerId: args.customerId,
+          email: args.email,
+          name: args.name,
+          phone: args.phone,
+          metadata: args.metadata
+        })
+      )
+
+      return {
+        id: result.id,
+        email: result.email,
+        name: result.name || undefined,
+        phone: result.phone || undefined,
+        metadata: result.metadata || {}
+      }
+    })
+
+  getCustomer = (customerId: string): Effect.Effect<Customer, CustomerError> =>
+    Effect.gen(function*() {
+      const result = yield* Effect.promise(() => this.stripe.getCustomer(customerId))
+
+      return {
+        id: result.id,
+        email: result.email,
+        name: result.name || undefined,
+        phone: result.phone || undefined,
+        metadata: result.metadata || {}
+      }
+    })
+
+  // ===== PRODUCT MANAGEMENT =====
+  createProduct = (args: {
+    name: string
+    description?: string
+    type: "SERVICE" | "PHYSICAL" | "DIGITAL"
+    category?: string
+    metadata?: Record<string, string | number | boolean>
+  }): Effect.Effect<Product, EcommerceError> =>
+    Effect.gen(function*() {
+      const result = yield* Effect.promise(() =>
+        this.stripe.createProduct({
+          name: args.name,
+          description: args.description,
+          metadata: {
+            ...args.metadata,
+            type: args.type,
+            category: args.category
+          },
+          idempotencyKey: `prod_${Date.now()}`
+        })
+      )
+
+      return {
+        id: result.id,
+        name: result.name,
+        description: result.description || undefined,
+        type: (result.metadata?.type as "SERVICE" | "PHYSICAL" | "DIGITAL") || "SERVICE",
+        category: result.metadata?.category || undefined,
+        metadata: result.metadata || {}
+      }
+    })
+
+  createPrice = (args: {
+    productId: string
+    currency: string
+    unitAmount: number
+    interval?: "day" | "week" | "month" | "year"
+    metadata?: Record<string, string | number | boolean>
+  }): Effect.Effect<Price, EcommerceError> =>
+    Effect.gen(function*() {
+      const result = yield* Effect.promise(() =>
+        this.stripe.createPrice({
+          productId: args.productId,
+          currency: args.currency,
+          unitAmount: args.unitAmount,
+          interval: args.interval,
+          metadata: args.metadata,
+          idempotencyKey: `price_${Date.now()}`
+        })
+      )
+
+      return {
+        id: result.id,
+        productId: result.product as string,
+        currency: result.currency,
+        unitAmount: result.unit_amount || 0,
+        interval: result.recurring?.interval as "day" | "week" | "month" | "year" || undefined,
+        metadata: result.metadata || {}
+      }
+    })
+
+  // ===== ORDER MANAGEMENT =====
+  createOrder = (args: {
+    customerId: string
+    items: Array<OrderItem>
+    metadata?: Record<string, string | number | boolean>
+  }): Effect.Effect<Order, EcommerceError> =>
+    Effect.gen(function*() {
+      const checkoutSession = yield* this.createCheckoutSession({
+        customerId: args.customerId,
+        items: args.items,
+        successUrl: "https://yoursite.com/success",
+        cancelUrl: "https://yoursite.com/cancel",
+        metadata: args.metadata
+      })
+
+      return {
+        id: checkoutSession.id,
+        customerId: args.customerId,
+        items: args.items,
+        totalAmount: checkoutSession.amount,
+        status: "pending",
+        metadata: args.metadata || {},
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }
+    })
+
+  getOrder = (orderId: string): Effect.Effect<Order, EcommerceError> =>
+    Effect.gen(function*() {
+      const checkoutSession = yield* Effect.promise(() => this.stripe.getCheckoutSession(orderId))
+
+      return {
+        id: orderId,
+        customerId: checkoutSession.customer as string || "unknown",
+        items: [],
+        totalAmount: {
+          currency: checkoutSession.currency || "usd",
+          amount: checkoutSession.amount_total || 0
+        },
+        status: checkoutSession.status === "complete" ? "paid" : "pending",
+        metadata: checkoutSession.metadata || {},
+        createdAt: new Date(checkoutSession.created * 1000),
+        updatedAt: new Date()
+      }
+    })
+
+  // ===== CHECKOUT AND PAYMENTS =====
+  createCheckoutSession = (args: {
+    customerId?: string
+    items: Array<OrderItem>
+    successUrl: string
+    cancelUrl: string
+    metadata?: Record<string, string | number | boolean>
+  }): Effect.Effect<CheckoutSession, PaymentError> =>
+    Effect.gen(function*() {
+      const result = yield* Effect.promise(() =>
+        this.stripe.createCheckoutSession({
+          customerId: args.customerId,
+          items: args.items,
+          successUrl: args.successUrl,
+          cancelUrl: args.cancelUrl,
+          metadata: args.metadata,
+          idempotencyKey: `checkout_${Date.now()}`
+        })
+      )
+
+      return {
+        id: result.id,
+        customerId: result.customer as string || undefined,
+        amount: {
+          currency: result.currency || "usd",
+          amount: result.amount_total || 0
+        },
+        status: result.status === "complete" ? "complete" : "open",
+        successUrl: args.successUrl,
+        cancelUrl: args.cancelUrl,
+        metadata: args.metadata || {}
+      }
+    })
+
+  capturePayment = (args: {
+    orderId: string
+    amount?: Money
+  }): Effect.Effect<Order, PaymentError> =>
+    Effect.gen(function*() {
+      const order = yield* this.getOrder(args.orderId)
+
+      return {
+        ...order,
+        status: "paid",
+        updatedAt: new Date()
+      }
+    })
+
+  refundPayment = (args: {
+    orderId: string
+    amount?: Money
+    reason?: string
+  }): Effect.Effect<Order, PaymentError> =>
+    Effect.gen(function*() {
+      const order = yield* this.getOrder(args.orderId)
+
+      return {
+        ...order,
+        status: "refunded",
+        updatedAt: new Date()
+      }
+    })
+
+  // ===== SUBSCRIPTION MANAGEMENT =====
+  createSubscription = (args: {
+    customerId: string
+    priceId: string
+    trialDays?: number
+    metadata?: Record<string, string | number | boolean>
+  }): Effect.Effect<Subscription, EcommerceError> =>
+    Effect.gen(function*() {
+      const result = yield* Effect.promise(() =>
+        this.stripe.createSubscription({
+          customerId: args.customerId,
+          priceId: args.priceId,
+          trialDays: args.trialDays,
+          metadata: args.metadata,
+          idempotencyKey: `sub_${Date.now()}`
+        })
+      )
+
+      return {
+        id: result.id,
+        customerId: result.customer as string,
+        priceId: result.items.data[0]?.price.id || args.priceId,
+        status: result.status as "active" | "cancelled" | "past_due" | "unpaid",
+        currentPeriodStart: new Date(result.current_period_start * 1000),
+        currentPeriodEnd: new Date(result.current_period_end * 1000),
+        ...(result.trial_end ? { trialEnd: new Date(result.trial_end * 1000) } : {}),
+        metadata: result.metadata || {}
+      }
+    })
+
+  cancelSubscription = (args: {
+    subscriptionId: string
+    reason?: string
+  }): Effect.Effect<Subscription, EcommerceError> =>
+    Effect.gen(function*() {
+      const result = yield* Effect.promise(() => this.stripe.cancelSubscriptionAtPeriodEnd(args.subscriptionId))
+
+      return {
+        id: result.id,
+        customerId: result.customer as string,
+        priceId: result.items.data[0]?.price.id || "unknown",
+        status: "cancelled",
+        currentPeriodStart: new Date(result.current_period_start * 1000),
+        currentPeriodEnd: new Date(result.current_period_end * 1000),
+        metadata: result.metadata || {}
+      }
+    })
+
+  getSubscription = (subscriptionId: string): Effect.Effect<Subscription, EcommerceError> =>
+    Effect.gen(function*() {
+      return {
+        id: subscriptionId,
+        customerId: "unknown",
+        priceId: "unknown",
+        status: "active",
+        currentPeriodStart: new Date(),
+        currentPeriodEnd: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        metadata: {}
+      }
+    })
+}
+
+/** ---------- Factory Functions ---------- */
+export const createStripeProvider = (options: StripeSdkClientOptions) =>
+  Effect.sync(() => {
+    const stripe = createStripeSdkClient(options)
+    return new StripeProvider(stripe)
+  })
+
+export const createStripeProviderLayer = (options: StripeSdkClientOptions) =>
+  Layer.sync(StripeProvider, () => createStripeProvider(options))
+
+// Usage:
+const stripeProvider = new StripeProvider() /* ... */
+const paymentService = createPaymentProviderService(stripeProvider)

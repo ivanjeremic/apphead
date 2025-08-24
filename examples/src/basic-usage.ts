@@ -1,5 +1,8 @@
 import { Apphead } from "@apphead/app"
 import { createEcommerceService } from "@apphead/ecommerce"
+import { createPaymentProviderService } from "../../packages/ecommerce/src/create_payment_provider.js"
+import { PayPalProvider } from "../../packages/ecommerce/src/payment_providers/paypal.js"
+import { StripeProvider } from "../../packages/ecommerce/src/payment_providers/stripe.js"
 
 // ===== BASIC USAGE EXAMPLE =====
 // This shows how to use the ecommerce service with perfect autocomplete
@@ -100,11 +103,41 @@ async function convenienceFunctionsExample() {
   console.log("Services available:", app.getServicesInfo())
 }
 
+// ===== BASIC PAYMENT PROVIDER EXAMPLE =====
+// This shows how to use the payment provider service directly
+
+async function basicPaymentProviderExample() {
+  console.log("\n=== Basic Payment Provider Example ===")
+
+  // Create a payment provider service with Stripe
+  const stripeProvider = new StripeProvider({
+    apiKey: "sk_test_123",
+    apiVersion: "2023-10-16",
+    maxNetworkRetries: 3,
+    timeoutMs: 30000
+  })
+  const stripeService = createPaymentProviderService(stripeProvider)
+
+  // Create a payment provider service with PayPal
+  const paypalProvider = new PayPalProvider({
+    clientId: "your_paypal_client_id",
+    clientSecret: "your_paypal_client_secret",
+    env: "sandbox",
+    timeoutMs: 30000,
+    retries: 3,
+    concurrency: 10
+  })
+  const paypalService = createPaymentProviderService(paypalProvider)
+
+  // Use stripeService or paypalService for shop operations...
+}
+
 // ===== RUN EXAMPLES =====
 async function runExamples() {
   try {
     await basicEcommerceExample()
     await convenienceFunctionsExample()
+    await basicPaymentProviderExample()
 
     console.log("\n=== All Examples Completed Successfully! ===")
   } catch (error) {
@@ -117,4 +150,4 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   runExamples()
 }
 
-export { basicEcommerceExample, convenienceFunctionsExample, runExamples }
+export { basicEcommerceExample, basicPaymentProviderExample, convenienceFunctionsExample, runExamples }
