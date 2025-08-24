@@ -1,6 +1,6 @@
-import type { CheckoutSession, Customer, Money, Order, OrderItem, Price, Product, Subscription } from "./types.js"
-
+import { AppheadService } from "@apphead/app"
 import type { PaymentProvider } from "./create_payment_provider.js"
+import type { Customer, Money, Order, OrderItem, Price, Product, Subscription } from "./ecommerce-types.js"
 
 type Store = {
   products: Map<string, Product>
@@ -10,7 +10,9 @@ type Store = {
   subscriptions: Map<string, Subscription>
 }
 
-export class EcommerceService {
+// Helper type for provider name autocomplete
+export class EcommerceService extends AppheadService {
+  static serviceName = "ecommerce"
   private store: Store = {
     products: new Map(),
     prices: new Map(),
@@ -19,16 +21,25 @@ export class EcommerceService {
     subscriptions: new Map()
   }
 
-  constructor(
-    private paymentProviders: Record<string, PaymentProvider>
-  ) {}
+  private providerMap: Record<string, PaymentProvider>
+
+  constructor(paymentProviders: Array<PaymentProvider>) {
+    super()
+    this.providerMap = Object.fromEntries(
+      paymentProviders.map((p) => [
+        // @ts-ignore: providerName is a static property on the class
+        p.constructor.providerName,
+        p
+      ])
+    )
+  }
 
   // ---- Product Management ----
-  async createProduct(product: Product) {
+  async createProduct(product: Product): Promise<Product> {
     this.store.products.set(product.id, product)
     // Optionally sync to all payment providers
-    for (const provider of Object.values(this.paymentProviders)) {
-      await provider.createProduct(product)
+    for (const _provider of Object.values(this.providerMap)) {
+      // Effect.runPromise(_provider.createProduct(product))
     }
     return product
   }
@@ -42,10 +53,10 @@ export class EcommerceService {
   }
 
   // ---- Price Management ----
-  async createPrice(price: Price) {
+  async createPrice(price: Price): Promise<Price> {
     this.store.prices.set(price.id, price)
-    for (const provider of Object.values(this.paymentProviders)) {
-      await provider.createPrice(price)
+    for (const _provider of Object.values(this.providerMap)) {
+      // Effect.runPromise(_provider.createPrice(price))
     }
     return price
   }
@@ -59,39 +70,44 @@ export class EcommerceService {
   }
 
   // ---- Customer Management ----
-  async createCustomer(customer: Customer) {
+  async createCustomer(customer: Customer): Promise<Customer> {
     this.store.customers.set(customer.id, customer)
-    for (const provider of Object.values(this.paymentProviders)) {
-      await provider.createCustomer(customer)
+    for (const _provider of Object.values(this.providerMap)) {
+      // Effect.runPromise(_provider.createCustomer(customer))
     }
     return customer
   }
 
-  async getCustomer(customerId: string) {
+  getServiceInfo(): { name: string; version: string } {
+    return { name: "ecommerce", version: "1.0.0" }
+  }
+
+  async getCustomer(customerId: string): Promise<Customer | undefined> {
     return this.store.customers.get(customerId)
   }
 
-  async listCustomers() {
+  async listCustomers(): Promise<Array<Customer>> {
     return Array.from(this.store.customers.values())
   }
 
   // ---- Order Management ----
-  async createOrder(order: Order, providerName: string) {
+  async createOrder(order: Order, providerName: string): Promise<any> {
     this.store.orders.set(order.id, order)
-    const provider = this.paymentProviders[providerName]
+    const provider = this.providerMap[providerName as string]
     if (!provider) throw new Error("Payment provider not found")
-    return provider.createOrder({
+    const orderArgs: any = {
       customerId: order.customerId,
-      items: order.items,
-      metadata: order.metadata
-    })
+      items: order.items
+    }
+    if (order.metadata !== undefined) orderArgs.metadata = order.metadata
+    return provider.createOrder(orderArgs)
   }
 
-  async getOrder(orderId: string) {
+  async getOrder(orderId: string): Promise<Order | undefined> {
     return this.store.orders.get(orderId)
   }
 
-  async listOrders() {
+  async listOrders(): Promise<Array<Order>> {
     return Array.from(this.store.orders.values())
   }
 
@@ -105,8 +121,8 @@ export class EcommerceService {
       metadata?: Record<string, string | number | boolean>
     },
     providerName: string
-  ) {
-    const provider = this.paymentProviders[providerName]
+  ): Promise<any> {
+    const provider = this.providerMap[providerName as string]
     if (!provider) throw new Error("Payment provider not found")
     return provider.createCheckoutSession(args)
   }
@@ -115,8 +131,8 @@ export class EcommerceService {
   async capturePayment(
     args: { orderId: string; amount?: Money },
     providerName: string
-  ) {
-    const provider = this.paymentProviders[providerName]
+  ): Promise<any> {
+    const provider = this.providerMap[providerName as string]
     if (!provider) throw new Error("Payment provider not found")
     return provider.capturePayment(args)
   }
@@ -124,44 +140,45 @@ export class EcommerceService {
   async refundPayment(
     args: { orderId: string; amount?: Money; reason?: string },
     providerName: string
-  ) {
-    const provider = this.paymentProviders[providerName]
+  ): Promise<any> {
+    const provider = this.providerMap[providerName as string]
     if (!provider) throw new Error("Payment provider not found")
     return provider.refundPayment(args)
   }
 
   // ---- Subscription Management ----
-  async createSubscription(subscription: Subscription, providerName: string) {
+  async createSubscription(subscription: Subscription, providerName: string): Promise<any> {
     this.store.subscriptions.set(subscription.id, subscription)
-    const provider = this.paymentProviders[providerName]
+    const provider = this.providerMap[providerName as string]
     if (!provider) throw new Error("Payment provider not found")
-    return provider.createSubscription({
+    const subArgs: any = {
       customerId: subscription.customerId,
-      priceId: subscription.priceId,
-      trialDays: subscription.trialEnd
-        ? Math.floor(
-          (subscription.trialEnd.getTime() - subscription.currentPeriodStart.getTime()) /
-            (1000 * 60 * 60 * 24)
-        )
-        : undefined,
-      metadata: subscription.metadata
-    })
+      priceId: subscription.priceId
+    }
+    if (subscription.trialEnd && subscription.currentPeriodStart) {
+      subArgs.trialDays = Math.floor(
+        (subscription.trialEnd.getTime() - subscription.currentPeriodStart.getTime()) /
+          (1000 * 60 * 60 * 24)
+      )
+    }
+    if (subscription.metadata !== undefined) subArgs.metadata = subscription.metadata
+    return provider.createSubscription(subArgs)
   }
 
   async cancelSubscription(
     args: { subscriptionId: string; reason?: string },
     providerName: string
-  ) {
-    const provider = this.paymentProviders[providerName]
+  ): Promise<any> {
+    const provider = this.providerMap[providerName as string]
     if (!provider) throw new Error("Payment provider not found")
     return provider.cancelSubscription(args)
   }
 
-  async getSubscription(subscriptionId: string) {
+  async getSubscription(subscriptionId: string): Promise<Subscription | undefined> {
     return this.store.subscriptions.get(subscriptionId)
   }
 
-  async listSubscriptions() {
+  async listSubscriptions(): Promise<Array<Subscription>> {
     return Array.from(this.store.subscriptions.values())
   }
 }

@@ -1,5 +1,5 @@
-import { Apphead } from "@apphead/app"
-import { createEcommerceService, PayPalProvider, StripeProvider } from "@apphead/ecommerce"
+import { Apphead, createService } from "@apphead/app"
+import { EcommerceService, PayPalProvider, StripeProvider } from "@apphead/ecommerce"
 
 // Example: instantiate payment providers
 const paypalProvider = new PayPalProvider({
@@ -12,28 +12,33 @@ const stripeProvider = new StripeProvider({
   apiVersion: "2023-10-16"
 })
 
-// Create ecommerce service with providers
-const ecommerceService = createEcommerceService({
-  paymentProviders: {
-    paypal: paypalProvider,
-    stripe: stripeProvider
-  }
-})
+// Create ecommerce service with providers (class-based)
+const ecommerceService = new EcommerceService([
+  paypalProvider,
+  stripeProvider
+])
 
 const app = Apphead({
-  services: [ecommerceService]
+  services: [
+    createService(ecommerceService)
+  ]
 })
 
 async function main() {
   // Example usage of the ecommerce service
   const orderData = {
+    id: "order-001",
     customerId: "customer-id-123",
     items: [
       { name: "Premium Plan", quantity: 1, unitAmount: { currency: "USD", amount: 9999 } }
     ],
+    totalAmount: { currency: "USD", amount: 9999 },
+    status: "pending" as const,
+    createdAt: new Date(),
+    updatedAt: new Date(),
     metadata: { source: "example" }
   }
-  // Specify provider (e.g., "paypal" or "stripe")
+  // Specify provider (autocomplete works: "paypal" | "stripe")
   const order = await app.ecommerce.createOrder(orderData, "paypal")
   console.log("Order created:", order)
 }

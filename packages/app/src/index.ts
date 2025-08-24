@@ -1,3 +1,4 @@
+export { AppheadService } from "./apphead-service.js"
 // Main exports for @apphead/app package
 export { Apphead, createApphead } from "./apphead.js"
 export { createService, extractServiceInfo, isAppheadService } from "./create-service.js"
@@ -8,7 +9,6 @@ export type {
   AppheadInstance,
   AppheadServices,
   AuthService,
-  BaseService,
   EcommerceService,
   EmailService,
   ServiceRegistry,

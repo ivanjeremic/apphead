@@ -245,6 +245,7 @@ export function createStripeSdkClient(opts: StripeSdkClientOptions) {
 
 /** ---------- StripeProvider Implementation ---------- */
 export class StripeProvider implements PaymentProvider {
+  static providerName = "stripe" as const
   constructor(private stripe: ReturnType<typeof createStripeSdkClient>) {}
 
   // ===== CUSTOMER MANAGEMENT =====

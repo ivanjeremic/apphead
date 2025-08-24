@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest"
-import { Apphead, type AppheadService, createService } from "../src/index.js"
+import { describe, expect, it } from "bun:test"
+import { Apphead, createService } from "../src/index.js"
 
 // Mock services for testing
 class MockAuthService {
@@ -39,14 +39,14 @@ class MockEcommerceService {
 }
 
 // Create service exports
-const authService: AppheadService<"auth"> = {
+const authService = {
   __apphead: {
     serviceName: "auth",
     service: new MockAuthService()
   }
 }
 
-const ecommerceService: AppheadService<"ecommerce"> = {
+const ecommerceService = {
   __apphead: {
     serviceName: "ecommerce",
     service: new MockEcommerceService()
@@ -124,16 +124,22 @@ describe("Apphead", () => {
 
 describe("createService", () => {
   it("should create a service definition", () => {
-    const mockService = new MockAuthService()
-    const serviceDef = createService("auth", mockService)
+    class MockAuthWithStatic extends MockAuthService {
+      static serviceName = "auth"
+    }
+    const mockService = new MockAuthWithStatic()
+    const serviceDef = createService(mockService)
 
     expect(serviceDef.__apphead.serviceName).toBe("auth")
     expect(serviceDef.__apphead.service).toBe(mockService)
   })
 
   it("should work with Apphead", () => {
-    const mockService = new MockAuthService()
-    const serviceDef = createService("auth", mockService)
+    class MockAuthWithStatic extends MockAuthService {
+      static serviceName = "auth"
+    }
+    const mockService = new MockAuthWithStatic()
+    const serviceDef = createService(mockService)
 
     const app = Apphead({
       services: [serviceDef]
@@ -153,7 +159,7 @@ describe("Service methods", () => {
     const session = await app.auth.getSession()
     expect(session).toEqual({ userId: "test_user", isAuthenticated: true })
 
-    const order = await app.ecommerce.createOrder({ items: [] })
+    const order = await app.ecommerce.createOrder({ items: [] } as any, "paypal")
     expect(order.orderId).toBe("test_order")
     expect(order.status).toBe("pending")
   })

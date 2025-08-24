@@ -1,5 +1,5 @@
 import { extractServiceInfo, isAppheadService } from "./create-service.js"
-import type { AppheadConfig, AppheadInstance, AppheadService, ServiceRegistry } from "./types.js"
+import type { AppheadConfig, AppheadInstance, ServiceRegistry } from "./types.js"
 
 /**
  * Main Apphead function that creates an application instance with the specified services
@@ -20,11 +20,11 @@ export function Apphead(config: AppheadConfig): AppheadInstance {
     const { service, serviceName } = extractServiceInfo(serviceExport)
 
     // Ensure the service implements BaseService
-    if (typeof service.getServiceInfo !== "function") {
+    if (typeof (service as any).getServiceInfo !== "function") {
       throw new Error(`Service ${serviceName} must implement BaseService interface`)
     }
 
-    acc[serviceName] = service
+    acc[serviceName] = service as any
     return acc
   }, {} as Record<string, any>)
 
@@ -52,7 +52,7 @@ export function Apphead(config: AppheadConfig): AppheadInstance {
     getServicesInfo(): Array<{ name: string; version: string }> {
       return Object.entries(serviceInstances).map(([name, service]) => {
         try {
-          return service.getServiceInfo()
+          return (service as any).getServiceInfo()
         } catch {
           return { name, version: "unknown" }
         }
@@ -75,7 +75,7 @@ export function Apphead(config: AppheadConfig): AppheadInstance {
  * This provides better type inference for the returned instance
  */
 export function createApphead<T extends keyof ServiceRegistry>(
-  services: Array<AppheadService<T>>
+  services: Array<any>
 ): AppheadInstance<T> {
   return Apphead({ services }) as AppheadInstance<T>
 }

@@ -17,7 +17,7 @@
       "DOM",
       "DOM.Iterable"
     ],
-    "types": [],
+  "types": ["bun-types", "node"],
     "isolatedModules": true,
     "sourceMap": true,
     "declarationMap": true,
@@ -46,40 +46,40 @@
     ],
     "paths": {
       "@apphead/app": [
-        "./packages/app/src/index.js"
+        "./packages/app/src/index.ts"
       ],
       "@apphead/app/*": [
-        "./packages/app/src/*.js"
+        "./packages/app/src/*.ts"
       ],
       "@apphead/app/test/*": [
-        "./packages/app/test/*.js"
+        "./packages/app/test/*.ts"
       ],
       "@apphead/auth": [
-        "./packages/auth/src/index.js"
+        "./packages/auth/src/index.ts"
       ],
       "@apphead/auth/*": [
-        "./packages/auth/src/*.js"
+        "./packages/auth/src/*.ts"
       ],
       "@apphead/auth/test/*": [
-        "./packages/auth/test/*.js"
+        "./packages/auth/test/*.ts"
       ],
       "@apphead/ecommerce": [
-        "./packages/ecommerce/src/index.js"
+        "./packages/ecommerce/src/index.ts"
       ],
       "@apphead/ecommerce/*": [
-        "./packages/ecommerce/src/*.js"
+        "./packages/ecommerce/src/*.ts"
       ],
       "@apphead/ecommerce/test/*": [
-        "./packages/ecommerce/test/*.js"
+        "./packages/ecommerce/test/*.ts"
       ],
       "@apphead/server": [
-        "./packages/server/src/index.js"
+        "./packages/server/src/index.ts"
       ],
       "@apphead/server/*": [
-        "./packages/server/src/*.js"
+        "./packages/server/src/*.ts"
       ],
       "@apphead/server/test/*": [
-        "./packages/server/test/*.js"
+        "./packages/server/test/*.ts"
       ],
     }
   }
