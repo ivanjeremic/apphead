@@ -54,15 +54,6 @@
       "@apphead/app/test/*": [
         "./packages/app/test/*.js"
       ],
-      "@apphead/ecommerce": [
-        "./packages/ecommerce/src/index.js"
-      ],
-      "@apphead/ecommerce/*": [
-        "./packages/ecommerce/src/*.js"
-      ],
-      "@apphead/ecommerce/test/*": [
-        "./packages/ecommerce/test/*.js"
-      ],
       "@apphead/auth": [
         "./packages/auth/src/index.js"
       ],
@@ -71,6 +62,15 @@
       ],
       "@apphead/auth/test/*": [
         "./packages/auth/test/*.js"
+      ],
+      "@apphead/ecommerce": [
+        "./packages/ecommerce/src/index.js"
+      ],
+      "@apphead/ecommerce/*": [
+        "./packages/ecommerce/src/*.js"
+      ],
+      "@apphead/ecommerce/test/*": [
+        "./packages/ecommerce/test/*.js"
       ],
       "@apphead/server": [
         "./packages/server/src/index.js"
