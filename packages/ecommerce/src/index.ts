@@ -23,7 +23,11 @@ export type { EcommerceService } from "./ecommerce_service.js"
 export type { PaymentProvider } from "./ecommerce_service.js"
 
 // Export provider implementations
+export * from "./payment_providers/apple_pay.ts"
+export * from "./payment_providers/google_pay.ts"
+export * from "./payment_providers/paypal.js"
 export { PayPalProvider } from "./payment_providers/paypal_adapter.js"
+export * from "./payment_providers/stripe.js"
 export { StripeProvider } from "./payment_providers/stripe_adapter.js"
 
 // Export utility functions
