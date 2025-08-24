@@ -1,13 +1,13 @@
 {
-  "name": "@apphead/server",
+  "name": "@apphead/auth",
   "version": "0.0.0",
   "type": "module",
   "license": "MIT",
-  "description": "The server template",
+  "description": "The auth template",
   "repository": {
     "type": "git",
     "url": "<PLACEHOLDER>",
-    "directory": "packages/server"
+    "directory": "packages/auth"
   },
   "publishConfig": {
     "access": "public",
@@ -25,10 +25,8 @@
   },
   "dependencies": {
     "@effect/platform": "latest",
-    "@effect/platform-node": "latest",
-    "@apphead/app": "workspace:^",
-    "@apphead/auth": "workspace:^",
-    "@apphead/ecommerce": "workspace:^",
+    "@effect/schema": "^0.75.5",
+    "@effect/sql": "latest",
     "effect": "latest"
   },
   "effect": {

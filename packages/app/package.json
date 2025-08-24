@@ -1,13 +1,17 @@
 {
-  "name": "@apphead/server",
+  "name": "@apphead/app",
   "version": "0.0.0",
   "type": "module",
   "license": "MIT",
-  "description": "The server template",
+  "exports": {
+    ".": "./src/index.ts",
+    "./types": "./src/types.ts"
+  },
+  "description": "The core Apphead package that provides a unified interface for all your application services",
   "repository": {
     "type": "git",
     "url": "<PLACEHOLDER>",
-    "directory": "packages/server"
+    "directory": "packages/app"
   },
   "publishConfig": {
     "access": "public",
@@ -25,11 +29,11 @@
   },
   "dependencies": {
     "@effect/platform": "latest",
-    "@effect/platform-node": "latest",
-    "@apphead/app": "workspace:^",
-    "@apphead/auth": "workspace:^",
-    "@apphead/ecommerce": "workspace:^",
+    "@effect/schema": "^0.75.5",
     "effect": "latest"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.2"
   },
   "effect": {
     "generateExports": {

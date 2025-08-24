@@ -1,13 +1,13 @@
 {
-  "name": "@apphead/server",
+  "name": "@apphead/ecommerce",
   "version": "0.0.0",
   "type": "module",
   "license": "MIT",
-  "description": "The server template",
+  "description": "The ecommerce template",
   "repository": {
     "type": "git",
     "url": "<PLACEHOLDER>",
-    "directory": "packages/server"
+    "directory": "packages/ecommerce"
   },
   "publishConfig": {
     "access": "public",
@@ -24,12 +24,12 @@
     "coverage": "vitest --coverage"
   },
   "dependencies": {
-    "@effect/platform": "latest",
-    "@effect/platform-node": "latest",
     "@apphead/app": "workspace:^",
-    "@apphead/auth": "workspace:^",
-    "@apphead/ecommerce": "workspace:^",
-    "effect": "latest"
+    "@effect/platform": "latest",
+    "@effect/schema": "^0.75.5",
+    "@effect/sql": "latest",
+    "effect": "latest",
+    "stripe": "^18.4.0"
   },
   "effect": {
     "generateExports": {

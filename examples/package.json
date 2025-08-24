@@ -1,0 +1,21 @@
+{
+    "name": "@apphead/examples",
+    "version": "0.0.0",
+    "private": true,
+    "type": "module",
+    "description": "Examples showing how to use Apphead services",
+    "scripts": {
+        "start": "tsx src/basic-usage.ts",
+        "auth": "tsx src/auth-example.ts",
+        "ecommerce": "tsx src/ecommerce-example.ts",
+        "full-app": "tsx src/full-app-example.ts",
+        "dev": "tsx --watch src/basic-usage.ts"
+    },
+    "dependencies": {
+        "@apphead/app": "workspace:^",
+        "@apphead/ecommerce": "workspace:^"
+    },
+    "devDependencies": {
+        "tsx": "^4.19.2"
+    }
+}

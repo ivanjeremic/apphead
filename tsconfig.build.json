@@ -2,8 +2,17 @@
   "extends": "./tsconfig.base.json",
   "include": [],
   "references": [
-    { "path": "packages/cli/tsconfig.build.json" },
-    { "path": "packages/domain/tsconfig.build.json" },
-    { "path": "packages/server/tsconfig.build.json" }
+    {
+      "path": "packages/app/tsconfig.build.json"
+    },
+    {
+      "path": "packages/auth/tsconfig.build.json"
+    },
+    {
+      "path": "packages/ecommerce/tsconfig.build.json"
+    },
+    {
+      "path": "packages/server/tsconfig.build.json"
+    },
   ]
 }
