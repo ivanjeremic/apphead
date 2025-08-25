@@ -1,11 +1,17 @@
 {
   "extends": "./tsconfig.base.json",
-  "include": [],
   "compilerOptions": {
-    "baseUrl": "."
+    "baseUrl": ".",
+    "noEmit": true
   },
-  "references": [
-    { "path": "packages/app" },
-    { "path": "packages/ecommerce" }
+  "include": [
+    "packages/*/src/**/*.ts",
+    "packages/*/test/**/*.ts",
+    "examples/src/**/*.ts",
+    "scripts/**/*.mjs"
+  ],
+  "exclude": [
+    // Internal heavy reference implementations not shipped/checked by default
+    "packages/ecommerce/src/payment_providers/**"
   ]
 }

@@ -1,13 +1,14 @@
 {
   "extends": "../../tsconfig.base.json",
-  "include": ["src"],
-  "references": [
-    { "path": "../app" }
+  "include": [
+    "src/**/*.ts",
+    "../app/src/**/*.ts",
+    "../auth/src/**/*.ts",
+    "../ecommerce/src/**/*.ts"
   ],
+  "references": [],
   "compilerOptions": {
     "types": ["node"],
-    "outDir": "build/src",
-    "tsBuildInfoFile": ".tsbuildinfo/src.tsbuildinfo",
-    "rootDir": "src"
+    "noEmit": true
   }
 }

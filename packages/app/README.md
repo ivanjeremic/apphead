@@ -127,17 +127,16 @@ app.getServicesInfo() // Returns array of service info
 app.getRawServices() // Returns all services as plain object
 ```
 
-### **createService Utility**
+### Registering Services
+
+Pass service instances directly (classes extending AppheadService). No wrappers are needed.
 
 ```typescript
-import { createService } from "@apphead/app";
+import { Apphead } from "@apphead/app";
+import { EcommerceService } from "@apphead/ecommerce";
 
-// Create a service manually
-const customService = createService("auth", new AuthServiceImpl(config));
-
-const app = Apphead({
-  services: [customService]
-});
+const ecommerce = new EcommerceService([]);
+const app = Apphead({ services: [ecommerce] });
 ```
 
 ## 📚 Usage Examples
@@ -226,47 +225,22 @@ try {
 
 ## 🏗️ Creating Your Own Services
 
-### **1. Implement BaseService Interface**
+### **1. Extend AppheadService**
 
 ```typescript
-import type { BaseService } from "@apphead/app";
+import { AppheadService } from "@apphead/app";
 
-class MyCustomService implements BaseService {
-  getServiceInfo() {
-    return { name: "custom", version: "1.0.0" };
-  }
-  
-  // Your custom methods
-  async doSomething() {
-    return "Hello from custom service!";
-  }
+class MyCustomService extends AppheadService {
+  static serviceName = "custom";
+  getServiceInfo() { return { name: "custom", version: "1.0.0" }; }
+  async doSomething() { return "Hello from custom service!"; }
 }
 ```
 
-### **2. Create Service Export**
+### **2. Use in Your App**
 
 ```typescript
-import type { AppheadService } from "@apphead/app";
-
-export const customService: AppheadService<"custom"> = {
-  __apphead: {
-    serviceName: "custom",
-    service: new MyCustomService()
-  }
-};
-```
-
-### **3. Use in Your App**
-
-```typescript
-import { customService } from "./my-service";
-
-const app = Apphead({
-  services: [authService, customService]
-});
-
-// Use your custom service
-const result = await app.custom.doSomething();
+const app = Apphead({ services: [new MyCustomService()] });
 ```
 
 ## 🔍 Type Definitions

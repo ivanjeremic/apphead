@@ -25,6 +25,8 @@ export class CustomerError extends Data.TaggedError("CustomerError")<{
 
 // ===== PAYMENT PROVIDER INTERFACE =====
 export interface PaymentProvider {
+  /** Optional instance property mirroring the static providerName for better inference */
+  readonly providerName?: string
   // Customer management
   createCustomer(args: {
     email: string

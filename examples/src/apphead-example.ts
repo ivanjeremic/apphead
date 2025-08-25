@@ -1,4 +1,4 @@
-import { Apphead, createService } from "@apphead/app"
+import { Apphead } from "@apphead/app"
 import { EcommerceService, PayPalProvider, StripeProvider } from "@apphead/ecommerce"
 
 // Example: instantiate payment providers
@@ -18,11 +18,7 @@ const ecommerceService = new EcommerceService([
   stripeProvider
 ])
 
-const app = Apphead({
-  services: [
-    createService(ecommerceService)
-  ]
-})
+const app = Apphead({ services: [ecommerceService] })
 
 async function main() {
   // Example usage of the ecommerce service

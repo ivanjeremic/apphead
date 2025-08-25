@@ -1,4 +1,6 @@
 import { AppheadService } from "@apphead/app"
+import { Effect } from "effect"
+import type { Effect as TEffect } from "effect"
 import type { PaymentProvider } from "./create_payment_provider.js"
 import type { Customer, Money, Order, OrderItem, Price, Product, Subscription } from "./ecommerce-types.js"
 
@@ -11,8 +13,20 @@ type Store = {
 }
 
 // Helper type for provider name autocomplete
-export class EcommerceService extends AppheadService {
-  static serviceName = "ecommerce"
+// Helper types to derive provider name union and method return types
+type ProviderNameOf<P> = P extends { providerName: infer N extends string } ? N : never
+type ProvidersNameUnion<TProviders extends ReadonlyArray<PaymentProvider>> = ProviderNameOf<TProviders[number]>
+type MethodOf<T, K extends keyof T> = T[K] extends (...args: any) => any ? T[K] : never
+type ProviderPromiseReturn<K extends keyof PaymentProvider> = ReturnType<MethodOf<PaymentProvider, K>> extends
+  TEffect.Effect<infer A, any> ? Promise<A>
+  : ReturnType<MethodOf<PaymentProvider, K>>
+
+export class EcommerceService<
+  TProviders extends ReadonlyArray<PaymentProvider & { providerName: string }> = ReadonlyArray<
+    PaymentProvider & { providerName: string }
+  >
+> extends AppheadService {
+  readonly serviceName = "ecommerce" as const
   private store: Store = {
     products: new Map(),
     prices: new Map(),
@@ -21,17 +35,16 @@ export class EcommerceService extends AppheadService {
     subscriptions: new Map()
   }
 
-  private providerMap: Record<string, PaymentProvider>
+  private providerMap: Record<ProvidersNameUnion<TProviders>, PaymentProvider>
 
-  constructor(paymentProviders: Array<PaymentProvider>) {
+  constructor(paymentProviders: TProviders) {
     super()
     this.providerMap = Object.fromEntries(
       paymentProviders.map((p) => [
-        // @ts-ignore: providerName is a static property on the class
-        p.constructor.providerName,
-        p
+        p.providerName as ProvidersNameUnion<TProviders>,
+        p as PaymentProvider
       ])
-    )
+    ) as Record<ProvidersNameUnion<TProviders>, PaymentProvider>
   }
 
   // ---- Product Management ----
@@ -91,16 +104,19 @@ export class EcommerceService extends AppheadService {
   }
 
   // ---- Order Management ----
-  async createOrder(order: Order, providerName: string): Promise<any> {
+  async createOrder(
+    order: Order,
+    providerName: ProvidersNameUnion<TProviders>
+  ): Promise<ProviderPromiseReturn<"createOrder">> {
     this.store.orders.set(order.id, order)
-    const provider = this.providerMap[providerName as string]
+    const provider = this.providerMap[providerName]
     if (!provider) throw new Error("Payment provider not found")
     const orderArgs: any = {
       customerId: order.customerId,
       items: order.items
     }
     if (order.metadata !== undefined) orderArgs.metadata = order.metadata
-    return provider.createOrder(orderArgs)
+    return Effect.runPromise(provider.createOrder(orderArgs))
   }
 
   async getOrder(orderId: string): Promise<Order | undefined> {
@@ -120,36 +136,39 @@ export class EcommerceService extends AppheadService {
       cancelUrl: string
       metadata?: Record<string, string | number | boolean>
     },
-    providerName: string
-  ): Promise<any> {
-    const provider = this.providerMap[providerName as string]
+    providerName: ProvidersNameUnion<TProviders>
+  ): Promise<ProviderPromiseReturn<"createCheckoutSession">> {
+    const provider = this.providerMap[providerName]
     if (!provider) throw new Error("Payment provider not found")
-    return provider.createCheckoutSession(args)
+    return Effect.runPromise(provider.createCheckoutSession(args))
   }
 
   // ---- Payment ----
   async capturePayment(
     args: { orderId: string; amount?: Money },
-    providerName: string
-  ): Promise<any> {
-    const provider = this.providerMap[providerName as string]
+    providerName: ProvidersNameUnion<TProviders>
+  ): Promise<ProviderPromiseReturn<"capturePayment">> {
+    const provider = this.providerMap[providerName]
     if (!provider) throw new Error("Payment provider not found")
-    return provider.capturePayment(args)
+    return Effect.runPromise(provider.capturePayment(args))
   }
 
   async refundPayment(
     args: { orderId: string; amount?: Money; reason?: string },
-    providerName: string
-  ): Promise<any> {
-    const provider = this.providerMap[providerName as string]
+    providerName: ProvidersNameUnion<TProviders>
+  ): Promise<ProviderPromiseReturn<"refundPayment">> {
+    const provider = this.providerMap[providerName]
     if (!provider) throw new Error("Payment provider not found")
-    return provider.refundPayment(args)
+    return Effect.runPromise(provider.refundPayment(args))
   }
 
   // ---- Subscription Management ----
-  async createSubscription(subscription: Subscription, providerName: string): Promise<any> {
+  async createSubscription(
+    subscription: Subscription,
+    providerName: ProvidersNameUnion<TProviders>
+  ): Promise<ProviderPromiseReturn<"createSubscription">> {
     this.store.subscriptions.set(subscription.id, subscription)
-    const provider = this.providerMap[providerName as string]
+    const provider = this.providerMap[providerName]
     if (!provider) throw new Error("Payment provider not found")
     const subArgs: any = {
       customerId: subscription.customerId,
@@ -162,16 +181,16 @@ export class EcommerceService extends AppheadService {
       )
     }
     if (subscription.metadata !== undefined) subArgs.metadata = subscription.metadata
-    return provider.createSubscription(subArgs)
+    return Effect.runPromise(provider.createSubscription(subArgs))
   }
 
   async cancelSubscription(
     args: { subscriptionId: string; reason?: string },
-    providerName: string
-  ): Promise<any> {
-    const provider = this.providerMap[providerName as string]
+    providerName: ProvidersNameUnion<TProviders>
+  ): Promise<ProviderPromiseReturn<"cancelSubscription">> {
+    const provider = this.providerMap[providerName]
     if (!provider) throw new Error("Payment provider not found")
-    return provider.cancelSubscription(args)
+    return Effect.runPromise(provider.cancelSubscription(args))
   }
 
   async getSubscription(subscriptionId: string): Promise<Subscription | undefined> {

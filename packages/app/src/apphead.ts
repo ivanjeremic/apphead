@@ -1,31 +1,29 @@
-import { extractServiceInfo, isAppheadService } from "./create-service.js"
-import type { AppheadConfig, AppheadInstance, ServiceRegistry } from "./types.js"
+// Apphead now only accepts raw AppheadService instances
+import type { AppheadService as AppheadServiceBase } from "./apphead-service.js"
+import type { AppheadConfig, AppheadInstance, ServicesToRegistry } from "./types.js"
 
 /**
  * Main Apphead function that creates an application instance with the specified services
  * @param config Configuration object containing the services array
  * @returns An AppheadInstance with all the configured services
  */
-export function Apphead(config: AppheadConfig): AppheadInstance {
-  // Validate that all services are valid Apphead services
-  const validServices = config.services.filter(isAppheadService)
-
-  if (validServices.length !== config.services.length) {
-    const invalidServices = config.services.filter((service) => !isAppheadService(service))
-    throw new Error(`Invalid services provided: ${invalidServices.map((s) => typeof s).join(", ")}`)
-  }
-
-  // Create service instances by extracting the actual service implementations
-  const serviceInstances = validServices.reduce((acc, serviceExport) => {
-    const { service, serviceName } = extractServiceInfo(serviceExport)
-
-    // Ensure the service implements BaseService
-    if (typeof (service as any).getServiceInfo !== "function") {
-      throw new Error(`Service ${serviceName} must implement BaseService interface`)
+export function Apphead<S extends ReadonlyArray<AppheadServiceBase>>(config: AppheadConfig<S>): AppheadInstance<S> {
+  // Only raw AppheadService instances are supported
+  const serviceInstances = config.services.reduce((acc, item) => {
+    const service = item as any
+    const serviceName = service?.serviceName ?? service?.constructor?.serviceName
+    if (
+      service &&
+      typeof service.getServiceInfo === "function" &&
+      typeof serviceName === "string" &&
+      serviceName.length > 0
+    ) {
+      acc[serviceName] = service as any
+      return acc
     }
-
-    acc[serviceName] = service as any
-    return acc
+    throw new Error(
+      "Invalid service provided to Apphead. Pass instances of classes extending AppheadService with a serviceName."
+    )
   }, {} as Record<string, any>)
 
   // Add utility methods to the instance
@@ -35,8 +33,8 @@ export function Apphead(config: AppheadConfig): AppheadInstance {
     /**
      * Get a specific service by name
      */
-    getService<T extends keyof ServiceRegistry>(name: T): ServiceRegistry[T] | undefined {
-      return serviceInstances[name]
+    getService<K extends keyof ServicesToRegistry<S>>(name: K): ServicesToRegistry<S>[K] | undefined {
+      return serviceInstances[name as string]
     },
 
     /**
@@ -67,15 +65,15 @@ export function Apphead(config: AppheadConfig): AppheadInstance {
     }
   }
 
-  return appInstance as unknown as AppheadInstance
+  return appInstance as unknown as AppheadInstance<S>
 }
 
 /**
  * Type-safe helper to create an Apphead instance with specific services
  * This provides better type inference for the returned instance
  */
-export function createApphead<T extends keyof ServiceRegistry>(
-  services: Array<any>
-): AppheadInstance<T> {
-  return Apphead({ services }) as AppheadInstance<T>
+export function createApphead<S extends ReadonlyArray<AppheadServiceBase>>(
+  services: S
+): AppheadInstance<S> {
+  return Apphead({ services })
 }

@@ -4,12 +4,12 @@ This directory contains examples showing how to use Apphead services with perfec
 
 ## ✨ What's New
 
-The examples now demonstrate the **new service factory pattern** that provides:
+The examples now demonstrate the class-based service pattern:
 
 - **Perfect Autocomplete**: Full TypeScript support for all service options
-- **Clean API**: Simple service creation with `createService()`
-- **Flexible Configuration**: Services handle their own setup internally
-- **Type Safety**: Compile-time validation of all configurations
+- **Clean API**: Pass service instances directly (no wrappers)
+- **Flexible Configuration**: Each service handles its own setup
+- **Type Safety**: Compile-time validation of configurations
 
 ## 🏃‍♂️ Quick Start
 
@@ -31,105 +31,63 @@ pnpm dev
 
 ## 📚 Examples
 
-### **1. Basic Ecommerce Usage** (`src/basic-usage.ts`)
+### **1. Basic Ecommerce Usage** (`src/apphead-example.ts`)
 
-Shows how to create and use the ecommerce service with perfect autocomplete:
+Create and use the ecommerce service with provider-aware autocomplete:
 
 ```typescript
 import { Apphead } from "@apphead/app"
-import { createEcommerceService } from "@apphead/ecommerce"
+import { EcommerceService, PayPalProvider, StripeProvider } from "@apphead/ecommerce"
 
-// Create ecommerce service with full autocomplete
-const ecommerceService = createEcommerceService({
-  provider: "stripe", // ← Autocomplete shows "stripe" | "paypal"
-  stripe: {
-    apiKey: "sk_test_123",
-    apiVersion: "2023-10-16", // ← Autocomplete shows available options
-    maxNetworkRetries: 3,
-    timeoutMs: 30000
-  }
+// Instantiate payment providers
+const paypal = new PayPalProvider({
+  clientId: "your_paypal_client_id",
+  clientSecret: "your_paypal_client_secret",
+  env: "sandbox"
 })
+const stripe = new StripeProvider({ apiKey: "sk_test_123", apiVersion: "2023-10-16" })
 
-// Use with Apphead
-const app = Apphead({
-  services: [ecommerceService]
-})
+// Create ecommerce service with providers (class-based)
+const ecommerceService = new EcommerceService([paypal, stripe])
 
-// Perfect autocomplete works here!
-const order = await app.ecommerce.createOrder({
+// Register raw service instance (no wrappers needed)
+const app = Apphead({ services: [ecommerceService] })
+
+// Provider name autocompletes to available providers (e.g., "paypal" | "stripe")
+await app.ecommerce.createOrder({
+  id: "order-001",
   customerId: "cus_123",
-  items: [{ name: "Premium Plan", quantity: 1, unitAmount: { currency: "USD", amount: 2500 } }]
-})
+  items: [{ name: "Premium Plan", quantity: 1, unitAmount: { currency: "USD", amount: 2500 } }],
+  totalAmount: { currency: "USD", amount: 2500 },
+  status: "pending",
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  metadata: { plan: "premium" }
+}, "paypal")
 ```
 
-### **2. Full App Example** (`src/full-app-example.ts`)
+### **2. Multiple Services**
 
-Demonstrates using multiple services together:
+Register any services by passing their instances directly:
 
 ```typescript
-import { Apphead, createService } from "@apphead/app"
-import { createEcommerceService } from "@apphead/ecommerce"
+import { Apphead } from "@apphead/app"
+import { EcommerceService } from "@apphead/ecommerce"
 
-// Create all services
-const authService = createService("auth", new MockAuthService({
-  providers: ["github", "google"],
-  session: { maxAge: 3600 }
-}))
+const app = Apphead({ services: [new EcommerceService([])] })
 
-const ecommerceService = createEcommerceService({
-  provider: "stripe",
-  stripe: { apiKey: "sk_test_123" }
-})
-
-const emailService = createService("email", new MockEmailService({
-  provider: "sendgrid",
-  apiKey: "SG_123",
-  fromEmail: "noreply@example.com"
-}))
-
-// Use all services together
-const app = Apphead({
-  services: [authService, ecommerceService, emailService]
-})
-
-// Perfect autocomplete for all services!
-await app.auth.signInWithOAuth({ provider: "github" })
-await app.ecommerce.createOrder(orderData)
-await app.email.sendWelcomeEmail(user)
+// Use with perfect autocomplete
+// await app.auth.signInWithOAuth({ provider: "github" })
+// await app.email.sendWelcomeEmail(user)
 ```
 
-### **3. Environment Configuration** (`src/full-app-example.ts`)
+### **3. Environment Configuration**
 
-Shows how to configure different environments:
+Create different service instances per environment and pass them to Apphead:
 
 ```typescript
-// Development environment
-const devApp = Apphead({
-  services: [
-    createService("auth", new MockAuthService({
-      providers: ["github"],
-      session: { maxAge: 1800 } // 30 minutes for dev
-    })),
-    createEcommerceService({
-      provider: "stripe",
-      stripe: { apiKey: "sk_test_dev_123" }
-    })
-  ]
-})
-
-// Production environment
-const prodApp = Apphead({
-  services: [
-    createService("auth", new MockAuthService({
-      providers: ["github", "google", "email"],
-      session: { maxAge: 86400 } // 24 hours for prod
-    })),
-    createEcommerceService({
-      provider: "stripe",
-      stripe: { apiKey: "sk_live_prod_456" }
-    })
-  ]
-})
+const devApp = Apphead({ services: [new EcommerceService([stripeDev]) ] })
+const prodApp = Apphead({ services: [new EcommerceService([stripeProd]) ] })
 ```
 
 ## 🎯 Key Benefits
@@ -140,28 +98,13 @@ const prodApp = Apphead({
 - **Type Safety**: Compile-time validation prevents runtime errors
 
 ### **Clean API**
-- **Single Function**: Only `createService()` to create services
-- **Direct Passing**: Pass service instances directly, not configuration objects
+- **Direct Passing**: Pass service instances directly (no wrappers)
 - **Flexible**: Create services however you prefer, then register them
 
-### **Service Factory Pattern**
+### **Registering Services**
 ```typescript
-// Create service with full configuration
-const ecommerceService = createEcommerceService({
-  provider: "stripe",
-  stripe: {
-    apiKey: "sk_test_123",
-    apiVersion: "2023-10-16"
-  }
-})
-
-// Register with Apphead
-const app = Apphead({
-  services: [ecommerceService]
-})
-
-// Use with perfect autocomplete
-app.ecommerce.createOrder(orderData)
+const ecommerceService = new EcommerceService([/* providers */])
+const app = Apphead({ services: [ecommerceService] })
 ```
 
 ## 🔧 Available Services

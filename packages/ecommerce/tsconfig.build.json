@@ -5,6 +5,16 @@
     "tsBuildInfoFile": ".tsbuildinfo/build.tsbuildinfo",
     "outDir": "build/esm",
     "declarationDir": "build/dts",
-    "stripInternal": true
-  }
+    "stripInternal": true,
+    // Override path mapping during build to point at compiled outputs of referenced projects
+    "paths": {
+      "@apphead/app": ["../app/build/esm/index.js"],
+      "@apphead/app/*": ["../app/build/esm/*.js"]
+    }
+  },
+  "include": ["src"],
+  // Ensure the app package builds first and is treated as a referenced project
+  "references": [
+    { "path": "../app/tsconfig.build.json" }
+  ]
 }

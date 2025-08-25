@@ -1,8 +1,9 @@
 import { describe, expect, it } from "bun:test"
-import { Apphead, createService } from "../src/index.js"
+import { Apphead, AppheadService } from "../src/index.js"
 
 // Mock services for testing
-class MockAuthService {
+class MockAuthService extends AppheadService {
+  readonly serviceName = "auth"
   getServiceInfo() {
     return { name: "auth", version: "1.0.0" }
   }
@@ -20,7 +21,8 @@ class MockAuthService {
   }
 }
 
-class MockEcommerceService {
+class MockEcommerceService extends AppheadService {
+  readonly serviceName = "ecommerce"
   getServiceInfo() {
     return { name: "ecommerce", version: "1.0.0" }
   }
@@ -38,26 +40,13 @@ class MockEcommerceService {
   }
 }
 
-// Create service exports
-const authService = {
-  __apphead: {
-    serviceName: "auth",
-    service: new MockAuthService()
-  }
-}
-
-const ecommerceService = {
-  __apphead: {
-    serviceName: "ecommerce",
-    service: new MockEcommerceService()
-  }
-}
+// Create raw instances
+const authService = new MockAuthService()
+const ecommerceService = new MockEcommerceService()
 
 describe("Apphead", () => {
   it("should create an app instance with services", () => {
-    const app = Apphead({
-      services: [authService, ecommerceService]
-    })
+    const app = Apphead({ services: [authService, ecommerceService] })
 
     expect(app.auth).toBeDefined()
     expect(app.ecommerce).toBeDefined()
@@ -66,9 +55,7 @@ describe("Apphead", () => {
   })
 
   it("should provide utility methods", () => {
-    const app = Apphead({
-      services: [authService, ecommerceService]
-    })
+    const app = Apphead({ services: [authService, ecommerceService] })
 
     expect(app.getService).toBeDefined()
     expect(app.hasService).toBeDefined()
@@ -77,9 +64,7 @@ describe("Apphead", () => {
   })
 
   it("should validate service interface", () => {
-    const app = Apphead({
-      services: [authService, ecommerceService]
-    })
+    const app = Apphead({ services: [authService, ecommerceService] })
 
     const servicesInfo = app.getServicesInfo()
     expect(servicesInfo).toHaveLength(2)
@@ -88,9 +73,7 @@ describe("Apphead", () => {
   })
 
   it("should check service availability", () => {
-    const app = Apphead({
-      services: [authService, ecommerceService]
-    })
+    const app = Apphead({ services: [authService, ecommerceService] })
 
     expect(app.hasService("auth")).toBe(true)
     expect(app.hasService("ecommerce")).toBe(true)
@@ -98,13 +81,11 @@ describe("Apphead", () => {
   })
 
   it("should get services by name", () => {
-    const app = Apphead({
-      services: [authService, ecommerceService]
-    })
+    const app = Apphead({ services: [authService, ecommerceService] })
 
     const auth = app.getService("auth")
     const ecommerce = app.getService("ecommerce")
-    const email = app.getService("email")
+    const email = app.getService("email" as any)
 
     expect(auth).toBeDefined()
     expect(ecommerce).toBeDefined()
@@ -112,9 +93,7 @@ describe("Apphead", () => {
   })
 
   it("should work with partial services", () => {
-    const app = Apphead({
-      services: [authService]
-    })
+    const app = Apphead({ services: [authService] })
 
     expect(app.auth).toBeDefined()
     expect(app.hasService("auth")).toBe(true)
@@ -122,52 +101,22 @@ describe("Apphead", () => {
   })
 })
 
-describe("createService", () => {
-  it("should create a service definition", () => {
-    class MockAuthWithStatic extends MockAuthService {
-      static serviceName = "auth"
-    }
-    const mockService = new MockAuthWithStatic()
-    const serviceDef = createService(mockService)
-
-    expect(serviceDef.__apphead.serviceName).toBe("auth")
-    expect(serviceDef.__apphead.service).toBe(mockService)
-  })
-
-  it("should work with Apphead", () => {
-    class MockAuthWithStatic extends MockAuthService {
-      static serviceName = "auth"
-    }
-    const mockService = new MockAuthWithStatic()
-    const serviceDef = createService(mockService)
-
-    const app = Apphead({
-      services: [serviceDef]
-    })
-
-    expect(app.auth).toBeDefined()
-    expect(app.auth.getServiceInfo()).toEqual({ name: "auth", version: "1.0.0" })
-  })
-})
+// createService removed: services are passed as raw instances extending AppheadService
 
 describe("Service methods", () => {
   it("should call service methods correctly", async () => {
-    const app = Apphead({
-      services: [authService, ecommerceService]
-    })
+    const app = Apphead({ services: [authService, ecommerceService] })
 
     const session = await app.auth.getSession()
     expect(session).toEqual({ userId: "test_user", isAuthenticated: true })
 
-    const order = await app.ecommerce.createOrder({ items: [] } as any, "paypal")
+    const order = await app.ecommerce.createOrder({ items: [] } as any)
     expect(order.orderId).toBe("test_order")
     expect(order.status).toBe("pending")
   })
 
   it("should handle OAuth sign in", async () => {
-    const app = Apphead({
-      services: [authService]
-    })
+    const app = Apphead({ services: [authService] })
 
     const result = await app.auth.signInWithOAuth({ provider: "github" })
     expect(result.userId).toBe("test_user")

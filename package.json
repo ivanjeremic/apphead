@@ -9,17 +9,12 @@
   ],
   "scripts": {
     "clean": "node scripts/clean.mjs",
-    "build": "bun x tsc -b tsconfig.build.json",
-    "check": "bun x tsc -b tsconfig.build.json",
+    "check": "bun x tsc -p tsconfig.json --noEmit",
     "lint": "bun x eslint \"**/{src,test,examples,scripts,dtslint}/**/*.{ts,mjs}\"",
     "lint-fix": "bun x eslint --fix \"**/{src,test,examples,scripts,dtslint}/**/*.{ts,mjs}\"",
     "test": "bun test"
   },
   "devDependencies": {
-    "@babel/cli": "^7.25.9",
-    "@babel/core": "^7.26.0",
-    "@babel/plugin-transform-export-namespace-from": "^7.25.9",
-    "@babel/plugin-transform-modules-commonjs": "^7.25.9",
     "@effect/build-utils": "^0.7.7",
     "@effect/eslint-plugin": "^0.3.2",
     "@effect/language-service": "latest",

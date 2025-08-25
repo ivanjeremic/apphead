@@ -3,7 +3,7 @@
     "strict": true,
     "exactOptionalPropertyTypes": true,
     "moduleDetection": "force",
-    "composite": true,
+  "composite": false,
     "downlevelIteration": true,
     "resolveJsonModule": true,
     "esModuleInterop": false,
@@ -46,10 +46,10 @@
     ],
     "paths": {
       "@apphead/app": [
-        "./packages/app/src/index.ts"
+  "./packages/app/src/index.ts"
       ],
       "@apphead/app/*": [
-        "./packages/app/src/*.ts"
+  "./packages/app/src/*.ts"
       ],
       "@apphead/app/test/*": [
         "./packages/app/test/*.ts"
@@ -64,10 +64,10 @@
         "./packages/auth/test/*.ts"
       ],
       "@apphead/ecommerce": [
-        "./packages/ecommerce/src/index.ts"
+  "./packages/ecommerce/src/index.ts"
       ],
       "@apphead/ecommerce/*": [
-        "./packages/ecommerce/src/*.ts"
+  "./packages/ecommerce/src/*.ts"
       ],
       "@apphead/ecommerce/test/*": [
         "./packages/ecommerce/test/*.ts"
