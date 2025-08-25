@@ -1,13 +1,13 @@
 import { Apphead } from "@apphead/app"
-import { EcommerceService, PayPalProvider, StripeProvider } from "@apphead/ecommerce"
+import { createPayPalProvider, createStripeProvider, EcommerceService } from "@apphead/ecommerce"
 
 // Example: instantiate payment providers
-const paypalProvider = new PayPalProvider({
+const paypalProvider = createPayPalProvider({
   clientId: "your_paypal_client_id",
   clientSecret: "your_paypal_client_secret",
   env: "sandbox"
 })
-const stripeProvider = new StripeProvider({
+const stripeProvider = createStripeProvider({
   apiKey: "your_stripe_secret_key",
   apiVersion: "2023-10-16"
 })

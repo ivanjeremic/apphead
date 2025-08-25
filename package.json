@@ -1,19 +1,5 @@
 {
   "name": "apphead-monorepo",
-  "private": true,
-  "type": "module",
-  "packageManager": "pnpm@10.14.0",
-  "workspaces": [
-    "packages/*",
-    "examples"
-  ],
-  "scripts": {
-    "clean": "node scripts/clean.mjs",
-    "check": "bun x tsc -p tsconfig.json --noEmit",
-    "lint": "bun x eslint \"**/{src,test,examples,scripts,dtslint}/**/*.{ts,mjs}\"",
-    "lint-fix": "bun x eslint --fix \"**/{src,test,examples,scripts,dtslint}/**/*.{ts,mjs}\"",
-    "test": "bun test"
-  },
   "devDependencies": {
     "@effect/build-utils": "^0.7.7",
     "@effect/eslint-plugin": "^0.3.2",
@@ -21,7 +7,7 @@
     "@eslint/compat": "1.2.2",
     "@eslint/eslintrc": "3.1.0",
     "@eslint/js": "9.13.0",
-    "@types/node": "^22.8.5",
+    "@types/bun": "^1.2.20",
     "@typescript-eslint/eslint-plugin": "^8.12.2",
     "@typescript-eslint/parser": "^8.12.2",
     "babel-plugin-annotate-pure-calls": "^0.5.0",
@@ -33,7 +19,6 @@
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "eslint-plugin-sort-destructure-keys": "^2.0.0",
     "glob": "^11.0.0",
-    "tsx": "^4.19.2",
     "typescript": "^5.6.3"
   },
   "imports": {
@@ -45,5 +30,19 @@
       "packages/apphead/src",
       "packages/apphead/dist"
     ]
-  }
+  },
+  "packageManager": "pnpm@10.14.0",
+  "private": true,
+  "scripts": {
+    "clean": "node scripts/clean.mjs",
+    "check": "bun x tsc -p tsconfig.json --noEmit",
+    "lint": "bun x eslint \"**/{src,test,examples,scripts,dtslint}/**/*.{ts,mjs}\"",
+    "lint-fix": "bun x eslint --fix \"**/{src,test,examples,scripts,dtslint}/**/*.{ts,mjs}\"",
+    "test": "bun test"
+  },
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "examples"
+  ]
 }

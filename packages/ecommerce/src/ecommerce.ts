@@ -2,7 +2,7 @@ import { AppheadService } from "@apphead/app"
 import { Effect } from "effect"
 import type { Effect as TEffect } from "effect"
 import type { PaymentProvider } from "./create_payment_provider.js"
-import type { Customer, Money, Order, OrderItem, Price, Product, Subscription } from "./ecommerce-types.js"
+import type { Customer, Money, Order, OrderItem, Price, Product, Subscription } from "./types.js"
 
 type Store = {
   products: Map<string, Product>
@@ -18,7 +18,7 @@ type ProviderNameOf<P> = P extends { providerName: infer N extends string } ? N 
 type ProvidersNameUnion<TProviders extends ReadonlyArray<PaymentProvider>> = ProviderNameOf<TProviders[number]>
 type MethodOf<T, K extends keyof T> = T[K] extends (...args: any) => any ? T[K] : never
 type ProviderPromiseReturn<K extends keyof PaymentProvider> = ReturnType<MethodOf<PaymentProvider, K>> extends
-  TEffect.Effect<infer A, any> ? Promise<A>
+  TEffect.Effect<infer A, any> ? A
   : ReturnType<MethodOf<PaymentProvider, K>>
 
 export class EcommerceService<

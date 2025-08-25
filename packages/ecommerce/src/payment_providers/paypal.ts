@@ -636,7 +636,7 @@ export const PayPalLive = (options: PayPalOptions) =>
 
 /* ---------------------- PaymentProvider Implementation ---------------------- */
 
-export class PayPalProvider implements PaymentProvider {
+export class PayPalProvider extends PaymentProvider {
   static providerName = "paypal" as const
   constructor(private paypal: PayPal) {}
 
