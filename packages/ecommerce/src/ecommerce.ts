@@ -1,203 +1,188 @@
 import { AppheadService } from "@apphead/app"
 import { Effect } from "effect"
-import type { Effect as TEffect } from "effect"
-import type { PaymentProvider } from "./create_payment_provider.js"
-import type { Customer, Money, Order, OrderItem, Price, Product, Subscription } from "./types.js"
+import type { Customer, Order, Price, Product, Subscription } from "./types.js"
+import type { PaymentProvider } from "./utils/create_payment_provider.js"
 
-type Store = {
-  products: Map<string, Product>
-  prices: Map<string, Price>
-  customers: Map<string, Customer>
-  orders: Map<string, Order>
-  subscriptions: Map<string, Subscription>
+type ProviderNameOf<T extends PaymentProvider<any>> = T["name"]
+type ProvidersNameUnion<TProviders extends ReadonlyArray<PaymentProvider<any>>> = ProviderNameOf<TProviders[number]>
+
+export type CreateOrderArgs = {
+  customerId?: string
+  items: ReadonlyArray<{ unitAmount: { currency: string; amount: number }; quantity: number }>
+  metadata?: Record<string, string | number | boolean>
 }
 
-// Helper type for provider name autocomplete
-// Helper types to derive provider name union and method return types
-type ProviderNameOf<P> = P extends { providerName: infer N extends string } ? N : never
-type ProvidersNameUnion<TProviders extends ReadonlyArray<PaymentProvider>> = ProviderNameOf<TProviders[number]>
-type MethodOf<T, K extends keyof T> = T[K] extends (...args: any) => any ? T[K] : never
-type ProviderPromiseReturn<K extends keyof PaymentProvider> = ReturnType<MethodOf<PaymentProvider, K>> extends
-  TEffect.Effect<infer A, any> ? A
-  : ReturnType<MethodOf<PaymentProvider, K>>
+export type CreateCheckoutSessionArgs = {
+  customerId?: string
+  items: ReadonlyArray<{ unitAmount: { currency: string; amount: number }; quantity: number }>
+  successUrl: string
+  cancelUrl: string
+  metadata?: Record<string, string | number | boolean>
+  idempotencyKey?: string
+}
 
-export class EcommerceService<
-  TProviders extends ReadonlyArray<PaymentProvider & { providerName: string }> = ReadonlyArray<
-    PaymentProvider & { providerName: string }
-  >
-> extends AppheadService {
-  readonly serviceName = "ecommerce" as const
-  private store: Store = {
-    products: new Map(),
-    prices: new Map(),
-    customers: new Map(),
-    orders: new Map(),
-    subscriptions: new Map()
-  }
+export type CapturePaymentArgs = { orderId: string; amount?: { currency: string; amount: number } }
+export type RefundPaymentArgs = { orderId: string; amount?: { currency: string; amount: number } }
+export type CreateSubscriptionArgs = {
+  customerId: string
+  priceId: string
+  trialDays?: number
+  metadata?: Record<string, string | number | boolean>
+  idempotencyKey?: string
+}
+export type CancelSubscriptionArgs = { subscriptionId: string; reason?: string }
 
-  private providerMap: Record<ProvidersNameUnion<TProviders>, PaymentProvider>
+// Relaxed helper to avoid nested Promise types in signatures
+type ProviderPromiseReturn<_M extends string> = any
 
-  constructor(paymentProviders: TProviders) {
+export class EcommerceService<TProviders extends ReadonlyArray<PaymentProvider<string>>> extends AppheadService {
+  readonly serviceName = "ecommerce"
+
+  private readonly providersByName: Record<ProvidersNameUnion<TProviders>, PaymentProvider>
+  public readonly ecommerce: this = this
+
+  constructor(opts: { providers: TProviders }) {
     super()
-    this.providerMap = Object.fromEntries(
-      paymentProviders.map((p) => [
-        p.providerName as ProvidersNameUnion<TProviders>,
-        p as PaymentProvider
-      ])
+    const providers = opts.providers
+    this.providersByName = Object.fromEntries(
+      providers.map((p) => [p.name as ProvidersNameUnion<TProviders>, p])
     ) as Record<ProvidersNameUnion<TProviders>, PaymentProvider>
   }
 
-  // ---- Product Management ----
-  async createProduct(product: Product): Promise<Product> {
-    this.store.products.set(product.id, product)
-    // Optionally sync to all payment providers
-    for (const _provider of Object.values(this.providerMap)) {
-      // Effect.runPromise(_provider.createProduct(product))
-    }
-    return product
+  // Required by AppheadService
+  override getServiceInfo(): any {
+    return { serviceName: this.serviceName }
   }
 
-  async getProduct(productId: string) {
-    return this.store.products.get(productId)
+  // Helper
+  private getProvider(name: ProvidersNameUnion<TProviders>): PaymentProvider {
+    return this.providersByName[name]
+  }
+  private notSupported(method: string, provider: string): never {
+    throw new Error(`[ecommerce] ${method} is not supported by provider "${provider}"`)
   }
 
-  async listProducts() {
-    return Array.from(this.store.products.values())
+  // Products (delegate if provider implements them)
+  getProduct(productId: string, providerName: ProvidersNameUnion<TProviders>): Promise<Product> {
+    const provider = this.getProvider(providerName)
+    const fn = provider?.common?.onGetProduct
+    if (typeof fn !== "function") this.notSupported("getProduct", providerName as string)
+    return Effect.runPromise(fn(productId)) as Promise<Product>
   }
 
-  // ---- Price Management ----
-  async createPrice(price: Price): Promise<Price> {
-    this.store.prices.set(price.id, price)
-    for (const _provider of Object.values(this.providerMap)) {
-      // Effect.runPromise(_provider.createPrice(price))
-    }
-    return price
+  listProducts(providerName: ProvidersNameUnion<TProviders>): Promise<ReadonlyArray<Product>> {
+    const provider = this.getProvider(providerName)
+    const fn = provider?.common?.onListProducts
+    if (typeof fn !== "function") this.notSupported("listProducts", providerName as string)
+    return Effect.runPromise(fn()) as Promise<ReadonlyArray<Product>>
   }
 
-  async getPrice(priceId: string) {
-    return this.store.prices.get(priceId)
+  // Prices
+  getPrice(priceId: string, providerName: ProvidersNameUnion<TProviders>): Promise<Price> {
+    const provider = this.getProvider(providerName)
+    const fn = provider?.common?.onGetPrice
+    if (typeof fn !== "function") this.notSupported("getPrice", providerName as string)
+    return Effect.runPromise(fn(priceId)) as Promise<Price>
   }
 
-  async listPrices() {
-    return Array.from(this.store.prices.values())
+  listPrices(providerName: ProvidersNameUnion<TProviders>): Promise<ReadonlyArray<Price>> {
+    const provider = this.getProvider(providerName)
+    const fn = provider?.common?.onListPrices
+    if (typeof fn !== "function") this.notSupported("listPrices", providerName as string)
+    return Effect.runPromise(fn()) as Promise<ReadonlyArray<Price>>
   }
 
-  // ---- Customer Management ----
-  async createCustomer(customer: Customer): Promise<Customer> {
-    this.store.customers.set(customer.id, customer)
-    for (const _provider of Object.values(this.providerMap)) {
-      // Effect.runPromise(_provider.createCustomer(customer))
-    }
-    return customer
+  // Customers
+  getCustomer(customerId: string, providerName: ProvidersNameUnion<TProviders>): Promise<Customer> {
+    const provider = this.getProvider(providerName)
+    const fn = provider?.common?.onGetCustomer
+    if (typeof fn !== "function") this.notSupported("getCustomer", providerName as string)
+    return Effect.runPromise(fn(customerId)) as Promise<Customer>
   }
 
-  getServiceInfo(): { name: string; version: string } {
-    return { name: "ecommerce", version: "1.0.0" }
+  listCustomers(providerName: ProvidersNameUnion<TProviders>): Promise<ReadonlyArray<Customer>> {
+    const provider = this.getProvider(providerName)
+    const fn = provider?.common?.onListCustomers
+    if (typeof fn !== "function") this.notSupported("listCustomers", providerName as string)
+    return Effect.runPromise(fn()) as Promise<ReadonlyArray<Customer>>
   }
 
-  async getCustomer(customerId: string): Promise<Customer | undefined> {
-    return this.store.customers.get(customerId)
+  // Orders
+  getOrder(orderId: string, providerName: ProvidersNameUnion<TProviders>): Promise<Order> {
+    const provider = this.getProvider(providerName)
+    const fn = provider?.oneTime?.onGetOrder
+    if (typeof fn !== "function") this.notSupported("getOrder", providerName as string)
+    return Effect.runPromise(fn(orderId)) as Promise<Order>
   }
 
-  async listCustomers(): Promise<Array<Customer>> {
-    return Array.from(this.store.customers.values())
+  listOrders(providerName: ProvidersNameUnion<TProviders>): Promise<ReadonlyArray<Order>> {
+    const provider = this.getProvider(providerName)
+    const fn = provider?.oneTime?.onListOrders
+    if (typeof fn !== "function") this.notSupported("listOrders", providerName as string)
+    return Effect.runPromise(fn()) as Promise<ReadonlyArray<Order>>
   }
 
-  // ---- Order Management ----
-  async createOrder(
-    order: Order,
+  // Subscriptions
+  getSubscription(subscriptionId: string, providerName: ProvidersNameUnion<TProviders>): Promise<Subscription> {
+    const provider = this.getProvider(providerName)
+    const fn = provider?.recurring?.onGetSubscription
+    if (typeof fn !== "function") this.notSupported("getSubscription", providerName as string)
+    return Effect.runPromise(fn(subscriptionId)) as Promise<Subscription>
+  }
+
+  listSubscriptions(providerName: ProvidersNameUnion<TProviders>): Promise<ReadonlyArray<Subscription>> {
+    const provider = this.getProvider(providerName)
+    const fn = provider?.recurring?.onListSubscriptions
+    if (typeof fn !== "function") this.notSupported("listSubscriptions", providerName as string)
+    return Effect.runPromise(fn()) as Promise<ReadonlyArray<Subscription>>
+  }
+
+  // Delegated actions
+  createOrder(
+    orderArgs: CreateOrderArgs,
     providerName: ProvidersNameUnion<TProviders>
   ): Promise<ProviderPromiseReturn<"createOrder">> {
-    this.store.orders.set(order.id, order)
-    const provider = this.providerMap[providerName]
-    if (!provider) throw new Error("Payment provider not found")
-    const orderArgs: any = {
-      customerId: order.customerId,
-      items: order.items
-    }
-    if (order.metadata !== undefined) orderArgs.metadata = order.metadata
-    return Effect.runPromise(provider.createOrder(orderArgs))
+    const provider = this.getProvider(providerName)
+    return Effect.runPromise(provider.oneTime.onCreateOrder(orderArgs))
   }
 
-  async getOrder(orderId: string): Promise<Order | undefined> {
-    return this.store.orders.get(orderId)
-  }
-
-  async listOrders(): Promise<Array<Order>> {
-    return Array.from(this.store.orders.values())
-  }
-
-  // ---- Checkout ----
-  async createCheckoutSession(
-    args: {
-      customerId?: string
-      items: Array<OrderItem>
-      successUrl: string
-      cancelUrl: string
-      metadata?: Record<string, string | number | boolean>
-    },
+  createCheckoutSession(
+    args: CreateCheckoutSessionArgs,
     providerName: ProvidersNameUnion<TProviders>
   ): Promise<ProviderPromiseReturn<"createCheckoutSession">> {
-    const provider = this.providerMap[providerName]
-    if (!provider) throw new Error("Payment provider not found")
-    return Effect.runPromise(provider.createCheckoutSession(args))
+    const provider = this.getProvider(providerName)
+    return Effect.runPromise(provider.oneTime.onCreateCheckoutSession(args))
   }
 
-  // ---- Payment ----
-  async capturePayment(
-    args: { orderId: string; amount?: Money },
+  capturePayment(
+    args: CapturePaymentArgs,
     providerName: ProvidersNameUnion<TProviders>
   ): Promise<ProviderPromiseReturn<"capturePayment">> {
-    const provider = this.providerMap[providerName]
-    if (!provider) throw new Error("Payment provider not found")
-    return Effect.runPromise(provider.capturePayment(args))
+    const provider = this.getProvider(providerName)
+    return Effect.runPromise(provider.oneTime.onCapturePayment(args))
   }
 
-  async refundPayment(
-    args: { orderId: string; amount?: Money; reason?: string },
+  refundPayment(
+    args: RefundPaymentArgs,
     providerName: ProvidersNameUnion<TProviders>
   ): Promise<ProviderPromiseReturn<"refundPayment">> {
-    const provider = this.providerMap[providerName]
-    if (!provider) throw new Error("Payment provider not found")
-    return Effect.runPromise(provider.refundPayment(args))
+    const provider = this.getProvider(providerName)
+    return Effect.runPromise(provider.oneTime.onRefundPayment(args))
   }
 
-  // ---- Subscription Management ----
-  async createSubscription(
-    subscription: Subscription,
+  createSubscription(
+    args: CreateSubscriptionArgs,
     providerName: ProvidersNameUnion<TProviders>
   ): Promise<ProviderPromiseReturn<"createSubscription">> {
-    this.store.subscriptions.set(subscription.id, subscription)
-    const provider = this.providerMap[providerName]
-    if (!provider) throw new Error("Payment provider not found")
-    const subArgs: any = {
-      customerId: subscription.customerId,
-      priceId: subscription.priceId
-    }
-    if (subscription.trialEnd && subscription.currentPeriodStart) {
-      subArgs.trialDays = Math.floor(
-        (subscription.trialEnd.getTime() - subscription.currentPeriodStart.getTime()) /
-          (1000 * 60 * 60 * 24)
-      )
-    }
-    if (subscription.metadata !== undefined) subArgs.metadata = subscription.metadata
-    return Effect.runPromise(provider.createSubscription(subArgs))
+    const provider = this.getProvider(providerName)
+    return Effect.runPromise(provider.recurring.onCreateSubscription(args))
   }
 
-  async cancelSubscription(
-    args: { subscriptionId: string; reason?: string },
+  cancelSubscription(
+    args: CancelSubscriptionArgs,
     providerName: ProvidersNameUnion<TProviders>
   ): Promise<ProviderPromiseReturn<"cancelSubscription">> {
-    const provider = this.providerMap[providerName]
-    if (!provider) throw new Error("Payment provider not found")
-    return Effect.runPromise(provider.cancelSubscription(args))
-  }
-
-  async getSubscription(subscriptionId: string): Promise<Subscription | undefined> {
-    return this.store.subscriptions.get(subscriptionId)
-  }
-
-  async listSubscriptions(): Promise<Array<Subscription>> {
-    return Array.from(this.store.subscriptions.values())
+    const provider = this.getProvider(providerName)
+    return Effect.runPromise(provider.recurring.onCancelSubscription(args))
   }
 }

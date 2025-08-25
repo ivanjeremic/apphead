@@ -3,40 +3,32 @@ import { createPayPalProvider, createStripeProvider, EcommerceService } from "@a
 
 // Example: instantiate payment providers
 const paypalProvider = createPayPalProvider({
-  clientId: "your_paypal_client_id",
-  clientSecret: "your_paypal_client_secret",
+  clientId: process.env.PP_CLIENT_ID ?? "your-client-id",
+  clientSecret: process.env.PP_CLIENT_SECRET ?? "your-client-secret",
   env: "sandbox"
 })
+
 const stripeProvider = createStripeProvider({
-  apiKey: "your_stripe_secret_key",
-  apiVersion: "2023-10-16"
+  apiKey: process.env.STRIPE_API_KEY ?? "your-stripe-key"
 })
 
-// Create ecommerce service with providers (class-based)
-const ecommerceService = new EcommerceService([
-  paypalProvider,
-  stripeProvider
-])
+// Create the ecommerce service and pass it to Apphead
+const ecommerceService = new EcommerceService({ providers: [paypalProvider, stripeProvider] })
 
 const app = Apphead({ services: [ecommerceService] })
 
 async function main() {
-  // Example usage of the ecommerce service
   const orderData = {
-    id: "order-001",
-    customerId: "customer-id-123",
-    items: [
-      { name: "Premium Plan", quantity: 1, unitAmount: { currency: "USD", amount: 9999 } }
-    ],
-    totalAmount: { currency: "USD", amount: 9999 },
-    status: "pending" as const,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    metadata: { source: "example" }
+    customerId: "cus_123",
+    items: [{ unitAmount: { currency: "USD", amount: 1200 }, quantity: 1 }]
   }
-  // Specify provider (autocomplete works: "paypal" | "stripe")
+
+  // Keep API: app.ecommerce.createOrder(...)
   const order = await app.ecommerce.createOrder(orderData, "paypal")
-  console.log("Order created:", order)
+  console.log(order)
 }
 
-main().catch(console.error)
+main().catch((err) => {
+  console.error(err)
+  process.exit(1)
+})

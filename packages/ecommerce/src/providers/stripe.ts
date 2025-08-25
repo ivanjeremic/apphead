@@ -1,22 +1,20 @@
 import { Effect } from "effect"
 import Stripe from "stripe"
-import { CustomerError, PaymentError, PaymentProvider, PaymentProviderError } from "../create_payment_provider.js"
 import type { CheckoutSession, Customer, Money, Order, Price, Product, Subscription } from "../types.js"
+import { CustomerError, PaymentError, PaymentProvider, PaymentProviderError } from "../utils/create_payment_provider.js"
+import { sumLineItems } from "../utils/currency.js"
 
 export interface StripeProviderOptions {
   apiKey: string
   apiVersion?: string
 }
 
-export function createStripeProvider(_opts: StripeProviderOptions): PaymentProvider {
+export function createStripeProvider(opts: StripeProviderOptions): PaymentProvider<"stripe"> {
   const name = "stripe" as const
-  const stripe = new Stripe(_opts.apiKey)
+  const stripe = new Stripe(opts.apiKey)
 
-  // helpers
-  const toMoney = (items: Array<{ unitAmount: Money; quantity: number }>): Money => ({
-    currency: items[0]?.unitAmount.currency ?? "USD",
-    amount: items.reduce((sum, i) => sum + i.unitAmount.amount * i.quantity, 0)
-  })
+  const toAmount = (items: Array<{ unitAmount: Money; quantity: number }>) => sumLineItems(items)
+
   const toPPError = (code: string, err: unknown) =>
     new PaymentProviderError({ code, message: err instanceof Error ? err.message : String(err), details: err })
   const toPayError = (code: string, err: unknown) =>
@@ -31,8 +29,11 @@ export function createStripeProvider(_opts: StripeProviderOptions): PaymentProvi
 
   return new PaymentProvider({
     name,
+    policy: {
+      // ...existing code...
+    },
     common: {
-      onCreateCustomer: (args) =>
+      onCreateCustomer: (args: any) =>
         Effect.tryPromise(() =>
           stripe.customers.create({
             email: args.email,
@@ -51,7 +52,7 @@ export function createStripeProvider(_opts: StripeProviderOptions): PaymentProvi
           Effect.mapError((e) => toCustError("CUSTOMER_CREATE_FAILED", e))
         ),
 
-      onUpdateCustomer: (args) =>
+      onUpdateCustomer: (args: any) =>
         Effect.tryPromise(() =>
           stripe.customers.update(args.customerId, {
             ...(args.email !== undefined ? { email: args.email } : {}),
@@ -73,7 +74,7 @@ export function createStripeProvider(_opts: StripeProviderOptions): PaymentProvi
       onGetCustomer: (customerId: string) =>
         Effect.tryPromise(() => stripe.customers.retrieve(customerId)).pipe(
           Effect.map((c) => {
-            if (c.deleted) throw new Error("Customer deleted")
+            if ((c as Stripe.DeletedCustomer).deleted) throw new Error("Customer deleted")
             const cust = c as Stripe.Customer
             const out: Customer = {
               id: cust.id,
@@ -86,7 +87,7 @@ export function createStripeProvider(_opts: StripeProviderOptions): PaymentProvi
           Effect.mapError((e) => toCustError("CUSTOMER_GET_FAILED", e))
         ),
 
-      onCreateProduct: (args) =>
+      onCreateProduct: (args: any) =>
         Effect.tryPromise(() =>
           stripe.products.create({
             name: args.name,
@@ -105,7 +106,7 @@ export function createStripeProvider(_opts: StripeProviderOptions): PaymentProvi
           Effect.mapError((e) => toPPError("PRODUCT_CREATE_FAILED", e))
         ),
 
-      onCreatePrice: (args) =>
+      onCreatePrice: (args: any) =>
         Effect.tryPromise(() =>
           stripe.prices.create({
             product: args.productId,
@@ -128,12 +129,12 @@ export function createStripeProvider(_opts: StripeProviderOptions): PaymentProvi
     },
 
     oneTime: {
-      onCreateOrder: (args) =>
-        // Option A: model "order" in your store; Option B: create a PaymentIntent here.
-        Effect.tryPromise(() =>
+      onCreateOrder: (args: any) => {
+        const total = toAmount(args.items)
+        return Effect.tryPromise(() =>
           stripe.paymentIntents.create({
-            amount: args.items.reduce((sum, i) => sum + i.unitAmount.amount * i.quantity, 0),
-            currency: args.items[0]?.unitAmount.currency.toLowerCase() ?? "usd",
+            amount: total.amount,
+            currency: total.currency.toLowerCase(),
             ...(args.metadata ? { metadata: args.metadata as Record<string, string> } : {})
           })
         ).pipe(
@@ -141,14 +142,15 @@ export function createStripeProvider(_opts: StripeProviderOptions): PaymentProvi
             id: pi.id,
             customerId: args.customerId,
             items: args.items,
-            totalAmount: toMoney(args.items),
+            totalAmount: total,
             status: pi.status === "succeeded" ? "paid" : "pending",
             createdAt: new Date(),
             updatedAt: new Date(),
             ...(args.metadata ? { metadata: args.metadata } : {})
           })),
           Effect.mapError((e) => toPPError("ORDER_CREATE_FAILED", e))
-        ),
+        )
+      },
 
       onGetOrder: (orderId: string) =>
         Effect.tryPromise(() => stripe.paymentIntents.retrieve(orderId)).pipe(
@@ -164,14 +166,15 @@ export function createStripeProvider(_opts: StripeProviderOptions): PaymentProvi
           Effect.mapError((e) => toPPError("ORDER_GET_FAILED", e))
         ),
 
-      onCreateCheckoutSession: (args) =>
-        Effect.tryPromise(() =>
+      onCreateCheckoutSession: (args: any) => {
+        const total = toAmount(args.items)
+        return Effect.tryPromise(() =>
           stripe.checkout.sessions.create({
             mode: "payment",
             success_url: args.successUrl,
             cancel_url: args.cancelUrl,
             ...(args.customerId ? { customer: args.customerId } : {}),
-            line_items: args.items.map((i) => ({
+            line_items: args.items.map((i: any) => ({
               price_data: {
                 currency: i.unitAmount.currency.toLowerCase(),
                 unit_amount: i.unitAmount.amount,
@@ -185,16 +188,17 @@ export function createStripeProvider(_opts: StripeProviderOptions): PaymentProvi
           Effect.map((s): CheckoutSession => ({
             id: s.id,
             ...(s.customer ? { customerId: String(s.customer) } : {}),
-            amount: toMoney(args.items),
+            amount: total,
             status: (s.status ?? "open") as "open" | "complete" | "expired",
             successUrl: args.successUrl,
             cancelUrl: args.cancelUrl,
             ...(args.metadata ? { metadata: args.metadata } : {})
           })),
           Effect.mapError((e) => toPayError("CHECKOUT_CREATE_FAILED", e))
-        ),
+        )
+      },
 
-      onCapturePayment: (args) =>
+      onCapturePayment: (args: any) =>
         Effect.tryPromise(() => stripe.paymentIntents.capture(args.orderId)).pipe(
           Effect.map((pi): Order => ({
             id: pi.id,
@@ -208,7 +212,7 @@ export function createStripeProvider(_opts: StripeProviderOptions): PaymentProvi
           Effect.mapError((e) => toPayError("PAYMENT_CAPTURE_FAILED", e))
         ),
 
-      onRefundPayment: (args) =>
+      onRefundPayment: (args: any) =>
         Effect.tryPromise(() =>
           stripe.refunds.create({
             payment_intent: args.orderId,
@@ -230,7 +234,7 @@ export function createStripeProvider(_opts: StripeProviderOptions): PaymentProvi
     },
 
     recurring: {
-      onCreateSubscription: (args) =>
+      onCreateSubscription: (args: any) =>
         Effect.tryPromise(() =>
           stripe.subscriptions.create({
             customer: args.customerId,
@@ -257,7 +261,7 @@ export function createStripeProvider(_opts: StripeProviderOptions): PaymentProvi
           Effect.mapError((e) => toPPError("SUBSCRIPTION_CREATE_FAILED", e))
         ),
 
-      onCancelSubscription: (args) =>
+      onCancelSubscription: (args: any) =>
         Effect.tryPromise(() => stripe.subscriptions.cancel(args.subscriptionId)).pipe(
           Effect.map((s): Subscription => ({
             id: s.id,
