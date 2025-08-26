@@ -1,14 +1,12 @@
 export { AppheadService } from "./apphead-service.js"
-// Main exports for @apphead/app package
-export { Apphead, createApphead } from "./apphead.js"
-
-// Export all types
-export type {
-  AppheadConfig,
-  AppheadInstance,
-  AppheadServices,
+export { Apphead } from "./apphead.js"
+export {
+  type AuthError,
+  type AuthResult,
   AuthService,
-  EcommerceService,
-  EmailService,
-  UserService
-} from "./types.js"
+  type AuthSession,
+  type AuthUser,
+  type ProvidersNameUnion,
+  type SignInWithPasswordArgs
+} from "./auth-service.js"
+export { SignInWithPassword } from "./providers/signInWithPassword.js"

@@ -34,7 +34,10 @@ describe("currency utils", () => {
     // rounding half away from zero
     expect(toMinorUnits("KWD", "1.2344")).toBe(1234)
     expect(toMinorUnits("KWD", "1.2345")).toBe(1235)
-    expect(toMinorUnits("USD", "-1.2345")).toBe(-1235)
+    // negatives: -1.2345 -> -1.23 (since third decimal is 4)
+    expect(toMinorUnits("USD", "-1.2345")).toBe(-123)
+    // exact half rounds away from zero
+    expect(toMinorUnits("USD", "-1.235")).toBe(-124)
   })
 
   it("sumLineItems adds minor units", () => {

@@ -4,41 +4,23 @@ import { Effect, Ref } from "effect"
 import type { CheckoutSession, Customer, Money, Order, Price, Product, Subscription } from "../types.js"
 import { PaymentError, PaymentProvider, PaymentProviderError } from "../utils/create_payment_provider.js"
 import { formatMajorUnitString, sumLineItems } from "../utils/currency.js"
+import { basicAuthHeader, ensureOk } from "../utils/helpers.js"
 
-// Portable Base64 for Node, Workers, browsers, Deno, Bun
-function toBase64(str: string): string {
-  // @ts-ignore Node branch
-  if (typeof Buffer !== "undefined" && typeof (Buffer as any).from === "function") {
-    // @ts-ignore
-    return (Buffer as any).from(str, "utf8").toString("base64")
+// Find a link by rel on a PayPal resource
+function findLink(resource: any, rel: string): string | null {
+  const links: Array<{ rel?: string; href?: string }> = resource?.links ?? []
+  const target = rel.toLowerCase()
+  for (const l of links) {
+    const r = (l?.rel ?? "").toLowerCase()
+    if (r === target && typeof l?.href === "string") return l.href
   }
-  if (typeof btoa !== "undefined") {
-    const bytes = new TextEncoder().encode(str)
-    let bin = ""
-    for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i])
-    return btoa(bin)
-  }
-  throw new Error("No Base64 encoder available in this runtime")
+  return null
 }
 
-// Small guard to surface PayPal errors
-const ensureOk = (res: any, op: string) =>
-  Effect.gen(function*() {
-    const status: number = res.status
-    if (status >= 200 && status < 300) return res
-
-    const body: unknown = yield* res.json.pipe(
-      Effect.catchAll(() => res.text.pipe(Effect.catchAll(() => Effect.succeed<unknown>(undefined))))
-    )
-
-    return yield* Effect.fail(
-      new PaymentProviderError({
-        code: "HTTP_ERROR",
-        message: `[paypal] ${op} failed with status ${status}`,
-        details: { status, body }
-      })
-    )
-  })
+// Extract the buyer approval URL from an Order response
+function getApprovalUrl(order: any): string | null {
+  return findLink(order, "approve") ?? findLink(order, "payer-action")
+}
 
 export type Env = "sandbox" | "live"
 
@@ -49,7 +31,7 @@ export interface PayPalProviderOptions {
   env: Env
 }
 
-export function createPayPalProvider(opts: PayPalProviderOptions): PaymentProvider<"paypal"> {
+export function PayPal(opts: PayPalProviderOptions): PaymentProvider<"paypal"> {
   const name = "paypal" as const
   const baseUrl = opts.env === "live" ? "https://api-m.paypal.com" : "https://api-m.sandbox.paypal.com"
 
@@ -68,13 +50,13 @@ export function createPayPalProvider(opts: PayPalProviderOptions): PaymentProvid
     const client = yield* HttpClient.HttpClient
     const res = yield* client.post(`${baseUrl}/v1/oauth2/token`, {
       headers: {
-        Authorization: `Basic ${toBase64(`${opts.clientId}:${opts.clientSecret}`)}`,
+        Authorization: basicAuthHeader(opts.clientId, opts.clientSecret),
         "Content-Type": "application/x-www-form-urlencoded",
         Accept: "application/json"
       },
       body: HttpBody.text(new URLSearchParams({ grant_type: "client_credentials" }).toString())
     })
-    const ok = yield* ensureOk(res, "oauth2")
+    const ok = yield* ensureOk(res, "oauth2", "paypal")
     const json = (yield* ok.json) as any
     const ttlSec = typeof json.expires_in === "number" ? json.expires_in : 300
     const token: Token = { value: json.access_token as string, exp: now + ttlSec * 1000 }
@@ -168,15 +150,18 @@ export function createPayPalProvider(opts: PayPalProviderOptions): PaymentProvid
               body: HttpBody.text(
                 JSON.stringify({
                   intent: "CAPTURE",
+                  processing_instruction: args.capture === "automatic"
+                    ? "ORDER_COMPLETE_ON_PAYMENT_APPROVAL"
+                    : "NO_INSTRUCTION",
                   purchase_units: [
                     { amount: { currency_code: amount.currency, value: formatMajorUnitString(amount) } }
                   ]
                 })
               )
             })
-            const ok = yield* ensureOk(res, "orders.create")
-            const pp = (yield* ok.json) as any as { id: string; links?: Array<{ rel: string; href: string }> }
-            const approveUrl = pp.links?.find((l) => l.rel === "approve")?.href
+            const ok = yield* ensureOk(res, "orders.create", "paypal")
+            const pp = (yield* ok.json) as any
+            const approveUrl = getApprovalUrl(pp)
             const order: Order = {
               id: pp.id,
               customerId: args.customerId,
@@ -210,7 +195,7 @@ export function createPayPalProvider(opts: PayPalProviderOptions): PaymentProvid
             const res = yield* client.get(`${baseUrl}/v2/checkout/orders/${orderId}`, {
               headers: { Authorization: `Bearer ${access_token}`, Accept: "application/json" }
             })
-            const ok = yield* ensureOk(res, "orders.get")
+            const ok = yield* ensureOk(res, "orders.get", "paypal")
             const pp = (yield* ok.json) as any as { id: string; status: string }
             const order: Order = {
               id: pp.id,
@@ -241,6 +226,9 @@ export function createPayPalProvider(opts: PayPalProviderOptions): PaymentProvid
               body: HttpBody.text(
                 JSON.stringify({
                   intent: "CAPTURE",
+                  processing_instruction: args.capture === "automatic"
+                    ? "ORDER_COMPLETE_ON_PAYMENT_APPROVAL"
+                    : "NO_INSTRUCTION",
                   purchase_units: [
                     { amount: { currency_code: amount.currency, value: formatMajorUnitString(amount) } }
                   ],
@@ -248,9 +236,9 @@ export function createPayPalProvider(opts: PayPalProviderOptions): PaymentProvid
                 })
               )
             })
-            const ok = yield* ensureOk(res, "checkout.create")
-            const pp = (yield* ok.json) as any as { id: string; links?: Array<{ rel: string; href: string }> }
-            const approveUrl = pp.links?.find((l) => l.rel === "approve")?.href
+            const ok = yield* ensureOk(res, "checkout.create", "paypal")
+            const pp = (yield* ok.json) as any
+            const approveUrl = getApprovalUrl(pp)
             const cs: CheckoutSession = {
               id: pp.id,
               ...(args.customerId ? { customerId: args.customerId } : {}),
@@ -284,7 +272,7 @@ export function createPayPalProvider(opts: PayPalProviderOptions): PaymentProvid
             const res = yield* client.post(`${baseUrl}/v2/checkout/orders/${args.orderId}/capture`, {
               headers: { Authorization: `Bearer ${access_token}`, Accept: "application/json" }
             })
-            yield* ensureOk(res, "orders.capture")
+            yield* ensureOk(res, "orders.capture", "paypal")
             const order: Order = {
               id: args.orderId,
               customerId: "unknown",
@@ -345,7 +333,7 @@ export function createPayPalProvider(opts: PayPalProviderOptions): PaymentProvid
                 })
               )
             })
-            const ok = yield* ensureOk(res, "subs.create")
+            const ok = yield* ensureOk(res, "subs.create", "paypal")
             const pp = (yield* ok.json) as any as {
               id: string
               status: string
@@ -394,7 +382,7 @@ export function createPayPalProvider(opts: PayPalProviderOptions): PaymentProvid
               },
               body: HttpBody.text(JSON.stringify({ reason: args.reason ?? "user_requested" }))
             })
-            yield* ensureOk(res, "subs.cancel")
+            yield* ensureOk(res, "subs.cancel", "paypal")
             const now = new Date()
             const sub: Subscription = {
               id: args.subscriptionId,
@@ -425,7 +413,7 @@ export function createPayPalProvider(opts: PayPalProviderOptions): PaymentProvid
             const res = yield* client.get(`${baseUrl}/v1/billing/subscriptions/${subscriptionId}`, {
               headers: { Authorization: `Bearer ${access_token}`, Accept: "application/json" }
             })
-            const ok = yield* ensureOk(res, "subs.get")
+            const ok = yield* ensureOk(res, "subs.get", "paypal")
             const pp = (yield* ok.json) as any as {
               id: string
               status: string

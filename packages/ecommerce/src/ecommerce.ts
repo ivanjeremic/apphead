@@ -10,6 +10,7 @@ export type CreateOrderArgs = {
   customerId?: string
   items: ReadonlyArray<{ unitAmount: { currency: string; amount: number }; quantity: number }>
   metadata?: Record<string, string | number | boolean>
+  capture?: "automatic" | "manual"
 }
 
 export type CreateCheckoutSessionArgs = {
@@ -19,6 +20,7 @@ export type CreateCheckoutSessionArgs = {
   cancelUrl: string
   metadata?: Record<string, string | number | boolean>
   idempotencyKey?: string
+  capture?: "automatic" | "manual"
 }
 
 export type CapturePaymentArgs = { orderId: string; amount?: { currency: string; amount: number } }

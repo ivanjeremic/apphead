@@ -1,5 +1,5 @@
 import { Effect } from "effect"
-import Stripe from "stripe"
+import StripePkg from "stripe"
 import type { CheckoutSession, Customer, Money, Order, Price, Product, Subscription } from "../types.js"
 import { CustomerError, PaymentError, PaymentProvider, PaymentProviderError } from "../utils/create_payment_provider.js"
 import { sumLineItems } from "../utils/currency.js"
@@ -9,9 +9,9 @@ export interface StripeProviderOptions {
   apiVersion?: string
 }
 
-export function createStripeProvider(opts: StripeProviderOptions): PaymentProvider<"stripe"> {
+export function Stripe(opts: StripeProviderOptions): PaymentProvider<"stripe"> {
   const name = "stripe" as const
-  const stripe = new Stripe(opts.apiKey)
+  const stripe = new StripePkg(opts.apiKey)
 
   const toAmount = (items: Array<{ unitAmount: Money; quantity: number }>) => sumLineItems(items)
 
@@ -74,8 +74,8 @@ export function createStripeProvider(opts: StripeProviderOptions): PaymentProvid
       onGetCustomer: (customerId: string) =>
         Effect.tryPromise(() => stripe.customers.retrieve(customerId)).pipe(
           Effect.map((c) => {
-            if ((c as Stripe.DeletedCustomer).deleted) throw new Error("Customer deleted")
-            const cust = c as Stripe.Customer
+            if ((c as StripePkg.DeletedCustomer).deleted) throw new Error("Customer deleted")
+            const cust = c as StripePkg.Customer
             const out: Customer = {
               id: cust.id,
               email: cust.email ?? "unknown",
@@ -114,7 +114,7 @@ export function createStripeProvider(opts: StripeProviderOptions): PaymentProvid
             unit_amount: args.unitAmount,
             ...(args.interval ? { recurring: { interval: args.interval } } : {}),
             ...(args.metadata ? { metadata: args.metadata as Record<string, string> } : {})
-          } as Stripe.PriceCreateParams)
+          } as StripePkg.PriceCreateParams)
         ).pipe(
           Effect.map((pr): Price => ({
             id: pr.id,
@@ -135,6 +135,7 @@ export function createStripeProvider(opts: StripeProviderOptions): PaymentProvid
           stripe.paymentIntents.create({
             amount: total.amount,
             currency: total.currency.toLowerCase(),
+            ...(args.capture === "manual" ? { capture_method: "manual" } : {}),
             ...(args.metadata ? { metadata: args.metadata as Record<string, string> } : {})
           })
         ).pipe(
@@ -182,6 +183,9 @@ export function createStripeProvider(opts: StripeProviderOptions): PaymentProvid
               },
               quantity: i.quantity
             })),
+            payment_intent_data: {
+              ...(args.capture === "manual" ? { capture_method: "manual" } : {})
+            },
             ...(args.metadata ? { metadata: args.metadata as Record<string, string> } : {})
           })
         ).pipe(
